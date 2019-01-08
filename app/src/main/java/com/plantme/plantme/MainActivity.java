@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private TextView mTextMessage;
 
     private BottomNavigationView mOnNavigationItemSelectedListener;
+    Fragment homeFragment;
+    Fragment myPlantsFragment;
 
 
     @Override
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mOnNavigationItemSelectedListener = findViewById(R.id.navigation);
         mOnNavigationItemSelectedListener.setOnNavigationItemSelectedListener(this);
 
-        Fragment homeFragment = new HomeFragment();
+        homeFragment = new HomeFragment();
+        myPlantsFragment = new MyPlantsFragment();
         this.setDefaultFragment(homeFragment);
 
     }
@@ -37,10 +40,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:
+                replaceFragment(homeFragment);
                 return true;
-            case R.id.navigation_dashboard:
+            case R.id.navigation_meteo:
                 return true;
-            case R.id.navigation_notifications:
+            case R.id.navigation_myPlants:
+                replaceFragment(myPlantsFragment);
                 return true;
         }
         return false;
