@@ -1,0 +1,76 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/plantecalendriers",
+      "handler": "Plantecalendrier.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/plantecalendriers/count",
+      "handler": "Plantecalendrier.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/plantecalendriers/:id",
+      "handler": "Plantecalendrier.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/plantecalendriers",
+      "handler": "Plantecalendrier.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/plantecalendriers/:id",
+      "handler": "Plantecalendrier.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/plantecalendriers/:id",
+      "handler": "Plantecalendrier.destroy",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/plantecalendriers/:id/relationships/:relation",
+      "handler": "Plantecalendrier.createRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/plantecalendriers/:id/relationships/:relation",
+      "handler": "Plantecalendrier.updateRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/plantecalendriers/:id/relationships/:relation",
+      "handler": "Plantecalendrier.destroyRelation",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

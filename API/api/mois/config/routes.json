@@ -1,0 +1,76 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/mois",
+      "handler": "Mois.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/mois/count",
+      "handler": "Mois.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/mois/:id",
+      "handler": "Mois.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/mois",
+      "handler": "Mois.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/mois/:id",
+      "handler": "Mois.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/mois/:id",
+      "handler": "Mois.destroy",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/mois/:id/relationships/:relation",
+      "handler": "Mois.createRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/mois/:id/relationships/:relation",
+      "handler": "Mois.updateRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/mois/:id/relationships/:relation",
+      "handler": "Mois.destroyRelation",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

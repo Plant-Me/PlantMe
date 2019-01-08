@@ -1,0 +1,19 @@
+{
+  "connection": "default",
+  "collectionName": "actioncalendriers",
+  "info": {
+    "name": "actioncalendrier",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "type": {
+      "default": "",
+      "type": "string"
+    }
+  }
+}

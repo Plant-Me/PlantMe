@@ -1,0 +1,76 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/familles",
+      "handler": "Famille.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/familles/count",
+      "handler": "Famille.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/familles/:id",
+      "handler": "Famille.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/familles",
+      "handler": "Famille.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/familles/:id",
+      "handler": "Famille.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/familles/:id",
+      "handler": "Famille.destroy",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/familles/:id/relationships/:relation",
+      "handler": "Famille.createRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/familles/:id/relationships/:relation",
+      "handler": "Famille.updateRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/familles/:id/relationships/:relation",
+      "handler": "Famille.destroyRelation",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

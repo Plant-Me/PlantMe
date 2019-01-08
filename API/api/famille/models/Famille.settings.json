@@ -1,0 +1,19 @@
+{
+  "connection": "default",
+  "collectionName": "familles",
+  "info": {
+    "name": "famille",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "nom": {
+      "default": "",
+      "type": "string"
+    }
+  }
+}

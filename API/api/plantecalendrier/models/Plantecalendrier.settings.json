@@ -1,0 +1,28 @@
+{
+  "connection": "default",
+  "collectionName": "plantecalendriers",
+  "info": {
+    "name": "plantecalendrier",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "idPlanteCalendrier": {
+      "default": "",
+      "type": "integer"
+    },
+    "idAction": {
+      "model": "actioncalendrier"
+    },
+    "idMois": {
+      "model": "mois"
+    },
+    "idPlante": {
+      "model": "plante"
+    }
+  }
+}

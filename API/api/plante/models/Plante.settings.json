@@ -1,0 +1,45 @@
+{
+  "connection": "default",
+  "collectionName": "plante",
+  "info": {
+    "name": "plante",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "nomFr": {
+      "default": "",
+      "type": "string"
+    },
+    "nomLatin": {
+      "default": "",
+      "type": "string"
+    },
+    "couleurFleurs": {
+      "default": "",
+      "type": "string"
+    },
+    "exposition": {
+      "default": "",
+      "type": "string"
+    },
+    "sol": {
+      "default": "",
+      "type": "string"
+    },
+    "usageOuMilieu": {
+      "default": "",
+      "type": "string"
+    },
+    "idType": {
+      "model": "type"
+    },
+    "idFamille": {
+      "model": "famille"
+    }
+  }
+}

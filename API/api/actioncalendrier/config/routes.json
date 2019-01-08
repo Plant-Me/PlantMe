@@ -1,0 +1,76 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/actioncalendriers",
+      "handler": "Actioncalendrier.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/actioncalendriers/count",
+      "handler": "Actioncalendrier.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/actioncalendriers/:id",
+      "handler": "Actioncalendrier.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/actioncalendriers",
+      "handler": "Actioncalendrier.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/actioncalendriers/:id",
+      "handler": "Actioncalendrier.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/actioncalendriers/:id",
+      "handler": "Actioncalendrier.destroy",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/actioncalendriers/:id/relationships/:relation",
+      "handler": "Actioncalendrier.createRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/actioncalendriers/:id/relationships/:relation",
+      "handler": "Actioncalendrier.updateRelation",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/actioncalendriers/:id/relationships/:relation",
+      "handler": "Actioncalendrier.destroyRelation",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
