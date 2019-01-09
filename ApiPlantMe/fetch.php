@@ -229,9 +229,4 @@ function recursiveChildPrint($object, $arrayMonths) {
   return $arrayMonths;
 }
 
-
-
-
-
-
 ?>
