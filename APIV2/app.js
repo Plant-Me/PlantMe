@@ -30,9 +30,53 @@ app.get("/", (req,res) => {
 })
 
 app.get("/plante",(req,res) => {
-  var plante = {test:"test"}
-  res.json(plante)
+
+  
+  let idTypeParam 
+  let idFamilleParam 
+  const queryString = "select * from plante "
+  const queryType = "select * from type where id = ?"
+  const queryFamille = "select * from famille where id = ?"
+  let idType 
+  let nomType
+  let idFamille 
+  let nomFamille
+  let resultPlant = connection.query(queryString) 
+    if(resultPlant.length > 0){
+      let plante = resultPlant.map((row) => {
+        return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
+          couleurFleurs:row.couleurFleurs, exposition:row.exposition,
+          sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
+        }
+      })
+     for(let i=0;i<resultPlant.length;i++){
+       
+      idTypeParam = resultPlant[i].idType
+      idFamilleParam = resultPlant[i].idFamille
+  
+    //type
+    let resultType = connection. query(queryType,[idTypeParam])
+      idType = resultType[0].id
+      nomType = resultType[0].nom
+    //famille
+    let resultFamille = connection. query(queryFamille,[idFamilleParam])
+      idFamille = resultFamille[0].id
+      nomFamille = resultFamille[0].nom
+
+  //affectation des valeurs
+  
+  plante[i].type = {id:idType,nom:nomType}
+  plante[i].famille = {id:idFamille,nom:nomFamille}
+  //console.log(resultPlant)
+     }
+      
+    res.json(plante)
+    } else {
+      res.sendStatus(204)
+      return
+    }  
 })
+
 app.get("/plante/:id",(req,res) => {
   
  
@@ -48,31 +92,36 @@ app.get("/plante/:id",(req,res) => {
   let idFamille 
   let nomFamille
   let resultPlant = connection.query(queryString,[planteId]) 
-    console.log('success1')
-    let plante = resultPlant.map((row) => {
-      return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
-        couleurFleurs:row.couleurFleurs, exposition:row.exposition,
-        sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
-      }
-    })
-   
-    idTypeParam = resultPlant[0].idType   
-    idFamilleParam = resultPlant[0].idFamille   
-
-  //type
-  let resultType = connection. query(queryType,[idTypeParam])
-    idType = resultType[0].id
-    nomType = resultType[0].nom
-  //famille
-  let resultFamille = connection. query(queryFamille,[idFamilleParam])
-    idFamille = resultFamille[0].id
-    nomFamille = resultFamille[0].nom
-
-    //affectation des valeurs
-    plante[0].type = {id:idType,nom:nomType}
-    plante[0].famille = {id:idFamille,nom:nomFamille}
-
-  res.json(plante)
+    if(resultPlant.length > 0){
+      let plante = resultPlant.map((row) => {
+        return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
+          couleurFleurs:row.couleurFleurs, exposition:row.exposition,
+          sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
+        }
+      })
+     
+      idTypeParam = resultPlant[0].idType   
+      idFamilleParam = resultPlant[0].idFamille   
+  
+    //type
+    let resultType = connection. query(queryType,[idTypeParam])
+      idType = resultType[0].id
+      nomType = resultType[0].nom
+    //famille
+    let resultFamille = connection. query(queryFamille,[idFamilleParam])
+      idFamille = resultFamille[0].id
+      nomFamille = resultFamille[0].nom
+  
+      //affectation des valeurs
+      plante[0].type = {id:idType,nom:nomType}
+      plante[0].famille = {id:idFamille,nom:nomFamille}
+      console.log(resultPlant)
+    res.json(plante)
+    } else {
+      res.sendStatus(404)
+      return
+    }
+    
 })
 
 //localhost:3003
