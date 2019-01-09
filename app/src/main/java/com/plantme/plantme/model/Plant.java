@@ -1,8 +1,9 @@
 package com.plantme.plantme.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Plant {
+public class Plant implements Serializable {
     private String frName;
     private String ltnName;
     private String flowerColor;

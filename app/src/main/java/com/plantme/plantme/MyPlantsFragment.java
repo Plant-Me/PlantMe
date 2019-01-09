@@ -3,6 +3,7 @@ package com.plantme.plantme;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import com.plantme.plantme.model.Plant;
 
@@ -26,10 +28,14 @@ import java.util.List;
  */
 public class MyPlantsFragment extends Fragment implements SearchView.OnQueryTextListener {
 
+    private MainActivity mainActivity;
     private RecyclerView recyclerView;
     private PlantViewAdapter plantViewAdapter;
-    List<Plant> plantList = new ArrayList<>();
     private SearchView searchView;
+
+    List<Plant> plantList = new ArrayList<>();
+
+    Fragment plantDetailsFragment;
 
     public MyPlantsFragment() {
         // Required empty public constructor
@@ -64,8 +70,37 @@ public class MyPlantsFragment extends Fragment implements SearchView.OnQueryText
         recyclerView = view.findViewById(R.id.recyclerViewPlants);
         plantViewAdapter = new PlantViewAdapter(plantList);
 
+        mainActivity = (MainActivity)getContext();
+        plantDetailsFragment = mainActivity.getPlantDetailsFragment();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(plantViewAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Plant plant = plantViewAdapter.getPlantList().get(position);
+                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+                mainActivity.replace(plantDetailsFragment);
+
+//                FragmentTransaction fragmentTransaction =  getActivity().getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("selectedPlant", plant);
+//                plantDetailsFragment.setArguments(bundle);
+
+//                fragmentTransaction.replace(android.R.id.content, plantDetailsFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                /*Plant item = plantViewAdapter.getPlantList().get(position);
+                Toast.makeText(getContext(), item.getFrName(), Toast.LENGTH_SHORT).show();*/
+            }
+        }));
     }
 
     @Override
@@ -78,4 +113,6 @@ public class MyPlantsFragment extends Fragment implements SearchView.OnQueryText
         Log.d("searchview", "searchview :  " + s);
         return false;
     }
+
+
 }

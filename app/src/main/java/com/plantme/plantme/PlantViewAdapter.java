@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 
 import com.plantme.plantme.model.Plant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlantViewAdapter extends RecyclerView.Adapter<MyPlantsViewHolder> {
 
-    List<Plant> plantList;
+    private List<Plant> plantList;
 
     public PlantViewAdapter(List<Plant> plantList) {
         this.plantList = plantList;
@@ -35,5 +36,13 @@ public class PlantViewAdapter extends RecyclerView.Adapter<MyPlantsViewHolder> {
     @Override
     public int getItemCount() {
         return plantList.size();
+    }
+
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
     }
 }

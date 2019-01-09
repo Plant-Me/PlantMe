@@ -20,7 +20,10 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     private TabLayout tabLayout;
     Fragment homeDayFragment;
-    Fragment homeWeekFragment;
+    Fragment homeMonthFragment;
+
+    FragmentManager fragmentManager;
+    Fragment activeFragment;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -36,8 +39,6 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout.addOnTabSelectedListener(this);
 
         return rootView;
-
-
     }
 
     @Override
@@ -45,14 +46,22 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         super.onViewCreated(view, savedInstanceState);
 
         homeDayFragment = new HomeDayFragment();
-        homeWeekFragment = new HomeWeekFragment();
-        this.setDefaultFragment(homeDayFragment);
+        homeMonthFragment = new HomeMonthFragment();
+
+        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();
+
+        activeFragment = homeDayFragment;
+
+        fragmentManager.beginTransaction().add(R.id.containerHome, homeDayFragment, "2").hide(homeMonthFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.containerHome, homeMonthFragment, "1").commit();
+
+        //this.setDefaultFragment(homeDayFragment);
     }
 
-    private void setDefaultFragment(Fragment defaultFragment)
+    /*private void setDefaultFragment(Fragment defaultFragment)
     {
         this.replaceFragment(defaultFragment);
-    }
+    }*/
 
     // Replace current Fragment with the destination Fragment.
     public void replaceFragment(Fragment destFragment)
@@ -64,7 +73,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Replace the layout holder with the required Fragment object.
-        fragmentTransaction.replace(R.id.containerTask, destFragment);
+        fragmentTransaction.replace(R.id.containerHome, destFragment);
 
         // Commit the Fragment replace action.
         fragmentTransaction.commit();
@@ -74,10 +83,14 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     public void onTabSelected(TabLayout.Tab tab) {
         switch (tab.getPosition()) {
             case 0 :
-                replaceFragment(homeDayFragment);
+                //replaceFragment(homeDayFragment);
+                fragmentManager.beginTransaction().hide(activeFragment).show(homeDayFragment).commit();
+                activeFragment = homeDayFragment;
                 break;
             case 1 :
-                replaceFragment(homeWeekFragment);
+                //replaceFragment(homeMonthFragment);
+                fragmentManager.beginTransaction().hide(activeFragment).show(homeMonthFragment).commit();
+                activeFragment = homeMonthFragment;
                 break;
         }
     }
