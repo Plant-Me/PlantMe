@@ -3,7 +3,6 @@ package com.plantme.plantme;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -11,11 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Toast;
 
 import com.plantme.plantme.model.Plant;
 
@@ -26,29 +22,22 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyPlantsFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class MyPlantsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
     private PlantViewAdapter plantViewAdapter;
     private SearchView searchView;
 
-    List<Plant> plantList = new ArrayList<>();
+
+    List<Plant> plantList;
 
     Fragment plantDetailsFragment;
 
     public MyPlantsFragment() {
         // Required empty public constructor
-    }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_plants, container, false);
-
-        searchView = view.findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(this);
-
+        plantList = new ArrayList<>();
         Plant orchidee = new Plant("orchidee", "orchideum", "rose", "fleur", "exposition", "sol", "intérieur");
         Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
         Plant abricotier = new Plant("abricotier", "abricotierum", "jaune", "arbre", "exposition", "sol", "verger");
@@ -58,6 +47,37 @@ public class MyPlantsFragment extends Fragment implements SearchView.OnQueryText
         plantList.add(bonsai);
         plantList.add(abricotier);
         plantList.add(cerisier);
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_my_plants, container, false);
+
+        mainActivity = (MainActivity) getContext();
+        setHasOptionsMenu(true);
+        searchView = view.findViewById(R.id.searchView);
+
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Log.d("", "onQueryTextChange: " + s);
+                plantViewAdapter.getFilter().filter(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //CharSequence charSequence = searchView.getQuery();
+                Log.d("", "onQueryTextChange: " + s);
+                plantViewAdapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
+
 
         setUpRecyclerView(view);
 
@@ -66,11 +86,58 @@ public class MyPlantsFragment extends Fragment implements SearchView.OnQueryText
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mainActivity.getMenuInflater().inflate(R.menu.menu_with_filter, menu);
+
+        // Associate searchable configuration with the SearchView
+        /*SearchManager searchManager = (SearchManager) mainActivity.getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(mainActivity.getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);*/
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                Log.d("", "onQueryTextChange: " + query);
+                plantViewAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                Log.d("", "onQueryTextChange: " + query);
+                plantViewAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }*/
+
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewPlants);
         plantViewAdapter = new PlantViewAdapter(plantList);
 
-        mainActivity = (MainActivity)getContext();
         plantDetailsFragment = mainActivity.getPlantDetailsFragment();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -81,38 +148,16 @@ public class MyPlantsFragment extends Fragment implements SearchView.OnQueryText
             public void onClick(View view, int position) {
                 Plant plant = plantViewAdapter.getPlantList().get(position);
                 ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
-                mainActivity.replace(plantDetailsFragment);
+                mainActivity.replaceFragment(plantDetailsFragment);
 
-//                FragmentTransaction fragmentTransaction =  getActivity().getSupportFragmentManager().beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("selectedPlant", plant);
-//                plantDetailsFragment.setArguments(bundle);
-
-//                fragmentTransaction.replace(android.R.id.content, plantDetailsFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                /*Plant item = plantViewAdapter.getPlantList().get(position);
-                Toast.makeText(getContext(), item.getFrName(), Toast.LENGTH_SHORT).show();*/
+                Plant plant = plantViewAdapter.getPlantList().get(position);
+                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+                mainActivity.replaceFragment(plantDetailsFragment);
             }
         }));
     }
-
-    @Override
-    public boolean onQueryTextSubmit(String s) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        Log.d("searchview", "searchview :  " + s);
-        return false;
-    }
-
-
 }

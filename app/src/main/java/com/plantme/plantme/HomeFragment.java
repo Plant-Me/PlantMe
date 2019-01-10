@@ -22,8 +22,8 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     Fragment homeDayFragment;
     Fragment homeMonthFragment;
 
-    FragmentManager fragmentManager;
-    Fragment activeFragment;
+//    FragmentManager fragmentManager;
+    Fragment otherFragment;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -48,20 +48,20 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         homeDayFragment = new HomeDayFragment();
         homeMonthFragment = new HomeMonthFragment();
 
-        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();
+//        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();
 
-        activeFragment = homeDayFragment;
+        otherFragment = homeMonthFragment;
 
-        fragmentManager.beginTransaction().add(R.id.containerHome, homeDayFragment, "2").hide(homeMonthFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.containerHome, homeMonthFragment, "1").commit();
+//        fragmentManager.beginTransaction().add(R.id.containerHome, homeDayFragment, "2").hide(homeMonthFragment).commit();
+//        fragmentManager.beginTransaction().add(R.id.containerHome, homeMonthFragment, "1").commit();
 
-        //this.setDefaultFragment(homeDayFragment);
+        this.setDefaultFragment(homeDayFragment);
     }
 
-    /*private void setDefaultFragment(Fragment defaultFragment)
+    private void setDefaultFragment(Fragment defaultFragment)
     {
         this.replaceFragment(defaultFragment);
-    }*/
+    }
 
     // Replace current Fragment with the destination Fragment.
     public void replaceFragment(Fragment destFragment)
@@ -83,14 +83,14 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     public void onTabSelected(TabLayout.Tab tab) {
         switch (tab.getPosition()) {
             case 0 :
-                //replaceFragment(homeDayFragment);
-                fragmentManager.beginTransaction().hide(activeFragment).show(homeDayFragment).commit();
-                activeFragment = homeDayFragment;
+                replaceFragment(otherFragment);
+//                fragmentManager.beginTransaction().hide(otherFragment).show(homeDayFragment).commit();
+                otherFragment = homeMonthFragment;
                 break;
             case 1 :
-                //replaceFragment(homeMonthFragment);
-                fragmentManager.beginTransaction().hide(activeFragment).show(homeMonthFragment).commit();
-                activeFragment = homeMonthFragment;
+                replaceFragment(otherFragment);
+//                fragmentManager.beginTransaction().hide(otherFragment).show(homeMonthFragment).commit();
+                otherFragment = homeDayFragment;
                 break;
         }
     }

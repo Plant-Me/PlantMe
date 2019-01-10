@@ -16,10 +16,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private TextView mTextMessage;
 
+    private boolean wasInitialized = false;
+
     private BottomNavigationView bottomNavigationView;
     Fragment homeFragment;
     Fragment myPlantsFragment;
     Fragment plantDetailsFragment;
+    Fragment meteoFragment;
 
     final FragmentManager fm = getSupportFragmentManager();
 
@@ -41,44 +44,41 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         homeFragment = new HomeFragment();
         myPlantsFragment = new MyPlantsFragment();
         plantDetailsFragment = new PlantDetailsFragment();
+        meteoFragment = new MeteoFragment();
 
-        activeFragment = homeFragment;
+        //otherFragment = homeFragment;
 
-        fm.beginTransaction().add(R.id.mainContainer, myPlantsFragment, "3").hide(myPlantsFragment).commit();
-        fm.beginTransaction().add(R.id.mainContainer, plantDetailsFragment, "2").hide(plantDetailsFragment).commit();
-        fm.beginTransaction().add(R.id.mainContainer, homeFragment, "1").commit();
+        //fm.beginTransaction().add(R.id.mainContainer, myPlantsFragment, "3").hide(myPlantsFragment).commit();
+        //fm.beginTransaction().add(R.id.mainContainer, plantDetailsFragment, "2").hide(plantDetailsFragment).commit();
+        //fm.beginTransaction().add(R.id.mainContainer, homeFragment, "1").commit();
 
-//        this.setDefaultFragment(homeFragment);
-
+        this.setDefaultFragment(homeFragment);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:
-                previousFragment = activeFragment;
-                fm.beginTransaction().hide(activeFragment).show(homeFragment).commit();
-                activeFragment = homeFragment;
-//                replaceFragment(homeFragment);
+                replaceFragment(homeFragment);
                 return true;
             case R.id.navigation_meteo:
+                replaceFragment(meteoFragment);
                 return true;
             case R.id.navigation_myPlants:
-                previousFragment = activeFragment;
-                fm.beginTransaction().hide(activeFragment).show(myPlantsFragment).commit();
-                activeFragment = myPlantsFragment;
-//                replaceFragment(myPlantsFragment);
+                replaceFragment(myPlantsFragment);
                 return true;
         }
         return false;
     }
 
-    /*private void setDefaultFragment(Fragment defaultFragment) {
+    private void setDefaultFragment(Fragment defaultFragment) {
         this.replaceFragment(defaultFragment);
-    }*/
+    }
 
     // Replace current Fragment with the destination Fragment.
-    /*public void replaceFragment(Fragment destFragment) {
+    public void replaceFragment(Fragment destFragment) {
+
+
         // First get FragmentManager object.
         FragmentManager fragmentManager = this.getSupportFragmentManager();
 
@@ -86,12 +86,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Replace the layout holder with the required Fragment object.
-        fragmentTransaction.replace(R.id.mainContainer, destFragment);
+        if (!wasInitialized) {
+            wasInitialized = true;
+            fragmentTransaction.replace(R.id.mainContainer, destFragment);
+        } else {
+            fragmentTransaction.replace(R.id.mainContainer, destFragment);
+        }
 
         // Commit the Fragment replace action.
+        previousFragment = activeFragment;
+        activeFragment = destFragment;
         fragmentTransaction.commit();
-    }*/
 
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
     public Fragment getPlantDetailsFragment() {
         return plantDetailsFragment;
     }
@@ -104,13 +115,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
-        Log.d("", "onBackPressed: test");
-        if (activeFragment instanceof HomeFragment) {
+        FragmentManager manager = this.getSupportFragmentManager();
+
+        if (activeFragment instanceof PlantDetailsFragment) {
+            replaceFragment(previousFragment);
+        } else if (!(activeFragment instanceof HomeFragment)) {
+            replaceFragment(homeFragment);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        } else {
             super.onBackPressed();
-        } else if (activeFragment instanceof MyPlantsFragment) {
-            super.onBackPressed();
-        } else if (activeFragment instanceof PlantDetailsFragment) {
-            replace(previousFragment);
         }
+
+//        switch (bottomNavigationView.getSelectedItemId()){
+//            case 2 :{
+//                if(manager.getBackStackEntryCount() >0){
+//                    manager.getBackStackEntryAt(manager.getBackStackEntryAt())
+//                }
+//                bottomNavigationView.setSelectedItemId(2);
+//            }
+//        }
+
     }
 }

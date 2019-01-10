@@ -2,6 +2,8 @@ package com.plantme.plantme;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,19 @@ public class PlantDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        detailImagePlant = view.findViewById(R.id.detailImagePlant);
+        detailFrName = view.findViewById(R.id.detailFrName);
+        //detailLtnName = view.findViewById(R.id.detailImagePlant);
+        //detailFlowerColor = view.findViewById(R.id.detailImagePlant);
+        detailType = view.findViewById(R.id.detailType);
+        //detailExposition = view.findViewById(R.id.detailImagePlant);
+        //detailGround = view.findViewById(R.id.detailImagePlant);
+        detailUsage = view.findViewById(R.id.detailUsage);
+        //detailActionType = view.findViewById(R.id.detailImagePlant);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +76,7 @@ public class PlantDetailsFragment extends Fragment {
         detailUsage = view.findViewById(R.id.detailUsage);
         //detailActionType = view.findViewById(R.id.detailImagePlant);
 
-//        bind(plant);
+        bind(plant);
 
         // Inflate the layout for this fragment
         return view;
@@ -76,7 +91,6 @@ public class PlantDetailsFragment extends Fragment {
     public void setPlant(Plant plant) {
         if(this.plant == null || !this.plant.equals(plant)) {
             this.plant = plant;
-            bind(this.plant);
 
         }
     }

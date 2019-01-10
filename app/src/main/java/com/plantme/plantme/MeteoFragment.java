@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeMonthFragment extends Fragment {
+public class MeteoFragment extends Fragment {
 
 
-    public HomeMonthFragment() {
+    public MeteoFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +23,7 @@ public class HomeMonthFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_month, container, false);
+        return inflater.inflate(R.layout.fragment_meteo, container, false);
     }
 
 }
