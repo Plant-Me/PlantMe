@@ -60,7 +60,7 @@ app.get("/plante/:id",(req,res) => {
   connectionAsync.query(queryString,[planteId] ,(err,rows,fields) => {
     if (err){
       console.log("error " + err)
-      res.sendStatus(204)
+      res.sendStatus(404)
       return
     }
     const plante = rows.map((row) => {
@@ -74,6 +74,27 @@ app.get("/plante/:id",(req,res) => {
   })
 })
 
+app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
+
+  const utilisateurId = req.params.idUtilisateur
+  const queryString = "select plante.idPlante,plante.id_image,image.url,plante.id_type,type.nom,plante.usageMilieu,plante.nomFr,plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.nom_personnel "
+  + "from plante inner join image on plante.id_image = image.idImage INNER join plantes_utilisateur on plante.idPlante = plantes_utilisateur.id_plante INNER join type on plante.id_type = type.idType where plantes_utilisateur.id_utilisateur = ? "
+  connectionAsync.query(queryString,[utilisateurId],(err,rows,fields)=> {
+    if (err){
+      console.log("error " + err)
+      res.sendStatus(404)
+      return
+    }
+    const plante = rows.map((row) => {
+      return {idPlante:row.idPlante,idPlanteUtilisateur:row.id_plante_utilisateur, nomFr:row.nomFr,nomPersonnel:row.nom_personnel, usageMilieu:row.usageMilieu,
+        image :{idImage:row.id_image,url:row.url},type:{idType:row.id_type,nom:row.nom}}
+    })
+    res.json(plante)
+  }) 
+    
+    
+    
+})
 //localhost:3003
 app.listen(3000, () => {
   console.log("Server is up and listening on 3000 ...")
