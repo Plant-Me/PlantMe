@@ -2,17 +2,17 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-//const mysql = require('mysql')
-const mysql2 = require('sync-mysql')
+const mysqlAsync = require('mysql')
+const mysqlSync= require('sync-mysql')
 
  //connection mysql
- /*const connection = mysql2.createConnection({
+ const connectionAsync = mysqlAsync.createConnection({
   host: 'localhost',
   user: 'root',
   password:"",
   database: 'PlanteMe'
-})*/
-let connection = new mysql2({
+})
+const connectionSync = new mysqlSync({
   host: 'localhost',
   user: 'root',
   password: '',
@@ -32,97 +32,22 @@ app.get("/", (req,res) => {
 app.get("/plante",(req,res) => {
 
   
-  let idTypeParam 
-  let idFamilleParam 
-  const queryString = "select * from plante "
-  const queryType = "select * from type where id = ?"
-  const queryFamille = "select * from famille where id = ?"
-  let idType 
-  let nomType
-  let idFamille 
-  let nomFamille
-  let resultPlant = connection.query(queryString) 
-    if(resultPlant.length > 0){
-      let plante = resultPlant.map((row) => {
-        return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
-          couleurFleurs:row.couleurFleurs, exposition:row.exposition,
-          sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
-        }
-      })
-     for(let i=0;i<resultPlant.length;i++){
-       
-      idTypeParam = resultPlant[i].idType
-      idFamilleParam = resultPlant[i].idFamille
-  
-    //type
-    let resultType = connection. query(queryType,[idTypeParam])
-      idType = resultType[0].id
-      nomType = resultType[0].nom
-    //famille
-    let resultFamille = connection. query(queryFamille,[idFamilleParam])
-      idFamille = resultFamille[0].id
-      nomFamille = resultFamille[0].nom
-
-  //affectation des valeurs
-  
-  plante[i].type = {id:idType,nom:nomType}
-  plante[i].famille = {id:idFamille,nom:nomFamille}
-  //console.log(resultPlant)
-     }
-      
-    res.json(plante)
-    } else {
+  const queryString = "SELECT idPlante,id_image,nomFr,url, usageMilieu from plante inner JOIN image on plante.id_image = image.idImage "
+  connectionAsync.query(queryString,(err,rows,fields)=> {
+    if (err){
+      console.log("error " + err)
       res.sendStatus(204)
       return
-    }  
-})
-
-app.get("/plante",(req,res) => {
-
-  
-  let idTypeParam 
-  let idFamilleParam 
-  const queryString = "select * from plante "
-  const queryType = "select * from type where id = ?"
-  const queryFamille = "select * from famille where id = ?"
-  let idType 
-  let nomType
-  let idFamille 
-  let nomFamille
-  let resultPlant = connection.query(queryString) 
-    if(resultPlant.length > 0){
-      let plante = resultPlant.map((row) => {
-        return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
-          couleurFleurs:row.couleurFleurs, exposition:row.exposition,
-          sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
-        }
-      })
-     for(let i=0;i<resultPlant.length;i++){
-       
-      idTypeParam = resultPlant[i].idType
-      idFamilleParam = resultPlant[i].idFamille
-  
-    //type
-    let resultType = connection. query(queryType,[idTypeParam])
-      idType = resultType[0].id
-      nomType = resultType[0].nom
-    //famille
-    let resultFamille = connection. query(queryFamille,[idFamilleParam])
-      idFamille = resultFamille[0].id
-      nomFamille = resultFamille[0].nom
-
-  //affectation des valeurs
-  
-  plante[i].type = {id:idType,nom:nomType}
-  plante[i].famille = {id:idFamille,nom:nomFamille}
-  //console.log(resultPlant)
-     }
-      
+    }
+    const plante = rows.map((row) => {
+      return {idPlante:row.id, nomFr:row.nomFr, usageMilieu:row.usageMilieu,
+        image :{idImage:row.id_image,url:row.url}}
+    })
     res.json(plante)
-    } else {
-      res.sendStatus(204)
-      return
-    }  
+  }) 
+    
+    
+    
 })
 
 app.get("/plante/:id",(req,res) => {
@@ -130,46 +55,23 @@ app.get("/plante/:id",(req,res) => {
  
 
   const planteId = req.params.id
-  let idTypeParam 
-  let idFamilleParam 
-  const queryString = "select * from plante where id = ?"
-  const queryType = "select * from type where id = ?"
-  const queryFamille = "select * from famille where id = ?"
-  let idType 
-  let nomType
-  let idFamille 
-  let nomFamille
-  let resultPlant = connection.query(queryString,[planteId]) 
-    if(resultPlant.length > 0){
-      let plante = resultPlant.map((row) => {
-        return {id:row.id, nomFr:row.nomFr, nomLatin:row.nomLatin,
-          couleurFleurs:row.couleurFleurs, exposition:row.exposition,
-          sol:row.sol, usageMilieu:row.usageMilieu,type : {},famille : {}
-        }
-      })
-     
-      idTypeParam = resultPlant[0].idType   
-      idFamilleParam = resultPlant[0].idFamille   
-  
-    //type
-    let resultType = connection. query(queryType,[idTypeParam])
-      idType = resultType[0].id
-      nomType = resultType[0].nom
-    //famille
-    let resultFamille = connection. query(queryFamille,[idFamilleParam])
-      idFamille = resultFamille[0].id
-      nomFamille = resultFamille[0].nom
-  
-      //affectation des valeurs
-      plante[0].type = {id:idType,nom:nomType}
-      plante[0].famille = {id:idFamille,nom:nomFamille}
-      console.log(resultPlant)
-    res.json(plante)
-    } else {
-      res.sendStatus(404)
+  const queryString = "SELECT idPlante,nomFr,nomLatin,description,couleurFleurs,exposition,sol,usageMilieu,famille.idFamille,famille.nom,image.idImage,image.url,type.idType,type.nom from plante "
+   + "inner JOIN famille on plante.id_famille = famille.idFamille INNER JOIN image on plante.id_image = image.idImage INNER join type on plante.id_type = type.idType where plante.idPlante = ?"
+  connectionAsync.query(queryString,[planteId] ,(err,rows,fields) => {
+    if (err){
+      console.log("error " + err)
+      res.sendStatus(204)
       return
     }
-    
+    const plante = rows.map((row) => {
+      return {idPlante:row.idPlante, nomFr:row.nomFr, nomLatin:row.nomLatin,description:row.description,
+        couleurFleurs:row.couleurFleurs, exposition:row.exposition,
+        sol:row.sol, usageMilieu:row.usageMilieu,type : {idType:row.idType,nom:row.nom},image : {idImage:row.idImage,url:row.url},
+        famille : {idFamille:row.idFamille,nom:row.nom}
+      }
+    })
+    res.json(plante)
+  })
 })
 
 //localhost:3003
