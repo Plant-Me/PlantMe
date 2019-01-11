@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,10 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(false);
 
         homeDayFragment = new HomeDayFragment();
         homeMonthFragment = new HomeMonthFragment();

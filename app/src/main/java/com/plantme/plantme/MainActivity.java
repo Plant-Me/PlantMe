@@ -1,5 +1,6 @@
 package com.plantme.plantme;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     Fragment plantDetailsFragment;
     Fragment meteoFragment;
 
-    final FragmentManager fm = getSupportFragmentManager();
+    //final FragmentManager fm = getSupportFragmentManager();
 
     Fragment activeFragment;
     Fragment previousFragment;
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
 
         mTextMessage = findViewById(R.id.message);
-
 
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -107,15 +108,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return plantDetailsFragment;
     }
 
-    public void replace(Fragment destFragment) {
+    /*public void replace(Fragment destFragment) {
         previousFragment = activeFragment;
         fm.beginTransaction().hide(activeFragment).show(destFragment).commit();
         activeFragment = destFragment;
+    }*/
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_with_filter, menu);
+
+        return true;
     }
 
     @Override
     public void onBackPressed() {
-        FragmentManager manager = this.getSupportFragmentManager();
 
         if (activeFragment instanceof PlantDetailsFragment) {
             replaceFragment(previousFragment);
@@ -135,5 +141,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //            }
 //        }
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (activeFragment instanceof PlantDetailsFragment) {
+            replaceFragment(previousFragment);
+        } else if (!(activeFragment instanceof HomeFragment)) {
+            replaceFragment(homeFragment);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        } else {
+            super.onBackPressed();
+        }
+        return super.onSupportNavigateUp();
     }
 }

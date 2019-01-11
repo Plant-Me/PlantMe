@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,6 @@ public class PlantDetailsFragment extends Fragment {
 
     View view;
 
-
-
     public PlantDetailsFragment() {
         // Required empty public constructor
     }
@@ -45,6 +44,9 @@ public class PlantDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
         detailImagePlant = view.findViewById(R.id.detailImagePlant);
         detailFrName = view.findViewById(R.id.detailFrName);
         //detailLtnName = view.findViewById(R.id.detailImagePlant);
@@ -94,4 +96,7 @@ public class PlantDetailsFragment extends Fragment {
 
         }
     }
+
+
+
 }
