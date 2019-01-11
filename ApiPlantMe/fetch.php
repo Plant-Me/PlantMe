@@ -8,7 +8,7 @@ $xpath = new DOMXPath($DOM);
 
 $compteur = 1;
 
-for($compteur; $compteur <= 1; $compteur++) {
+for($compteur; $compteur <= 26; $compteur++) {
   $elementsDiv = $xpath->query("//*[@id=\"contenu\"]/div[2]/div/div[2]/div[".$compteur."]");
   if (!is_null($elementsDiv)) {
     foreach ($elementsDiv as $elementDiv) {
@@ -219,6 +219,7 @@ foreach ($arrayLinks as $key => $value) {
       }
     }
   }
+  echo "Plante : ".$key."\n";
   $arrayPlant["details"] = $arrayDetailPlante;
   $arrayPlanteFinal[$key] = $arrayPlant;
 }
@@ -260,10 +261,14 @@ MODIFY 'idFamille' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
 ksort($arrayFamilleFinal, SORT_STRING);
 $requeteFamille = "INSERT INTO 'famille' ('nom', 'nom_latin') VALUES\n";
 foreach ($arrayFamilleFinal as $famille => $familleValue) {
+  $familleValueNomLatin = "";
+  if($familleValue['nom_latin'] != "_hors AGP III") {
+    $familleValueNomLatin = $familleValue['nom_latin'];
+  }
   if($famille != key(end($arrayFamilleFinal))) {
-    $requeteFamille .= "('".$famille."', '".$familleValue['nom_latin']."'),\n";
+    $requeteFamille .= "('".$famille."', '".$familleValueNomLatin."'),\n";
   } else {
-    $requeteFamille .= "('".$famille."', '".$familleValue['nom_latin']."');";
+    $requeteFamille .= "('".$famille."', '".$familleValueNomLatin."');";
   }
 }
 
@@ -292,9 +297,9 @@ $requeteTypeCreate = "CREATE TABLE 'type' (
   'nom' varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
 
-$requeteTypeAlter = "ALTER TABLE 'type'\n
-ADD PRIMARY KEY ('idType'),\n
-MODIFY 'idType' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
+$requeteTypeAlter = "ALTER TABLE 'type'
+ADD PRIMARY KEY ('idType'),
+MODIFY 'idType' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
 
 sort($arrayTypeFinal, SORT_STRING);
 $requeteType = "INSERT INTO 'type' ('nom') VALUES\n";
@@ -452,30 +457,25 @@ foreach ($arrayPlanteFinal as $plantName => $plant) {
 
   if(array_key_exists("calendriers", $plant)) {
     foreach ($plant["calendriers"] as $typeCalendrier => $calendrier) {
-      if(is_array($calendrier)) {
-        foreach ($calendrier as $mois) {
+      foreach ($calendrier as $mois) {
+        if($mois != "gel") {
           $requetePlanteCalendrier .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($typeCalendrier, $arrayCalendrierFinal)+1).", ".$mois.")";
           if($mois != end($calendrier)) {
             $requetePlanteCalendrier = $requetePlanteCalendrier.",\n";
           }
-        }
-      } else {
-        if($calendrier != end($plant["calendriers"])) {
-          $requetePlanteCalendrier .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($typeCalendrier, $arrayCalendrierFinal)+1).", ".$calendrier.")),\n";
         } else {
-          $requetePlanteCalendrier .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($typeCalendrier, $arrayCalendrierFinal)+1).", ".$calendrier."))";
+          $requetePlanteCalendrier = substr($requetePlanteCalendrier, 0, -2).";";
         }
+
       }
-      if($typeCalendrier != end(array_keys($plant["calendriers"]))) {
+      $arrayKeys = array_keys($plant["calendriers"]);
+      if($typeCalendrier != end($arrayKeys)) {
         $requetePlanteCalendrier = $requetePlanteCalendrier.",\n";
       }
     }
   }
 
-  // $requetePlanteCalendrier
-
   if($plant != end($arrayPlanteFinal)) {
-    var_dump($plant);
     $requetePlante .= "(".$id_image.", ".$id_famille.", '".$nomFr."', '".$desciption."', '".$nomLatin."', '".$couleurFleurs."', '".$exposition."', '".$sol."', '".$usageMilieu."'),\n";
     if(array_key_exists("type", $plant["details"])){
       $requetePlanteType = $requetePlanteType.",\n";
@@ -495,7 +495,7 @@ foreach ($arrayPlanteFinal as $plantName => $plant) {
   }
 }
 
-$fpCalendrierRequete = fopen('calendrier.sql', 'w');
+$fpCalendrierRequete = fopen('action_calendrier.sql', 'w');
 fwrite($fpCalendrierRequete, $requeteCalendrierCreate);
 fwrite($fpCalendrierRequete, $requeteSautLigne);
 fwrite($fpCalendrierRequete, $requeteCalendrierAlter);
