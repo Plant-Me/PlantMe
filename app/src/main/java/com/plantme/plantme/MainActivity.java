@@ -1,18 +1,20 @@
 package com.plantme.plantme;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.plantme.plantme.fragment.HomeFragment;
+import com.plantme.plantme.fragment.MeteoFragment;
+import com.plantme.plantme.fragment.MyPlantsFragment;
+import com.plantme.plantme.fragment.PlantDetailsFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 

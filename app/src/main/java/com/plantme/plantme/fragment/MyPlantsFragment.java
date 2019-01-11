@@ -1,4 +1,4 @@
-package com.plantme.plantme;
+package com.plantme.plantme.fragment;
 
 
 import android.os.Bundle;
@@ -16,6 +16,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.plantme.plantme.MainActivity;
+import com.plantme.plantme.PlantViewAdapter;
+import com.plantme.plantme.R;
+import com.plantme.plantme.RecyclerTouchListener;
+import com.plantme.plantme.fragment.PlantDetailsFragment;
 import com.plantme.plantme.model.Plant;
 
 import java.util.ArrayList;
@@ -114,7 +119,6 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
-                Log.d("", "onQueryTextChange: " + query);
                 plantViewAdapter.getFilter().filter(query);
                 return false;
             }
@@ -122,7 +126,6 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
-                Log.d("", "onQueryTextChange: " + query);
                 plantViewAdapter.getFilter().filter(query);
                 return false;
             }

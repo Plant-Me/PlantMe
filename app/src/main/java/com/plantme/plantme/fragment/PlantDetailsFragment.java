@@ -1,4 +1,4 @@
-package com.plantme.plantme;
+package com.plantme.plantme.fragment;
 
 
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.plantme.plantme.MainActivity;
+import com.plantme.plantme.R;
 import com.plantme.plantme.model.Plant;
 
 import org.w3c.dom.Text;
