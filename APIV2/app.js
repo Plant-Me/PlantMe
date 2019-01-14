@@ -258,16 +258,22 @@ app.post("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
   const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
-  connectionAsync.query(queryString,[plantesUtilisateur.id_utilisateur,plantesUtilisateur.id_plante,plantesUtilisateur.nom_personnel],(err,rows,fields)=> {
-    if (err){
-      console.log("error " + err)
-      res.sendStatus(404)
-      return
-    }
-    else {
-      res.send('PlantesUtilisateur inserted',200)
-    }   
-})
+  console.log("plante " + plantesUtilisateur)
+  for(let i=0;i<plantesUtilisateur.length;i++){
+            
+    connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel],(err,rows,fields)=> {
+      if (err){
+        console.log("error " + err)
+        res.sendStatus(404)
+        return
+      }
+      else {
+        res.status(200).send('PlantesUtilisateur inserted')
+      }   
+  })
+  }
+  
+ 
 })
 
 
@@ -275,16 +281,21 @@ app.delete("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
   const queryString = "DELETE FROM plantes_utilisateur WHERE plantes_utilisateur.id_plante_utilisateur = ?"
-  connectionAsync.query(queryString,[plantesUtilisateur.id_plante_utilisateur],(err,rows,fields)=> {
-    if (err){
-      console.log("error " + err)
-      res.sendStatus(404)
-      return
-    }
-    else {
-      res.send('PlantesUtilisateur deleted',200)
-    }   
-})
+  for(let i=0;i<plantesUtilisateur.length;i++){
+  
+    connectionAsync.query(queryString,[plantesUtilisateur[i].id_plante_utilisateur],(err,rows,fields)=> {
+      if (err){
+        console.log("error " + err)
+        res.sendStatus(404)
+        return
+      }
+      else {
+        res.status(200).send('PlantesUtilisateur deleted')
+      }   
+  })
+  
+  }
+  
 })
 
 
