@@ -4,6 +4,8 @@ const app = express()
 const morgan = require('morgan')
 const mysqlAsync = require('mysql')
 const mysqlSync= require('sync-mysql')
+const bodyParser= require('body-parser')
+
 
  //connection mysql
  const connectionAsync = mysqlAsync.createConnection({
@@ -20,8 +22,10 @@ const connectionSync = new mysqlSync({
 });
 
 
-
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
 app.use(morgan('combined'))
+
 
 
 app.get("/", (req,res) => {
@@ -249,7 +253,43 @@ app.get("/utilisateur/:idUtilisateur/plante/:idPlanteUtilisateur",(req,res) => {
   }
     
 })
-//localhost:3003
+
+app.post("/plantesUtilisateur",(req,res) => {
+
+  let plantesUtilisateur = req.body
+  const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
+  connectionAsync.query(queryString,[plantesUtilisateur.id_utilisateur,plantesUtilisateur.id_plante,plantesUtilisateur.nom_personnel],(err,rows,fields)=> {
+    if (err){
+      console.log("error " + err)
+      res.sendStatus(404)
+      return
+    }
+    else {
+      res.send('PlantesUtilisateur inserted',200)
+    }   
+})
+})
+
+
+app.delete("/plantesUtilisateur",(req,res) => {
+
+  let plantesUtilisateur = req.body
+  const queryString = "DELETE FROM plantes_utilisateur WHERE plantes_utilisateur.id_plante_utilisateur = ?"
+  connectionAsync.query(queryString,[plantesUtilisateur.id_plante_utilisateur],(err,rows,fields)=> {
+    if (err){
+      console.log("error " + err)
+      res.sendStatus(404)
+      return
+    }
+    else {
+      res.send('PlantesUtilisateur deleted',200)
+    }   
+})
+})
+
+
+
+//localhost:3000
 app.listen(3000, () => {
   console.log("Server is up and listening on 3000 ...")
 })
