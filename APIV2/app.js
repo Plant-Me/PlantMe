@@ -55,7 +55,8 @@ app.get("/plante/:id",(req,res) => {
  
 
   const planteId = req.params.id
-  const queryString = "SELECT idPlante,nomFr,nomLatin,description,couleurFleurs,exposition,sol,usageMilieu,famille.idFamille,famille.nom as nomFamille,image.idImage,image.url,type.idType,type.nom from plante inner JOIN famille on plante.id_famille = famille.idFamille INNER JOIN image on plante.id_image = image.idImage INNER join type on plante.id_type = type.idType where plante.idPlante = ?"
+  const queryString3 = "SELECT type.idType,type.nom from type,plante_type where plante_type.id_type = type.idType and plante_type.id_plante = ?"
+  const queryString = "SELECT idPlante,nomFr,plante.nomLatin,description,couleurFleurs,exposition,sol,usageMilieu,famille.idFamille,famille.nom as nomFamille,image.idImage,image.url from plante inner JOIN famille on plante.id_famille = famille.idFamille INNER JOIN image on plante.id_image = image.idImage  where plante.idPlante = ?"
   const queryString2 = "SELECT * FROM plante_calendrier inner join action_calendrier on action_calendrier.idActionCalendrier = plante_calendrier.id_action_calendrier inner join mois on mois.idMois = plante_calendrier.id_mois WHERE plante_calendrier.id_plante = ?"
   
   let resultquery1 = connectionSync.query(queryString,[planteId])
@@ -63,12 +64,25 @@ app.get("/plante/:id",(req,res) => {
       let plante = resultquery1.map((row) => {
         return {idPlante:row.idPlante, nomFr:row.nomFr, nomLatin:row.nomLatin,description:row.description,
           couleurFleurs:row.couleurFleurs, exposition:row.exposition,
-          sol:row.sol, usageMilieu:row.usageMilieu,type : {idType:row.idType,nom:row.nom},image : {idImage:row.idImage,url:row.url},
+          sol:row.sol, usageMilieu:row.usageMilieu,type : [],image : {idImage:row.idImage,url:row.url},
           famille : {idFamille:row.idFamille,nom:row.nomFamille}, 
           actions : []
       
         }
       })
+      let resultquery3 = connectionSync.query(queryString3,[planteId])
+        if (resultquery3.length > 0){
+          for(let i=0;i<resultquery3.length;i++){
+
+            plante[0].type[i] = {
+              idType : resultquery3[i].idType,                
+              nom : resultquery3[i].nom
+            }     
+          }
+        }else {
+          res.sendStatus(404)
+          return
+        }
         let resultquery2 = connectionSync.query(queryString2,[planteId])
         if (resultquery2.length > 0){
           for(let i=0;i<resultquery2.length;i++){
@@ -95,20 +109,53 @@ app.get("/plante/:id",(req,res) => {
 app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
 
   const utilisateurId = req.params.idUtilisateur
-  const queryString = "select plante.idPlante,plante.id_image,image.url,plante.id_type,type.nom,plante.usageMilieu,plante.nomFr,plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.nom_personnel "
-  + "from plante inner join image on plante.id_image = image.idImage INNER join plantes_utilisateur on plante.idPlante = plantes_utilisateur.id_plante INNER join type on plante.id_type = type.idType where plantes_utilisateur.id_utilisateur = ? "
-  connectionAsync.query(queryString,[utilisateurId],(err,rows,fields)=> {
-    if (err){
-      console.log("error " + err)
+  const queryString1 = "select DISTINCT image.url,plante.usageMilieu,plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.nom_personnel,plante.nomFr from image,plante,plantes_utilisateur,plante_type where image.idImage = plante.id_image and plante_type.id_plante = plante.idPlante and plantes_utilisateur.id_plante = plante.idPlante and plantes_utilisateur.id_utilisateur = ?"
+  const queryString3 = "SELECT  id_plante from plantes_utilisateur where id_utilisateur = ?"
+  const queryString2 = "SELECT type.idType,type.nom from type,plante_type where plante_type.id_type = type.idType and plante_type.id_plante = ?"
+  let resultquery1 = connectionSync.query(queryString1,[utilisateurId])
+  if (resultquery1.length > 0){
+    let plante = resultquery1.map((row) => {
+    return {url:row.url,usageMilieu:row.usageMilieu,idPlanteUtilisateur:row.id_plante_utilisateur,nomPersonnel:row.nom_personnel,nomFr:row.nomFr,type:[]}
+    })
+
+    let resultquery3 = connectionSync.query(queryString3,[utilisateurId])
+    if (resultquery3.length > 0){
+      console.log("g,eg,e " +resultquery3.length )
+      for(let i=0;i<resultquery3.length;i++){
+        let resultquery2 = connectionSync.query(queryString2,[resultquery3[i].id_plante])
+        if (resultquery2.length > 0){
+          for(let j=0;j<resultquery2.length;j++){
+            
+            plante[i].type[j] = {
+              idType : resultquery2[j].idType,                
+              nom : resultquery2[j].nom
+            }     
+          }
+          
+        }else {
+          console.log("not found1")
+          res.sendStatus(404)
+          return
+        }
+      }
+      
+    }else {
+      console.log("not found")
       res.sendStatus(404)
       return
     }
-    const plante = rows.map((row) => {
-      return {idPlante:row.idPlante,idPlanteUtilisateur:row.id_plante_utilisateur, nomFr:row.nomFr,nomPersonnel:row.nom_personnel, usageMilieu:row.usageMilieu,
-        image :{idImage:row.id_image,url:row.url},type:{idType:row.id_type,nom:row.nom}}
-    })
+
+    
+
+
+
     res.json(plante)
-  })   
+  }else {
+    console.log("not found")
+    res.sendStatus(404)
+    return
+  }
+    
 })
 
 app.get("/utilisateur/:idUtilisateur/plante/:idPlanteUtilisateur",(req,res) => {
@@ -116,7 +163,8 @@ app.get("/utilisateur/:idUtilisateur/plante/:idPlanteUtilisateur",(req,res) => {
   const idPlanteUtilisateur = req.params.idPlanteUtilisateur
   const idUtilisateur = req.params.idUtilisateur
   const queryString = "select * from plantes_utilisateur where id_plante_utilisateur = ? and id_utilisateur = ?"
-  const queryString3 = "select plante.nomFr,famille.nom as nomFamille,type.nom as nomType from plante inner join famille on plante.id_famille = famille.idFamille inner join type on plante.id_type = type.idType where plante.idPlante = (SELECT id_plante from plantes_utilisateur where id_plante_utilisateur = ? and id_utilisateur = ?)"
+  const queryString5 = "SELECT type.idType,type.nom from type,plante_type where plante_type.id_type = type.idType and plante_type.id_plante = (SELECT id_plante from plantes_utilisateur where id_plante_utilisateur = ? and id_utilisateur = ?)"
+  const queryString3 = "select plante.nomFr,famille.nom as nomFamille,type.nom as nomType from plante,famille,type,plante_type where plante.id_famille = famille.idFamille and type.idType = plante_type.id_type and plante_type.id_plante = plante.idPlante and plante.idPlante = (SELECT id_plante from plantes_utilisateur where id_plante_utilisateur = ? and id_utilisateur = ?)"
   const queryString2 = "SELECT plante_action_utilisateur.date,action_utilisateur.idActionUtilisateur,action_utilisateur.nomAction,plantes_utilisateur.id_plante_utilisateur FROM plante_action_utilisateur inner join action_utilisateur on plante_action_utilisateur.id_action_utilisateur = action_utilisateur.idActionutilisateur inner join plantes_utilisateur on plante_action_utilisateur.id_plante_utilisateur = plantes_utilisateur.id_plante_utilisateur where plantes_utilisateur.id_plante_utilisateur = ?"
   const queryString4 ="SELECT * FROM plante_calendrier inner join action_calendrier on action_calendrier.idActionCalendrier = plante_calendrier.id_action_calendrier inner join mois on mois.idMois = plante_calendrier.id_mois WHERE plante_calendrier.id_plante = (SELECT id_plante from plantes_utilisateur where id_plante_utilisateur = ? and id_utilisateur = ?)"
   let resultquery1 = connectionSync.query(queryString,[idPlanteUtilisateur,idUtilisateur])
@@ -147,15 +195,31 @@ app.get("/utilisateur/:idUtilisateur/plante/:idPlanteUtilisateur",(req,res) => {
             plante[0].plante = {
               nomPlante : resultquery3[0].nomFr,
               nomFamille : resultquery3[0].nomFamille,
-              nomType : resultquery3[0].nomType ,
+              type : [],
               actionPlante : []
+            }
+            let resultquery5 = connectionSync.query(queryString5,[idPlanteUtilisateur,idUtilisateur])
+            if (resultquery5.length > 0){    
+                
+              for(let i=0;i<resultquery5.length;i++){
+                
+                plante[0].plante.type[i] = {
+                  idType : resultquery5[i].idType,                
+                  nom : resultquery5[i].nom,
+                }      
+              } 
+              
+            }else {
+             
+              res.sendStatus(404)
+              return
             }
             let resultquery4 = connectionSync.query(queryString4,[idPlanteUtilisateur,idUtilisateur])
             if (resultquery4.length > 0){    
                 
               for(let i=0;i<resultquery4.length;i++){
                 
-                plante[0].actionPlante[i] = {
+                plante[0].plante.actionPlante[i] = {
                   idActionCalendrier : resultquery4[i].idActionCalendrier,
                   idType : resultquery4[i].type,
                   idMois : resultquery4[i].idMois,
