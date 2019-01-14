@@ -5,13 +5,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.User;
+import com.plantme.plantme.model.UserPlant;
 
-public class MyPlantsViewHolder extends RecyclerView.ViewHolder {
+public class PlantsViewHolder extends RecyclerView.ViewHolder {
     private TextView tvPlantName;
     private TextView tvPlantType;
     private TextView tvPlantUsage;
 
-    public MyPlantsViewHolder(View viewItem) {
+    public PlantsViewHolder(View viewItem) {
         super(viewItem);
 
         tvPlantName = viewItem.findViewById(R.id.tvPlantName);

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Plant implements Serializable {
+    private String imageUrl;
     private String frName;
     private String ltnName;
     private String flowerColor;
@@ -11,7 +12,7 @@ public class Plant implements Serializable {
     private String exposition;
     private String ground;
     private String usage;
-    private List<ActionType> actionType;
+    private List<ActionCalendrier> actionCalendrier;
 
     public Plant() {
 
@@ -84,11 +85,19 @@ public class Plant implements Serializable {
         usage = usage;
     }
 
-    public List<ActionType> getActionType() {
-        return actionType;
+    public List<ActionCalendrier> getActionCalendrier() {
+        return actionCalendrier;
     }
 
-    public void setActionType(List<ActionType> actionType) {
-        this.actionType = actionType;
+    public void setActionCalendrier(List<ActionCalendrier> actionCalendrier) {
+        this.actionCalendrier = actionCalendrier;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
 
-        homeDayFragment = new HomeDayFragment();
+        homeDayFragment = new HomeWeekFragment();
         homeMonthFragment = new HomeMonthFragment();
 
 //        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();

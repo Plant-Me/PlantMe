@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.UserPlant;
 
 import org.w3c.dom.Text;
 
@@ -26,7 +26,7 @@ import java.util.zip.Inflater;
  */
 public class PlantDetailsFragment extends Fragment {
 
-    Plant plant;
+    UserPlant userPlant;
     ImageView detailImagePlant;
     TextView detailFrName;
     TextView detailLtnName;
@@ -80,21 +80,21 @@ public class PlantDetailsFragment extends Fragment {
         detailUsage = view.findViewById(R.id.detailUsage);
         //detailActionType = view.findViewById(R.id.detailImagePlant);
 
-        bind(plant);
+        bind(userPlant);
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    public void bind(Plant plant) {
-        detailFrName.setText(plant.getFrName());
-        detailType.setText(plant.getType());
-        detailUsage.setText(plant.getUsage());
+    public void bind(UserPlant userPlant) {
+        detailFrName.setText(userPlant.getUserPlant().getFrName());
+        detailType.setText(userPlant.getUserPlant().getType());
+        detailUsage.setText(userPlant.getUserPlant().getUsage());
     }
 
-    public void setPlant(Plant plant) {
-        if(this.plant == null || !this.plant.equals(plant)) {
-            this.plant = plant;
+    public void setPlant(UserPlant userPlant) {
+        if(this.userPlant == null || !this.userPlant.equals(userPlant)) {
+            this.userPlant = userPlant;
 
         }
     }

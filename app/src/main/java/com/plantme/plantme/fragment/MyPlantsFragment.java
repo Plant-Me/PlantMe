@@ -17,11 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.plantme.plantme.MainActivity;
-import com.plantme.plantme.PlantViewAdapter;
+import com.plantme.plantme.adapter.PlantViewAdapter;
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
-import com.plantme.plantme.fragment.PlantDetailsFragment;
+import com.plantme.plantme.adapter.UserPlantViewAdapter;
 import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.User;
+import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +36,17 @@ public class MyPlantsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
-    private PlantViewAdapter plantViewAdapter;
+    private UserPlantViewAdapter userPlantViewAdapter;
     private SearchView searchView;
 
 
-    List<Plant> plantList;
 
     Fragment plantDetailsFragment;
 
     public MyPlantsFragment() {
         // Required empty public constructor
 
-        plantList = new ArrayList<>();
-        Plant orchidee = new Plant("orchidee", "orchideum", "rose", "fleur", "exposition", "sol", "intérieur");
-        Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
-        Plant abricotier = new Plant("abricotier", "abricotierum", "jaune", "arbre", "exposition", "sol", "verger");
-        Plant cerisier = new Plant("cerisier", "cerisierum", "rose", "arbre", "exposition", "sol", "verger");
 
-        plantList.add(orchidee);
-        plantList.add(bonsai);
-        plantList.add(abricotier);
-        plantList.add(cerisier);
     }
 
 
@@ -72,7 +64,7 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d("", "onQueryTextChange: " + s);
-                plantViewAdapter.getFilter().filter(s);
+                userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
 
@@ -80,7 +72,7 @@ public class MyPlantsFragment extends Fragment {
             public boolean onQueryTextChange(String s) {
                 //CharSequence charSequence = searchView.getQuery();
                 Log.d("", "onQueryTextChange: " + s);
-                plantViewAdapter.getFilter().filter(s);
+                userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
         });
@@ -119,14 +111,14 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
-                plantViewAdapter.getFilter().filter(query);
+                userPlantViewAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
-                plantViewAdapter.getFilter().filter(query);
+                userPlantViewAdapter.getFilter().filter(query);
                 return false;
             }
         });
@@ -150,26 +142,26 @@ public class MyPlantsFragment extends Fragment {
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewPlants);
-        plantViewAdapter = new PlantViewAdapter(plantList);
+        userPlantViewAdapter = new UserPlantViewAdapter(mainActivity.getPlantUserList());
 
         plantDetailsFragment = mainActivity.getPlantDetailsFragment();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(plantViewAdapter);
+        recyclerView.setAdapter(userPlantViewAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Plant plant = plantViewAdapter.getPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+                UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
+                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
 
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                Plant plant = plantViewAdapter.getPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+                UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
+                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
             }
         }));

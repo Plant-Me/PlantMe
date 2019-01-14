@@ -1,4 +1,4 @@
-package com.plantme.plantme;
+package com.plantme.plantme.adapter;
 
 
 import android.support.annotation.NonNull;
@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.plantme.plantme.PlantsViewHolder;
+import com.plantme.plantme.R;
 import com.plantme.plantme.model.Plant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlantViewAdapter extends RecyclerView.Adapter<MyPlantsViewHolder> implements Filterable {
+public class PlantViewAdapter extends RecyclerView.Adapter<PlantsViewHolder> implements Filterable {
 
     private final List<Plant> plantList;
     private List<Plant> plantListFiltered;
@@ -27,15 +29,15 @@ public class PlantViewAdapter extends RecyclerView.Adapter<MyPlantsViewHolder> i
 
     @NonNull
     @Override
-    public MyPlantsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rv_my_plants,viewGroup,false);
-        return new MyPlantsViewHolder(view);
+    public PlantsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rv_plants,viewGroup,false);
+        return new PlantsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyPlantsViewHolder myPlantsViewHolder, int i) {
+    public void onBindViewHolder(PlantsViewHolder plantsViewHolder, int i) {
         Plant plant = plantListFiltered.get(i);
-        myPlantsViewHolder.bind(plant);
+        plantsViewHolder.bind(plant);
     }
 
     @Override
