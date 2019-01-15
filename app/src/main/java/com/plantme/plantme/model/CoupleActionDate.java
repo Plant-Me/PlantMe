@@ -8,7 +8,7 @@ public class CoupleActionDate {
     private String plantName;
     private UserAction userAction;
     private Date date;
-    private SimpleDateFormat sdf;
+    private boolean isValidated = false;
 
     public CoupleActionDate(String plantName, UserAction userAction, Date date) {
         this.plantName = plantName;
@@ -38,5 +38,13 @@ public class CoupleActionDate {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isValidated() {
+        return isValidated;
+    }
+
+    public void setValidated(boolean validated) {
+        isValidated = validated;
     }
 }

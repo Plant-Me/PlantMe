@@ -1,17 +1,14 @@
 package com.plantme.plantme.fragment;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.drm.DrmStore;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,7 +19,6 @@ import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.adapter.ActionViewAdapter;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.UserAction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +32,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.widget.TextView;
 
 
 /**
@@ -44,15 +41,23 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class HomeWeekFragment extends Fragment {
 
     private MainActivity mainActivity;
+
     private RecyclerView recyclerViewToday;
     private ActionViewAdapter actionViewAdapterToday;
     private RecyclerView recyclerViewNextDays;
     private ActionViewAdapter actionViewAdapterNextDays;
+    private RecyclerView recyclerViewPast;
+    private ActionViewAdapter actionViewAdapterPast;
+
     private List<CoupleActionDate> listCoupleActionDate;
     private List<CoupleActionDate> listCoupleActionDateToday;
     private List<CoupleActionDate> listCoupleActionDateNextDays;
+    private List<CoupleActionDate> listCoupleActionDatePast;
+    private TextView tvNextDays;
+    private TextView tvPastDays;
 
-    SwipeController swipeController = null;
+    SwipeController swipeControllerToday = null;
+    SwipeController swipeControllerPast = null;
 
     private RecyclerView.ViewHolder currentItemViewHolder = null;
 
@@ -68,6 +73,7 @@ public class HomeWeekFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_week, container, false);
 
         mainActivity = (MainActivity)getContext();
+        tvNextDays = view.findViewById(R.id.nextDays);
 
         setUpRecyclerView(view);
 
@@ -86,10 +92,13 @@ public class HomeWeekFragment extends Fragment {
     private void setUpRecyclerView(View view) {
         recyclerViewToday = view.findViewById(R.id.rvActionsToday);
         recyclerViewNextDays = view.findViewById(R.id.rvNextActions);
+        recyclerViewPast = view.findViewById(R.id.rvPastActions);
         listCoupleActionDate = mainActivity.getListCoupleActionDate();
         listCoupleActionDateToday = new ArrayList<>();
         listCoupleActionDateNextDays = new ArrayList<>();
+        listCoupleActionDatePast = new ArrayList<>();
 
+        //On associe une action à un recyclerView en fonction de la date de l'action
         for(CoupleActionDate coupleActionDate : listCoupleActionDate) {
             Calendar today = new GregorianCalendar();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
@@ -107,21 +116,59 @@ public class HomeWeekFragment extends Fragment {
                 listCoupleActionDateToday.add(coupleActionDate);
             } else if (coupleActionDate.getDate().after(today.getTime()) && coupleActionDate.getDate().before(nextSevenDays)) {
                 listCoupleActionDateNextDays.add(coupleActionDate);
+            } else if (coupleActionDate.getDate().before(today.getTime()) && coupleActionDate.isValidated() == false) {
+                listCoupleActionDatePast.add(coupleActionDate);
             }
         }
 
         actionViewAdapterToday = new ActionViewAdapter(listCoupleActionDateToday);
-        actionViewAdapterNextDays = new ActionViewAdapter(listCoupleActionDateNextDays);
-
         recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewToday.setAdapter(actionViewAdapterToday);
 
+        actionViewAdapterNextDays = new ActionViewAdapter(listCoupleActionDateNextDays);
         recyclerViewNextDays.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewNextDays.setAdapter(actionViewAdapterNextDays);
 
+        actionViewAdapterPast = new ActionViewAdapter(listCoupleActionDatePast);
+        recyclerViewPast.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewPast.setAdapter(actionViewAdapterPast);
 
+        if(listCoupleActionDateNextDays.isEmpty()) {
+            tvNextDays.setVisibility(View.GONE);
+            recyclerViewNextDays.setVisibility(View.GONE);
+        }
 
-        swipeController = new SwipeController(new SwipeControllerActions() {
+        if(listCoupleActionDatePast.isEmpty()) {
+            tvPastDays.setVisibility(View.GONE);
+            recyclerViewPast.setVisibility(View.GONE);
+        } else {
+            swipeControllerPast = new SwipeController(new SwipeControllerActions() {
+                @Override
+                public void onRightClicked(int position) {
+                }
+
+                @Override
+                public void onLeftClicked(int position) {
+                    removePositionToday(actionViewAdapterPast, position);
+                    CoupleActionDate coupleActionDate = listCoupleActionDatePast.get(position);
+                    coupleActionDate.setValidated(true);
+                }
+            }, false);
+//            swipeControllerPast.setActionsToday(false);
+
+            ItemTouchHelper itemTouchHelperPastDays = new ItemTouchHelper(swipeControllerPast);
+            itemTouchHelperPastDays.attachToRecyclerView(recyclerViewPast);
+
+            recyclerViewPast.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                    swipeControllerPast.onDraw(c);
+                }
+            });
+
+        }
+
+        swipeControllerToday = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
                 ReportActionDialogFragment dialog = new ReportActionDialogFragment();
@@ -133,33 +180,34 @@ public class HomeWeekFragment extends Fragment {
 
             @Override
             public void onLeftClicked(int position) {
-                removePositionToday(position);
+                removePositionToday(actionViewAdapterToday, position);
+                CoupleActionDate coupleActionDate = listCoupleActionDateToday.get(position);
+                coupleActionDate.setValidated(true);
             }
-        });
+        }, true);
+//        swipeControllerToday.setActionsToday(true);
 
-        ItemTouchHelper itemTouchHelperToday = new ItemTouchHelper(swipeController);
+        ItemTouchHelper itemTouchHelperToday = new ItemTouchHelper(swipeControllerToday);
         itemTouchHelperToday.attachToRecyclerView(recyclerViewToday);
 
         recyclerViewToday.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
+                swipeControllerToday.onDraw(c);
             }
         });
     }
 
-
-    public void removePositionToday(int position) {
-        actionViewAdapterToday.getListCoupleActionDates().remove(position);
-//        actionViewAdapterToday.notifyItemRemoved(position);
-//        actionViewAdapterToday.notifyItemRangeChanged(position, actionViewAdapterToday.getItemCount());
-        actionViewAdapterToday.notifyDataSetChanged();
+    public void removePositionToday(ActionViewAdapter actionViewAdapter, int position) {
+        actionViewAdapter.getListCoupleActionDates().remove(position);
+        actionViewAdapter.notifyDataSetChanged();
     }
 
     public void addPositionNextDays(int position) {
         CoupleActionDate coupleActionDate = actionViewAdapterToday.getListCoupleActionDates().get(position);
         listCoupleActionDateNextDays.add(coupleActionDate);
-//        actionViewAdapterNextDays.notifyItemRangeChanged(position, actionViewAdapterNextDays.getItemCount());
+        tvNextDays.setVisibility(View.VISIBLE);
+        recyclerViewNextDays.setVisibility(View.VISIBLE);
         actionViewAdapterNextDays.notifyDataSetChanged();
     }
 
@@ -167,12 +215,11 @@ public class HomeWeekFragment extends Fragment {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(coupleActionDate.getDate());
         calendar.add(Calendar.DAY_OF_MONTH, days);
-//        calendar.add(coupleActionDate.getDate().getDay(), +days);
         Date newDate = calendar.getTime();
         coupleActionDate.setDate(newDate);
 
         addPositionNextDays(position);
-        removePositionToday(position);
+        removePositionToday(actionViewAdapterToday, position);
     }
 
 

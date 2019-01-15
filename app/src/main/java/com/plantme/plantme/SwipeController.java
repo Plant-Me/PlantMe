@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -22,24 +23,27 @@ enum ButtonsState {
 public class SwipeController extends Callback {
 
     private boolean swipeBack = false;
-
     private ButtonsState buttonShowedState = ButtonsState.GONE;
-
     private RectF buttonInstance = null;
-
     private RecyclerView.ViewHolder currentItemViewHolder = null;
-
     private SwipeControllerActions buttonsActions = null;
-
     private static final float buttonWidth = 300;
+    private boolean isActionsToday = true;
+    private RectF rightButton;
+    private RectF leftButton;
 
-    public SwipeController(SwipeControllerActions buttonsActions) {
+    public SwipeController(SwipeControllerActions buttonsActions, boolean isActionsToday) {
         this.buttonsActions = buttonsActions;
+        this.isActionsToday = isActionsToday;
     }
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, LEFT | RIGHT);
+        if (isActionsToday) {
+            return makeMovementFlags(0, LEFT | RIGHT);
+        } else {
+            return makeMovementFlags(0, RIGHT);
+        }
     }
 
     @Override
@@ -65,8 +69,12 @@ public class SwipeController extends Callback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
-                if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -buttonWidth);
+                if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+                    dX = Math.max(dX, buttonWidth);
+                }
+                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE && isActionsToday) {
+                    dX = Math.min(dX, -buttonWidth);
+                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
@@ -155,15 +163,18 @@ public class SwipeController extends Callback {
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.parseColor("#DCEDC8"));
-        c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("OK", c, leftButton, p);
-
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.parseColor("#B2DFDB"));
-        c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("REPORT", c, rightButton, p);
+        if(buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+            leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
+            p.setColor(Color.parseColor("#DCEDC8"));
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("OK", c, leftButton, p);
+        }
+        if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+            rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+            p.setColor(Color.parseColor("#B2DFDB"));
+            c.drawRoundRect(rightButton, corners, corners, p);
+            drawText("REPORT", c, rightButton, p);
+        }
 
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
@@ -189,4 +200,5 @@ public class SwipeController extends Callback {
             drawButtons(c, currentItemViewHolder);
         }
     }
+
 }
