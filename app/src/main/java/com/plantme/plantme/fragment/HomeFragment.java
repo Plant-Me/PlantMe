@@ -9,12 +9,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
+import com.plantme.plantme.SwipeController;
 
 
 /**
@@ -25,6 +27,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private TabLayout tabLayout;
     Fragment homeDayFragment;
     Fragment homeMonthFragment;
+
 
 //    FragmentManager fragmentManager;
     Fragment otherFragment;

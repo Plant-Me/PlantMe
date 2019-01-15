@@ -3,6 +3,6 @@
     <color name="colorPrimary">#2b7d59</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="vertPomme">#C5E1A5</color>
-    <color name="marronTige">#EFEBE9</color>
+    <color name="vert">#F5F5F5</color>
+    <color name="gris">#F5F5F5</color>
 </resources>
