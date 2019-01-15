@@ -3,12 +3,8 @@ package com.plantme.plantme.model.databaseEntity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.plantme.plantme.model.UserAction;
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 @Entity(tableName = "couple_action_date")
 public class CoupleActionDate implements Serializable {

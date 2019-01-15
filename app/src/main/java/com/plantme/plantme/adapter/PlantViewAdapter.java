@@ -1,4 +1,4 @@
-package com.plantme.plantme.adapter;
+/*package com.plantme.plantme.adapter;
 
 
 import android.support.annotation.NonNull;
@@ -88,3 +88,4 @@ public class PlantViewAdapter extends RecyclerView.Adapter<PlantsViewHolder> imp
     }
 
 }
+*/

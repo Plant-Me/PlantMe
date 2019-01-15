@@ -1,4 +1,4 @@
-package com.plantme.plantme.model;
+/*package com.plantme.plantme.model;
 
 public class PlantFamily {
     private int id;
@@ -19,4 +19,4 @@ public class PlantFamily {
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
     }
-}
+}*/

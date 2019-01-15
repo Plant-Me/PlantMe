@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
-import com.plantme.plantme.adapter.UserPlantViewAdapter;
+//import com.plantme.plantme.adapter.UserPlantViewAdapter;
 import com.plantme.plantme.model.databaseEntity.UserPlant;
 
 
@@ -30,7 +30,7 @@ public class MyPlantsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
-    private UserPlantViewAdapter userPlantViewAdapter;
+    //private UserPlantViewAdapter userPlantViewAdapter;
     private SearchView searchView;
 
 
@@ -58,7 +58,7 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d("", "onQueryTextChange: " + s);
-                userPlantViewAdapter.getFilter().filter(s);
+                //userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
 
@@ -66,7 +66,7 @@ public class MyPlantsFragment extends Fragment {
             public boolean onQueryTextChange(String s) {
                 //CharSequence charSequence = searchView.getQuery();
                 Log.d("", "onQueryTextChange: " + s);
-                userPlantViewAdapter.getFilter().filter(s);
+                //userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
         });
@@ -105,14 +105,14 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
-                userPlantViewAdapter.getFilter().filter(query);
+                //userPlantViewAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
-                userPlantViewAdapter.getFilter().filter(query);
+                //userPlantViewAdapter.getFilter().filter(query);
                 return false;
             }
         });
@@ -136,26 +136,26 @@ public class MyPlantsFragment extends Fragment {
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewPlants);
-        userPlantViewAdapter = new UserPlantViewAdapter(mainActivity.getPlantUserList());
+        //userPlantViewAdapter = new UserPlantViewAdapter(mainActivity.getPlantUserList());
 
         plantDetailsFragment = mainActivity.getPlantDetailsFragment();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(userPlantViewAdapter);
+        //recyclerView.setAdapter(userPlantViewAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
+                //UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
+                //((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
 
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
+                //UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
+                //((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
             }
         }));

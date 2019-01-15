@@ -7,30 +7,38 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.plantme.plantme.Service.PlantMeService;
 import com.plantme.plantme.fragment.HomeFragment;
 import com.plantme.plantme.fragment.MeteoFragment;
 import com.plantme.plantme.fragment.MyPlantsFragment;
 import com.plantme.plantme.fragment.PlantDetailsFragment;
 import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
-import com.plantme.plantme.model.Plant;
-import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.databaseEntity.UserPlant;
+import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;
-    private List<Plant> plantList;
-    private List<UserPlant> plantUserList;
+    //private List<Plant> plantList;
+    //private List<UserPlant> plantUserList;
     List<CoupleActionDate> listCoupleActionDate;
+    List<ResultAllPlant> resultAllPlantList;
 
     private boolean wasInitialized = false;
 
@@ -63,9 +71,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         this.setDefaultFragment(homeFragment);
 
+        //retofit
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
+
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.listPlant().enqueue(new Callback<List<ResultAllPlant>>() {
+            @Override
+            public void onResponse(Call<List<ResultAllPlant>> call, Response<List<ResultAllPlant>> response) {
+                resultAllPlantList = response.body();
+                Log.d("list plante :", "onResponse: " + resultAllPlantList.size());
+            }
+
+            @Override
+            public void onFailure(Call<List<ResultAllPlant>> call, Throwable t) {
+
+            }
+        });
+
 
         //Liste des plantes
-        plantList = new ArrayList<>();
+       /* plantList = new ArrayList<>();
         Plant orchidee = new Plant("orchidee", "orchideum", "rose", "fleur", "exposition", "sol", "intérieur");
         Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
         Plant abricotier = new Plant("abricotier", "abricotierum", "jaune", "arbre", "exposition", "sol", "verger");
@@ -112,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        actionsPlant = new HashMap<>();
 //        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
 //        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
-
+*/
     }
 
     @Override
@@ -215,13 +245,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.onSupportNavigateUp();
     }
 
-    public List<Plant> getPlantList() {
+   /* public List<Plant> getPlantList() {
         return plantList;
     }
 
     public List<UserPlant> getPlantUserList() {
         return plantUserList;
-    }
+    }*/
 
 //    public Map<String, List<CoupleActionDate>> getActionsPlant() {
 //        return actionsPlant;

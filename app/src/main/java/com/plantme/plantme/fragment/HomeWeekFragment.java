@@ -16,7 +16,7 @@ import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
 import com.plantme.plantme.adapter.ActionViewAdapter;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.UserAction;
+import com.plantme.plantme.model.databaseEntity.UserAction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class HomeWeekFragment extends Fragment {
 
         mainActivity = (MainActivity)getContext();
 
-        setUpRecyclerView(view);
+        //setUpRecyclerView(view);
 
         // Inflate the layout for this fragment
         return view;
@@ -71,6 +71,9 @@ public class HomeWeekFragment extends Fragment {
         ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
         super.onViewCreated(view, savedInstanceState);
+
+
+
     }
 
     private void setUpRecyclerView(View view) {

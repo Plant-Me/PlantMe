@@ -83,9 +83,9 @@ public class PlantDetailsFragment extends Fragment {
     }
 
     public void bind(UserPlant userPlant) {
-        detailFrName.setText(userPlant.getUserPlant().getFrName());
-        detailType.setText(userPlant.getUserPlant().getType());
-        detailUsage.setText(userPlant.getUserPlant().getUsage());
+        //detailFrName.setText(userPlant.getUserPlant().getFrName());
+        //detailType.setText(userPlant.getUserPlant().getType());
+        //detailUsage.setText(userPlant.getUserPlant().getUsage());
     }
 
     public void setPlant(UserPlant userPlant) {

@@ -164,4 +164,18 @@ public class ResultOnePlant {
         this.actions = actions;
     }
 
+    public String getTypesToString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Type types:type
+             ) {
+            if(type.iterator().hasNext()){
+                stringBuilder.append("Type ").append(types.getIdType()).append(": ").append(types.getNom()).append(", ");
+            }else {
+                stringBuilder.append("Type ").append(types.getIdType()).append(": ").append(types.getNom());
+            }
+
+        }
+        return stringBuilder.toString();
+    }
+
 }

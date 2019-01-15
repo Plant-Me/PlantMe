@@ -1,4 +1,4 @@
-package com.plantme.plantme.model;
+/*package com.plantme.plantme.model;
 
 import com.plantme.plantme.model.databaseEntity.UserPlant;
 
@@ -39,3 +39,4 @@ public class User {
         this.listUserPlants = listUserPlants;
     }
 }
+*/
