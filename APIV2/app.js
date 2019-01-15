@@ -44,7 +44,7 @@ app.get("/plante",(req,res) => {
       return
     }
     const plante = rows.map((row) => {
-      return {idPlante:row.id, nomFr:row.nomFr, usageMilieu:row.usageMilieu,
+      return {idPlante:row.idPlante, nomFr:row.nomFr, usageMilieu:row.usageMilieu,
         image :{idImage:row.id_image,url:row.url}}
     })
     res.json(plante)
