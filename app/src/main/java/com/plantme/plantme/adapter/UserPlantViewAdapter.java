@@ -10,8 +10,7 @@ import android.widget.Filterable;
 
 import com.plantme.plantme.UserPlantsViewHolder;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.Plant;
-import com.plantme.plantme.model.UserPlant;
+import com.plantme.plantme.model.databaseEntity.UserPlant;
 
 import java.util.ArrayList;
 import java.util.List;

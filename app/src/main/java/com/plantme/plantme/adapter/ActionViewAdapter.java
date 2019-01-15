@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.plantme.plantme.ActionPlantsViewHolder;
-import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
 import com.plantme.plantme.R;
 
 import java.util.List;

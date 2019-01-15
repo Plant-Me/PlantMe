@@ -1,14 +1,25 @@
-package com.plantme.plantme.model;
+package com.plantme.plantme.model.databaseEntity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+import com.plantme.plantme.model.UserAction;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class CoupleActionDate {
+@Entity(tableName = "couple_action_date")
+public class CoupleActionDate implements Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    private int coupleActionDateId;
+
     private String plantName;
     private UserAction userAction;
     private Date date;
-    private SimpleDateFormat sdf;
+
 
     public CoupleActionDate(String plantName, UserAction userAction, Date date) {
         this.plantName = plantName;

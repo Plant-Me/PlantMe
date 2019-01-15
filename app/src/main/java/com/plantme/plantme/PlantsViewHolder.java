@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.plantme.plantme.model.Plant;
-import com.plantme.plantme.model.User;
-import com.plantme.plantme.model.UserPlant;
 
 public class PlantsViewHolder extends RecyclerView.ViewHolder {
     private TextView tvPlantName;

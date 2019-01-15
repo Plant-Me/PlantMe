@@ -17,16 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.plantme.plantme.MainActivity;
-import com.plantme.plantme.adapter.PlantViewAdapter;
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.adapter.UserPlantViewAdapter;
-import com.plantme.plantme.model.Plant;
-import com.plantme.plantme.model.User;
-import com.plantme.plantme.model.UserPlant;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.plantme.plantme.model.databaseEntity.UserPlant;
 
 
 /**

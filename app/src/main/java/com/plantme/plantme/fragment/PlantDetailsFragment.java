@@ -14,11 +14,7 @@ import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.UserPlant;
-
-import org.w3c.dom.Text;
-
-import java.util.zip.Inflater;
+import com.plantme.plantme.model.databaseEntity.UserPlant;
 
 
 /**

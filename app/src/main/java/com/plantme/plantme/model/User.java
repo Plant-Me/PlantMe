@@ -1,5 +1,7 @@
 package com.plantme.plantme.model;
 
+import com.plantme.plantme.model.databaseEntity.UserPlant;
+
 import java.util.List;
 
 public class User {

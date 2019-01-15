@@ -15,14 +15,13 @@ import com.plantme.plantme.fragment.HomeFragment;
 import com.plantme.plantme.fragment.MeteoFragment;
 import com.plantme.plantme.fragment.MyPlantsFragment;
 import com.plantme.plantme.fragment.PlantDetailsFragment;
-import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserAction;
-import com.plantme.plantme.model.UserPlant;
+import com.plantme.plantme.model.databaseEntity.UserPlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
