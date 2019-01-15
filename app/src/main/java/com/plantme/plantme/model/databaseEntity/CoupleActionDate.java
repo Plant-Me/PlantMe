@@ -15,12 +15,28 @@ public class CoupleActionDate implements Serializable {
     private String plantName;
     private UserAction userAction;
     private Date date;
+    private boolean done;
 
 
     public CoupleActionDate(String plantName, UserAction userAction, Date date) {
         this.plantName = plantName;
         this.userAction = userAction;
         this.date = date;
+    }
+
+    public CoupleActionDate(String plantName, UserAction userAction, Date date, boolean done) {
+        this.plantName = plantName;
+        this.userAction = userAction;
+        this.date = date;
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public String getPlantName() {

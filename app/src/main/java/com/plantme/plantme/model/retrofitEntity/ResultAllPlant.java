@@ -65,4 +65,13 @@ public class ResultAllPlant {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return "ResultAllPlant{" +
+                "idPlante=" + idPlante +
+                ", nomFr='" + nomFr + '\'' +
+                ", usageMilieu='" + usageMilieu + '\'' +
+                ", image=" + image +
+                '}';
+    }
 }

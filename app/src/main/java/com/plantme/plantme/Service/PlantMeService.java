@@ -12,11 +12,11 @@ import retrofit2.http.Query;
 
 public interface PlantMeService {
 
-    public static final String ENDPOINT = "https://10.0.2.2";
+    public static final String ENDPOINT = "http://10.0.2.2:3000";
 
     @GET("/plante")
     Call<List<ResultAllPlant>> listPlant();
 
     @GET("/plante/{id}")
-    Call<ResultOnePlant> plantDetail(@Query("id") int id);
+    Call<List<ResultOnePlant>> plantDetail(@Path("id") int id);
 }

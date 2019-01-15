@@ -19,7 +19,12 @@ import com.plantme.plantme.fragment.MyPlantsFragment;
 import com.plantme.plantme.fragment.PlantDetailsFragment;
 import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
 import com.plantme.plantme.model.databaseEntity.UserPlant;
+import com.plantme.plantme.model.retrofitEntity.Action;
+import com.plantme.plantme.model.retrofitEntity.Famille;
+import com.plantme.plantme.model.retrofitEntity.Image;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
+import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
+import com.plantme.plantme.model.retrofitEntity.Type;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     //private List<UserPlant> plantUserList;
     List<CoupleActionDate> listCoupleActionDate;
     List<ResultAllPlant> resultAllPlantList;
+    List<ResultOnePlant> resultOnePlantList;
+    ResultOnePlant resultOnePlant;
 
     private boolean wasInitialized = false;
 
@@ -53,7 +60,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment activeFragment;
     private Fragment previousFragment;
 
-
+    public interface GetPlantCallback {
+        void onGetPlant(List<ResultOnePlant> resultOnePlant);
+        void onError();
+    }
+    public interface GetAllPlantCallback {
+        void onGetPlant(List<ResultAllPlant> resultAllPlants);
+        void onError();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +84,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         meteoFragment = new MeteoFragment();
 
         this.setDefaultFragment(homeFragment);
+        //Log.d("plante :", "onResponse: " + resultOnePlantList);
 
-        //retofit
-        PlantMeService plantMeService = new Retrofit.Builder()
+        //retofit all plant
+      /*  PlantMeService plantMeService = new Retrofit.Builder()
                 .baseUrl(PlantMeService.ENDPOINT)
 
                 //convertie le json automatiquement
@@ -84,17 +99,66 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             @Override
             public void onResponse(Call<List<ResultAllPlant>> call, Response<List<ResultAllPlant>> response) {
                 resultAllPlantList = response.body();
-                Log.d("list plante :", "onResponse: " + resultAllPlantList.size());
+                for(int i = 0; i<resultAllPlantList.size();i++){
+                    Log.d("list-plante :", "onResponse: " + resultAllPlantList.get(i).toString());
+                }
+
             }
 
             @Override
             public void onFailure(Call<List<ResultAllPlant>> call, Throwable t) {
+                Log.d("list-plante :", "onResponse: fail " + t.getMessage());
+            }
+        });*/
+
+   /* getOnePlant(1, new GetPlantCallback() {
+        @Override
+        public void onGetPlant(List<ResultOnePlant> resultOnePlant) {
+            /*resultOnePlant.get(0).setIdPlante(resultOnePlantList.get(0).getIdPlante());
+            resultOnePlant.get(0).setNomFr(resultOnePlantList.get(0).getNomFr());
+            resultOnePlant.get(0).setNomLatin(resultOnePlantList.get(0).getNomLatin());
+            resultOnePlant.get(0).setDescription(resultOnePlantList.get(0).getDescription());
+            resultOnePlant.get(0).setCouleurFleurs(resultOnePlantList.get(0).getCouleurFleurs());
+            resultOnePlant.get(0).setExposition(resultOnePlantList.get(0).getExposition());
+            resultOnePlant.get(0).setSol(resultOnePlantList.get(0).getSol());
+            resultOnePlant.get(0).setUsageMilieu(resultOnePlantList.get(0).getUsageMilieu());
+            resultOnePlant.get(0).setType(resultOnePlantList.get(0).getType());
+            resultOnePlant.get(0).setImage(resultOnePlantList.get(0).getImage());
+            resultOnePlant.get(0).setFamille(resultOnePlantList.get(0).getFamille());
+            resultOnePlant.get(0).setActions(resultOnePlantList.get(0).getActions());*/
+            //resultOnePlantList = resultOnePlant;
+            Log.d("plante :", "onResponse: " + resultOnePlant);
+     /*   }
+
+        @Override
+        public void onError() {
+
+        }
+    });*/
+        getAllPlant( new GetAllPlantCallback() {
+
+            @Override
+            public void onGetPlant(List<ResultAllPlant> resultAllPlants) {
+                for(int i=0;i<resultAllPlants.size();i++){
+                    Log.d("plante :", "onResponse: " + resultAllPlants.get(i));
+
+                }
+
+            }
+
+            @Override
+            public void onError() {
 
             }
         });
 
 
-        //Liste des plantes
+
+
+
+
+
+                //Liste des plantes
        /* plantList = new ArrayList<>();
         Plant orchidee = new Plant("orchidee", "orchideum", "rose", "fleur", "exposition", "sol", "intérieur");
         Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
@@ -145,11 +209,69 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 */
     }
 
+    private void getOnePlant(final int id, final GetPlantCallback getPlantCallback){
+
+        //retrofit detail plant
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
+
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.plantDetail(id).enqueue(new Callback<List<ResultOnePlant>>() {
+            @Override
+            public void onResponse(Call<List<ResultOnePlant>> call, Response<List<ResultOnePlant>> response) {
+
+                if(response.isSuccessful()){
+
+                    //Log.d("plante :", "onResponse: " + resultOnePlant);
+                    getPlantCallback.onGetPlant(response.body());
+                    //Log.d("plante :", "onResponse1: " + resultOnePlantList);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ResultOnePlant>> call, Throwable t) {
+                Log.d("plante :", "onResponse: fail " + t.getMessage());
+            }
+        });
+
+    }
+    private void getAllPlant( final GetAllPlantCallback getAllPlantCallback){
+
+        //retrofit detail plant
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
+
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.listPlant().enqueue(new Callback<List<ResultAllPlant>>() {
+            @Override
+            public void onResponse(Call<List<ResultAllPlant>> call, Response<List<ResultAllPlant>> response) {
+                getAllPlantCallback.onGetPlant(response.body());
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ResultAllPlant>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:
                 replaceFragment(homeFragment);
+                Log.d("plante :", "onResponse: " + resultOnePlant);
                 return true;
             case R.id.navigation_meteo:
                 replaceFragment(meteoFragment);

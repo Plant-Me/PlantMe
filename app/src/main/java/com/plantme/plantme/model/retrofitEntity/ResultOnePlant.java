@@ -178,4 +178,21 @@ public class ResultOnePlant {
         return stringBuilder.toString();
     }
 
+    @Override
+    public String toString() {
+        return "ResultOnePlant{" +
+                "idPlante=" + idPlante +
+                ", nomFr='" + nomFr + '\'' +
+                ", nomLatin='" + nomLatin + '\'' +
+                ", description='" + description + '\'' +
+                ", couleurFleurs='" + couleurFleurs + '\'' +
+                ", exposition='" + exposition + '\'' +
+                ", sol='" + sol + '\'' +
+                ", usageMilieu='" + usageMilieu + '\'' +
+                ", type=" + type +
+                ", image=" + image +
+                ", famille=" + famille +
+                ", actions=" + actions +
+                '}';
+    }
 }
