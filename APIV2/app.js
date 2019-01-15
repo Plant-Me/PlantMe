@@ -280,10 +280,10 @@ app.post("/plantesUtilisateur",(req,res) => {
 app.delete("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
-  const queryString = "DELETE FROM plantes_utilisateur WHERE plantes_utilisateur.id_plante_utilisateur = ?"
+  const queryString = "DELETE FROM plantes_utilisateur WHERE plantes_utilisateur.id_utilisateur = ? && plantes_utilisateur.id_plante = ?"
   for(let i=0;i<plantesUtilisateur.length;i++){
   
-    connectionAsync.query(queryString,[plantesUtilisateur[i].id_plante_utilisateur],(err,rows,fields)=> {
+    connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante],(err,rows,fields)=> {
       if (err){
         console.log("error " + err)
         res.sendStatus(404)
