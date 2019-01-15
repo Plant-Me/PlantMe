@@ -447,10 +447,6 @@ fwrite($fpPlanteCalendrierRequete, $requetePlanteCalendrier);
 fclose($fpPlanteCalendrierRequete);
 
 
-
-
-
-
 echo json_encode($arrayCalendrierFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo json_encode($arrayFamilleFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo json_encode($arrayImgFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

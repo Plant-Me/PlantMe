@@ -6,11 +6,12 @@ $DOM = new DOMDocument();
 $DOM->loadHTMLFile($url);
 $xpath = new DOMXPath($DOM);
 
-$compteur = 1;
 
-for($compteur; $compteur <= 26; $compteur++) {
-  $elementsDiv = $xpath->query("//*[@id=\"contenu\"]/div[2]/div/div[2]/div[".$compteur."]");
-  if (!is_null($elementsDiv)) {
+for($compteurGlobal = 11; $compteurGlobal <= 26; $compteurGlobal++) {
+  $arrayLinks = array();
+  //*[@id="contenu"]/div[2]/div/div[2]/div[1]
+  $elementsDiv = $xpath->query("//*[@id=\"contenu\"]/div[2]/div/div[2]/div[".$compteurGlobal."]");
+  if ($elementsDiv->length > 0) {
     foreach ($elementsDiv as $elementDiv) {
       $nodesDiv = $elementDiv->childNodes;
       foreach ($nodesDiv as $nodeDiv) {
@@ -19,539 +20,243 @@ for($compteur; $compteur <= 26; $compteur++) {
         }
       }
     }
-  }
-}
-
-$arrayPlanteFinal = array();
-$arrayFamilleFinal = array();
-$arrayCalendrierFinal = array();
-$arrayImgFinal = array();
-$arrayTypeFinal = array();
-
-foreach ($arrayLinks as $key => $value) {
 
 
-  $arrayPlant = array();
+    $arrayPlanteFinal = array();
+    $arrayFamilleFinal = array();
+    $arrayCalendrierFinal = array();
+    $arrayImgFinal = array();
+    $arrayTypeFinal = array();
+
+    foreach ($arrayLinks as $key => $value) {
 
 
-  $namePlant = trim($key);
-  $urlPlant = $value;
-
-  $DOMPlant = new DOMDocument();
-  $DOMPlant->loadHTMLFile($urlPlant);
-  $xpathPlant = new DOMXPath($DOMPlant);
+      $arrayPlant = array();
 
 
-  $elementsImage = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/img");
-  foreach ($elementsImage as $elementImage) {
-    if($elementImage->getAttribute('src') != "local/cache-vignettes/L250xH339/rubon1-ad5fc.jpg?1512568097") {
-      $arrayImgFinal[] = "https://hortical.com/".$elementImage->getAttribute('src');
-      $arrayPlant["img_url"] = "https://hortical.com/".$elementImage->getAttribute('src');
-    } else {
-      $arrayPlant["img_url"] = "blank";
-    }
-  }
+      $namePlant = trim($key);
+      $firstLetter = substr($namePlant, 0, 1);
+      $urlPlant = $value;
 
-  $elementsFamily = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/div");
+      $DOMPlant = new DOMDocument();
+      $DOMPlant->loadHTMLFile($urlPlant);
+      $xpathPlant = new DOMXPath($DOMPlant);
 
-  $firstelement = false;
 
-  $arrayFamille = array();
-
-  foreach ($elementsFamily as $elementFamily) {
-    $nodesDiv = $elementFamily->childNodes;
-    foreach ($nodesDiv as $nodeDiv) {
-      if($nodeDiv->hasAttributes()) {
-        if($firstelement == false) {
-          $firstelement = true;
-          $familelNameFrench = trim(preg_replace("/\([^)]+\)/","",$nodeDiv->nodeValue), ")");
-          $familelNameFrench = trim(preg_replace("/\([^)]+\)/","",$familelNameFrench), ")");
-          $familelNameFrench = trim(preg_replace("/\)/","",$familelNameFrench), ")");
-          $arrayFamille["nom_francais"] = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $familelNameFrench);
+      $elementsImage = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/img");
+      foreach ($elementsImage as $elementImage) {
+        if($elementImage->getAttribute('src') != "local/cache-vignettes/L250xH339/rubon1-ad5fc.jpg?1512568097") {
+          $arrayImgFinal[] = "https://hortical.com/".$elementImage->getAttribute('src');
+          $arrayPlant["img_url"] = "https://hortical.com/".$elementImage->getAttribute('src');
         } else {
-          $arrayFamille["nom_latin"] = trim($nodeDiv->nodeValue);
+          $arrayPlant["img_url"] = "blank";
         }
       }
-    }
-  }
-  $arrayPlant["famille"] = $arrayFamille;
-  if(!in_array($arrayFamille["nom_francais"], $arrayFamilleFinal)) {
-    $arrayTempFamille = array();
-    $arrayTempFamille["nom_latin"] = $arrayFamille["nom_latin"];
-    $arrayFamilleFinal[$arrayFamille["nom_francais"]] = $arrayTempFamille;
-  }
 
-  $elementsLatinName = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/span[1]/i");
-  foreach ($elementsLatinName as $elementLatinName) {
-    $arrayPlant["nom_latin"] = trim($elementLatinName->nodeValue);
-  }
+      $elementsFamily = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/div");
 
+      $firstelement = false;
 
-  $elementsDescription = $xpathPlant->query("//*[@id=\"contenu\"]/div[5]/div");
-  foreach ($elementsDescription as $elementDescription) {
-    $arrayPlant["description"] = str_replace(["[1]", "[2]", "?23", "?"], "", trim($elementDescription->nodeValue));
-  }
+      $arrayFamille = array();
 
-  $arrayCalendrier = array();
-
-  for($cpt = 2; $cpt <= 20; $cpt++) {
-    $typeActionName = "";
-    $typesAction = $xpathPlant->query("//*[@id=\"contenu\"]/div[2]/div[".$cpt."]/div[1]");
-    foreach ($typesAction as $typeAction) {
-      $typeActionName = str_replace(["\n", "\r", "   "], ["", "", " "], trim($typeAction->nodeValue));
-      $typeActionName = trim(preg_replace("/\([^)]+\)/","",$typeActionName), ")");
-      $typeActionName = trim(preg_replace("/\)/","",$typeActionName), ")");
-      $typeActionName = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $typeActionName);
-
-      if($typeAction->hasChildNodes()) {
-        if(!in_array($typeActionName, $arrayCalendrierFinal) && $typeActionName != "") {
-          $arrayCalendrierFinal[] = $typeActionName;
-        }
-      }
-    }
-
-    $elementsCalendriers = $xpathPlant->query("//*[@id=\"contenu\"]/div[2]/div[".$cpt."]/table");
-    foreach ($elementsCalendriers as $elementCalendriers) {
-      $arrayMonths = array();
-      $arrayMonths = recursiveChildPrint($elementCalendriers, $arrayMonths);
-      if ($typeActionName != "" && !empty($arrayMonths)) {
-        $arrayCalendrier[$typeActionName] = $arrayMonths;
-      }
-    }
-  }
-
-  if(!empty($arrayCalendrier)) {
-    $arrayPlant["calendriers"] = $arrayCalendrier;
-  }
-
-  $divIndex = 4;
-  $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]");
-  $finalElementCouleur = null;
-  foreach ($elementsCouleurs as $elementCouleurs) {
-    $finalElementCouleur = $elementCouleurs;
-  }
-  while($finalElementCouleur->getAttribute('class') !== 'detail') {
-    $divIndex = $divIndex+1;
-    $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]");
-    foreach ($elementsCouleurs as $elementCouleurs) {
-      $finalElementCouleur = $elementCouleurs;
-    }
-  }
-
-  $arrayDetailPlante = array();
-
-  for($tableIndex = 1; $tableIndex <= 20; $tableIndex++) {
-
-
-    $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]/table[".$tableIndex."]");
-    foreach ($elementsCouleurs as $elementCouleurs) {
-
-      $typeDetail = -1;
-      $childNodes = $elementCouleurs->childNodes;
-      foreach ($childNodes as $childNode) {
-
-        $childNodesChilds = $childNode->childNodes;
-        foreach ($childNodesChilds as $childNodesChild) {
-          if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'titre_mots_articles') {
-            $childNodesChild->nodeValue = utf8_encode(trim($childNodesChild->nodeValue));
-            if($childNodesChild->nodeValue == "couleur des fleurs")
-            {
-              $typeDetail = 1;
-            }
-            if($childNodesChild->nodeValue == "sol")
-            {
-              $typeDetail = 2;
-            }
-            if($childNodesChild->nodeValue == "type")
-            {
-              $typeDetail = 3;
-            }
-            if($childNodesChild->nodeValue == "usage ou milieu")
-            {
-              $typeDetail = 4;
-            }
-            if($childNodesChild->nodeValue == "exposition")
-            {
-              $typeDetail = 5;
-            }
-          }
-          if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'mots_articles') {
-            $arrayValues = array();
-            $arrayValues = explode("/", $childNodesChild->nodeValue);
-            for ($i = 0; $i < count($arrayValues); $i++) {
-              $value = $arrayValues[$i];
-              $value = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $value);
-              $value = str_replace("\r", "", trim($value));
-              $value = str_replace("\n", "", trim($value));
-              $arrayValues[$i] = explode(" ", $value, 1)[0];
-            }
-            switch ($typeDetail) {
-              case 1:
-              $arrayDetailPlante["couleur des fleurs"] = $arrayValues;
-              break;
-              case 2:
-              $arrayDetailPlante["sol"] = $arrayValues;
-              break;
-              case 3:
-              foreach ($arrayValues as $value) {
-                if(!in_array($value, $arrayTypeFinal)) {
-                  $arrayTypeFinal[] = $value;
-                }
-              }
-              $arrayDetailPlante["type"] = $arrayValues;
-              break;
-              case 4:
-              $arrayDetailPlante["usage ou milieu"] = $arrayValues;
-              break;
-            }
-          }
-          if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'mois_vide') {
-            if($typeDetail == 5) {
-              $childNodesExposition = $childNodesChild->childNodes;
-              foreach ($childNodesExposition as $childNodeExposition) {
-                if($childNodeExposition->hasAttributes()) {
-                  $arrayDetailPlante["exposition"] = trim($childNodeExposition->getAttribute('title'));
-                }
+      foreach ($elementsFamily as $elementFamily) {
+        $nodesDiv = $elementFamily->childNodes;
+        foreach ($nodesDiv as $nodeDiv) {
+          if($nodeDiv->hasAttributes()) {
+            if($firstelement == false) {
+              $firstelement = true;
+              $familelNameFrench = trim(preg_replace("/\([^)]+\)/","",$nodeDiv->nodeValue), ")");
+              $familelNameFrench = trim(preg_replace("/\([^)]+\)/","",$familelNameFrench), ")");
+              $familelNameFrench = trim(preg_replace("/\)/","",$familelNameFrench), ")");
+              $arrayFamille["nom_francais"] = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $familelNameFrench);
+            } else {
+              if(trim($nodeDiv->nodeValue) != "_hors AGP III") {
+                $arrayFamille["nom_latin"] = trim($nodeDiv->nodeValue);
               }
             }
           }
         }
       }
-    }
-  }
-  echo "Plante : ".$key."\n";
-  $arrayPlant["details"] = $arrayDetailPlante;
-  $arrayPlanteFinal[$key] = $arrayPlant;
-}
-
-$requeteSautLigne = "\n";
-
-
-$requeteCalendrierCreate = "CREATE TABLE 'action_calendrier' (
-  'idActionCalendrier' int(11) NOT NULL,
-  'type' varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requeteCalendrierAlter = "ALTER TABLE 'action_calendrier'
-ADD PRIMARY KEY ('idActionCalendrier'),
-MODIFY 'idActionCalendrier' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
-
-$arrayCalendrierFinal = array_unique($arrayCalendrierFinal);
-sort($arrayCalendrierFinal, SORT_STRING);
-$requeteCalendrier = "INSERT INTO 'action_calendrier' ('type') VALUES\n";
-foreach ($arrayCalendrierFinal as $calendrier) {
-  if($calendrier != end($arrayCalendrierFinal)) {
-    $requeteCalendrier .= "('".$calendrier."'),\n";
-  } else {
-    $requeteCalendrier .= "('".$calendrier."');";
-  }
-}
-
-$requeteFamilleCreate = "CREATE TABLE 'famille' (
-  'idFamille' int(11) NOT NULL,
-  'nom' varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requeteFamilleAlter = "ALTER TABLE 'famille'
-ADD PRIMARY KEY ('idFamille'),
-MODIFY 'idFamille' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
-
-
-// $arrayFamilleFinal = array_unique($arrayFamilleFinal);
-ksort($arrayFamilleFinal, SORT_STRING);
-$requeteFamille = "INSERT INTO 'famille' ('nom', 'nom_latin') VALUES\n";
-foreach ($arrayFamilleFinal as $famille => $familleValue) {
-  $familleValueNomLatin = "";
-  if($familleValue['nom_latin'] != "_hors AGP III") {
-    $familleValueNomLatin = $familleValue['nom_latin'];
-  }
-  if($famille != key(end($arrayFamilleFinal))) {
-    $requeteFamille .= "('".$famille."', '".$familleValueNomLatin."'),\n";
-  } else {
-    $requeteFamille .= "('".$famille."', '".$familleValueNomLatin."');";
-  }
-}
-
-
-$requeteImgCreate = "CREATE TABLE 'image' (
-  'idImage' int(11) NOT NULL,
-  'url' varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requeteImgAlter = "ALTER TABLE 'image'
-ADD PRIMARY KEY ('idImage'),
-MODIFY 'idImage' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
-
-
-$requeteImg = "INSERT INTO 'image' ('url') VALUES\n";
-foreach ($arrayImgFinal as $img) {
-  if($img != end($arrayImgFinal)) {
-    $requeteImg .= "('".$img."'),\n";
-  } else {
-    $requeteImg .= "('".$img."');";
-  }
-}
-
-$requeteTypeCreate = "CREATE TABLE 'type' (
-  'idType' int(11) NOT NULL,
-  'nom' varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requeteTypeAlter = "ALTER TABLE 'type'
-ADD PRIMARY KEY ('idType'),
-MODIFY 'idType' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\n";
-
-sort($arrayTypeFinal, SORT_STRING);
-$requeteType = "INSERT INTO 'type' ('nom') VALUES\n";
-foreach ($arrayTypeFinal as $type) {
-  if($type != end($arrayTypeFinal)) {
-    $requeteType .= "('".$type."'),\n";
-  } else {
-    $requeteType .= "('".$type."');";
-  }
-}
-
-
-
-$requetePlanteCreate = "CREATE TABLE 'plante' (
-  'idPlante' int(11) NOT NULL,
-  'id_image' int(11) DEFAULT NULL,
-  'id_famille' int(11) NOT NULL,
-  'nomFr' varchar(32) NOT NULL,
-  'description' text NOT NULL,
-  'nomLatin' varchar(32) NOT NULL,
-  'couleurFleurs' varchar(255) DEFAULT NULL,
-  'exposition' varchar(25) DEFAULT NULL,
-  'sol' varchar(255) DEFAULT NULL,
-  'usageMilieu' varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requetePlanteAlter = "ALTER TABLE 'plante'
-ADD PRIMARY KEY ('idPlante'),
-ADD KEY 'fk_plante_famille' ('id_famille'),
-ADD KEY 'fk_plante_image' ('id_image'),
-MODIFY 'idPlante' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1,
-ADD CONSTRAINT 'fk_plante_famille' FOREIGN KEY ('id_famille') REFERENCES 'famille' ('idFamille'),
-ADD CONSTRAINT 'fk_plante_image' FOREIGN KEY ('id_image') REFERENCES 'image' ('idImage');\n";
-
-
-$requetePlanteTypeCreate = "CREATE TABLE 'plante_type' (
-  'idPlanteType' int(11) NOT NULL,
-  'id_plante' int(11) NOT NULL,
-  'id_type' int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requetePlanteTypeAlter = "ALTER TABLE 'plante_type'
-ADD PRIMARY KEY ('idPlanteType'),
-ADD KEY 'fk_plante_type_plante' ('id_plante'),
-ADD KEY 'fk_plante_type_type' ('id_type'),
-MODIFY 'idPlanteType' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1,
-ADD CONSTRAINT 'fk_plante_type_plante' FOREIGN KEY ('id_plante') REFERENCES 'plante' ('idPlante'),
-ADD CONSTRAINT 'fk_plante_type_type' FOREIGN KEY ('id_type') REFERENCES 'type' ('idType');\n";
-
-$requetePlanteCalendrierCreate = "CREATE TABLE 'plante_calendrier' (
-  'idPlanteCalendrier' int(11) NOT NULL,
-  'id_plante' int(11) NOT NULL,
-  'id_action_calendrier' int(11) NOT NULL,
-  'id_mois' int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
-
-$requetePlanteCalendrierAlter = "ALTER TABLE 'plante_calendrier'
-ADD PRIMARY KEY ('idPlanteCalendrier'),
-ADD KEY 'fk_plantecalendrier_plante' ('id_plante'),
-ADD KEY 'fk_plantecalendrier_mois' ('id_mois'),
-ADD KEY 'fk_plantecalendrier_action_calendrier' ('id_action_calendrier'),
-MODIFY 'idPlanteCalendrier' int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1,
-ADD CONSTRAINT 'fk_plantecalendrier_action_calendrier' FOREIGN KEY ('id_action_calendrier') REFERENCES 'action_calendrier' ('idActionCalendrier'),
-ADD CONSTRAINT 'fk_plantecalendrier_mois' FOREIGN KEY ('id_mois') REFERENCES 'mois' ('idMois'),
-ADD CONSTRAINT 'fk_plantecalendrier_plante' FOREIGN KEY ('id_plante') REFERENCES 'plante' ('idPlante');\n";
-
-
-$requetePlante = "INSERT INTO 'plante' ('id_image', 'id_famille', 'nomFr', 'description', 'nomLatin', 'couleurFleurs', 'exposition', 'sol', 'usageMilieu') VALUES\n";
-$requetePlanteType = "INSERT INTO 'plante_type' ('id_plante', 'id_type') VALUES\n";
-$requetePlanteCalendrier = "INSERT INTO 'plante_calendrier' ('id_plante', 'id_action_calendrier', 'id_mois') VALUES\n";
-foreach ($arrayPlanteFinal as $plantName => $plant) {
-  $id_image = array_search($plant["img_url"], $arrayImgFinal);
-  if($id_image === false){
-    $id_image = "";
-  } else {
-    $id_image += 1;
-  }
-  $id_famille = array_search($plant["famille"]["nom_francais"], array_keys($arrayFamilleFinal)) + 1;
-  $nomFr = $plantName;
-  $desciption = "";
-  if(array_key_exists("description", $plant)) {
-    $desciption = $plant["description"];
-  }
-  $nomLatin = $plant["nom_latin"];
-  $couleurFleurs = "";
-  if(array_key_exists("couleur des fleurs", $plant["details"])) {
-    if(is_array($plant["details"]["couleur des fleurs"])){
-      foreach ($plant["details"]["couleur des fleurs"] as $couleur) {
-        if($couleur != end($plant["details"]["couleur des fleurs"])) {
-          $couleurFleurs .= $couleur.", ";
-        } else {
-          $couleurFleurs .= $couleur;
-        }
-      }
-    } else {
-      $couleurFleurs = $plant["details"]["couleur des fleurs"];
-    }
-  }
-  $exposition = "";
-  if(array_key_exists("exposition", $plant["details"])) {
-    if(is_array($plant["details"]["exposition"])){
-      foreach ($plant["details"]["exposition"] as $expositionValue) {
-        if($expositionValue != end($plant["details"]["exposition"])) {
-          $exposition .= $expositionValue.", ";
-        } else {
-          $exposition .= $expositionValue;
-        }
-      }
-    } else {
-      $exposition = $plant["details"]["exposition"];
-    }
-  }
-  $sol = "";
-  if(array_key_exists("sol", $plant["details"])) {
-    if(is_array($plant["details"]["sol"])){
-      foreach ($plant["details"]["sol"] as $solValue) {
-        if($solValue != end($plant["details"]["sol"])) {
-          $sol .= $solValue.", ";
-        } else {
-          $sol .= $solValue;
-        }
-      }
-    } else {
-      $sol = $plant["details"]["sol"];
-    }
-  }
-  $usageMilieu = "";
-  if(array_key_exists("usage ou milieu", $plant["details"])) {
-    if(is_array($plant["details"]["usage ou milieu"])){
-      foreach ($plant["details"]["usage ou milieu"] as $usage) {
-        if($usage != end($plant["details"]["usage ou milieu"])) {
-          $usageMilieu .= $usage.", ";
-        } else {
-          $usageMilieu .= $usage;
-        }
-      }
-    } else {
-      $usageMilieu = $plant["details"]["usage ou milieu"];
-    }
-  }
-  if(array_key_exists("type", $plant["details"])) {
-    if(is_array($plant["details"]["type"])){
-      foreach ($plant["details"]["type"] as $type) {
-        if($type != end($plant["details"]["type"])) {
-          $requetePlanteType .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($type, $arrayTypeFinal)+1)."),\n";
-        }
-        else {
-          $requetePlanteType .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($type, $arrayTypeFinal)+1).")";
-        }
-      }
-    } else {
-      $requetePlanteType .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($plant["details"]["type"], $arrayTypeFinal)+1).")";
-    }
-  }
-
-  if(array_key_exists("calendriers", $plant)) {
-    foreach ($plant["calendriers"] as $typeCalendrier => $calendrier) {
-      foreach ($calendrier as $mois) {
-        if($mois != "gel") {
-          $requetePlanteCalendrier .= "(".(array_search($plantName, array_keys($arrayPlanteFinal))+1).", ".(array_search($typeCalendrier, $arrayCalendrierFinal)+1).", ".$mois.")";
-          if($mois != end($calendrier)) {
-            $requetePlanteCalendrier = $requetePlanteCalendrier.",\n";
+      $arrayPlant["famille"] = $arrayFamille;
+      if(!empty($arrayFamille)) {
+        if(in_array("nom_francais", array_keys($arrayFamille))){
+          if(!in_array($arrayFamille["nom_francais"], $arrayFamilleFinal)) {
+            $arrayTempFamille = array();
+            if(in_array("nom_latin", array_keys($arrayFamille))){
+              $arrayTempFamille["nom_latin"] = $arrayFamille["nom_latin"];
+            }
+            $arrayFamilleFinal[$arrayFamille["nom_francais"]] = $arrayTempFamille;
           }
-        } else {
-          $requetePlanteCalendrier = substr($requetePlanteCalendrier, 0, -2).";";
+        }
+      }
+
+      $elementsLatinName = $xpathPlant->query("//*[@id=\"contenu\"]/div[1]/span[1]/i");
+      foreach ($elementsLatinName as $elementLatinName) {
+        $arrayPlant["nom_latin"] = trim($elementLatinName->nodeValue);
+      }
+
+
+      $elementsDescription = $xpathPlant->query("//*[@id=\"contenu\"]/div[5]/div");
+      foreach ($elementsDescription as $elementDescription) {
+        $arrayPlant["description"] = str_replace(["[1]", "[2]", "?23", "?"], "", trim($elementDescription->nodeValue));
+      }
+
+      $arrayCalendrier = array();
+
+      for($cpt = 2; $cpt <= 20; $cpt++) {
+        $typeActionName = "";
+        $typesAction = $xpathPlant->query("//*[@id=\"contenu\"]/div[2]/div[".$cpt."]/div[1]");
+        foreach ($typesAction as $typeAction) {
+          $typeActionName = str_replace(["\n", "\r", "   "], ["", "", " "], trim($typeAction->nodeValue));
+          $typeActionName = trim(preg_replace("/\([^)]+\)/","",$typeActionName), ")");
+          $typeActionName = trim(preg_replace("/\)/","",$typeActionName), ")");
+          $typeActionName = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $typeActionName);
+
+          if($typeAction->hasChildNodes()) {
+            if(!in_array($typeActionName, $arrayCalendrierFinal) && $typeActionName != "") {
+              $arrayCalendrierFinal[] = $typeActionName;
+            }
+          }
         }
 
+        $elementsCalendriers = $xpathPlant->query("//*[@id=\"contenu\"]/div[2]/div[".$cpt."]/table");
+        foreach ($elementsCalendriers as $elementCalendriers) {
+          $arrayMonths = array();
+          $arrayMonths = recursiveChildPrint($elementCalendriers, $arrayMonths);
+          if ($typeActionName != "" && !empty($arrayMonths)) {
+            $arrayCalendrier[$typeActionName] = $arrayMonths;
+          }
+        }
       }
-      $arrayKeys = array_keys($plant["calendriers"]);
-      if($typeCalendrier != end($arrayKeys)) {
-        $requetePlanteCalendrier = $requetePlanteCalendrier.",\n";
+
+      if(!empty($arrayCalendrier)) {
+        $arrayPlant["calendriers"] = $arrayCalendrier;
       }
-    }
-  }
 
-  if($plant != end($arrayPlanteFinal)) {
-    $requetePlante .= "(".$id_image.", ".$id_famille.", '".$nomFr."', '".$desciption."', '".$nomLatin."', '".$couleurFleurs."', '".$exposition."', '".$sol."', '".$usageMilieu."'),\n";
-    if(array_key_exists("type", $plant["details"])){
-      $requetePlanteType = $requetePlanteType.",\n";
-    }
-    if(array_key_exists("calendriers", $plant)){
-      $requetePlanteCalendrier = $requetePlanteCalendrier.",\n";
-    }
-  } else {
-    $requetePlante .= "(".$id_image.", ".$id_famille.", '".$nomFr."', '".$desciption."', '".$nomLatin."', '".$couleurFleurs."', '".$exposition."', '".$sol."', '".$usageMilieu."');";
-    $requetePlanteType = $requetePlanteType.";";
+      $divIndex = 4;
+      $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]");
+      $finalElementCouleur = null;
+      foreach ($elementsCouleurs as $elementCouleurs) {
+        $finalElementCouleur = $elementCouleurs;
+      }
+      while($finalElementCouleur->getAttribute('class') !== 'detail') {
+        $divIndex = $divIndex+1;
+        $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]");
+        foreach ($elementsCouleurs as $elementCouleurs) {
+          $finalElementCouleur = $elementCouleurs;
+        }
+      }
 
-    if(array_key_exists("calendriers", $plant)){
-      $requetePlanteCalendrier = $requetePlanteCalendrier.";";
-    } else {
-      $requetePlanteCalendrier = substr($requetePlanteCalendrier, 0, -2).";";
+      $arrayDetailPlante = array();
+
+      for($tableIndex = 1; $tableIndex <= 20; $tableIndex++) {
+
+
+        $elementsCouleurs = $xpathPlant->query("//*[@id=\"contenu\"]/div[".$divIndex."]/table[".$tableIndex."]");
+        foreach ($elementsCouleurs as $elementCouleurs) {
+
+          $typeDetail = -1;
+          $childNodes = $elementCouleurs->childNodes;
+          foreach ($childNodes as $childNode) {
+
+            $childNodesChilds = $childNode->childNodes;
+            foreach ($childNodesChilds as $childNodesChild) {
+              if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'titre_mots_articles') {
+                $childNodesChild->nodeValue = utf8_encode(trim($childNodesChild->nodeValue));
+                if($childNodesChild->nodeValue == "couleur des fleurs")
+                {
+                  $typeDetail = 1;
+                }
+                if($childNodesChild->nodeValue == "sol")
+                {
+                  $typeDetail = 2;
+                }
+                if($childNodesChild->nodeValue == "type")
+                {
+                  $typeDetail = 3;
+                }
+                if($childNodesChild->nodeValue == "usage ou milieu")
+                {
+                  $typeDetail = 4;
+                }
+                if($childNodesChild->nodeValue == "exposition")
+                {
+                  $typeDetail = 5;
+                }
+              }
+              if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'mots_articles') {
+                $arrayValues = array();
+                $arrayValues = explode("/", $childNodesChild->nodeValue);
+                for ($i = 0; $i < count($arrayValues); $i++) {
+                  $value = $arrayValues[$i];
+                  $value = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $value);
+                  $value = str_replace("\r", "", trim($value));
+                  $value = str_replace("\n", "", trim($value));
+                  $value = trim(explode(',', $value)[0]);
+                  $arrayValues[$i] = explode(" ", $value, 1)[0];
+                }
+                switch ($typeDetail) {
+                  case 1:
+                  $arrayDetailPlante["couleur des fleurs"] = $arrayValues;
+                  break;
+                  case 2:
+                  $arrayDetailPlante["sol"] = $arrayValues;
+                  break;
+                  case 3:
+                  foreach ($arrayValues as $value) {
+                    if(!in_array($value, $arrayTypeFinal)) {
+                      $arrayTypeFinal[] = $value;
+                    }
+                  }
+                  $arrayDetailPlante["type"] = $arrayValues;
+                  break;
+                  case 4:
+                  $arrayDetailPlante["usage ou milieu"] = $arrayValues;
+                  break;
+                }
+              }
+              if($childNodesChild->hasAttributes() && $childNodesChild->getAttribute('class') == 'mois_vide') {
+                if($typeDetail == 5) {
+                  $childNodesExposition = $childNodesChild->childNodes;
+                  foreach ($childNodesExposition as $childNodeExposition) {
+                    if($childNodeExposition->hasAttributes()) {
+                      $arrayDetailPlante["exposition"] = trim($childNodeExposition->getAttribute('title'));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      echo "Plante : ".$key."\n";
+      flush();
+      ob_flush();
+      $arrayPlant["details"] = $arrayDetailPlante;
+      $arrayPlanteFinal[$key] = $arrayPlant;
     }
+
+    $fpCalendrierJson = fopen('action_calendrier_'.$firstLetter.'.json', 'w');
+    fwrite($fpCalendrierJson, json_encode($arrayCalendrierFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    fclose($fpCalendrierJson);
+
+    $fpFamilleJson = fopen('famille_'.$firstLetter.'.json', 'w');
+    fwrite($fpFamilleJson, json_encode($arrayFamilleFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    fclose($fpFamilleJson);
+
+    $fpImgJson = fopen('image_'.$firstLetter.'.json', 'w');
+    fwrite($fpImgJson, json_encode($arrayImgFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    fclose($fpImgJson);
+
+    $fpTypeJson = fopen('type_'.$firstLetter.'.json', 'w');
+    fwrite($fpTypeJson, json_encode($arrayTypeFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    fclose($fpTypeJson);
+
+    $fpPlanteJson = fopen('plante_'.$firstLetter.'.json', 'w');
+    fwrite($fpPlanteJson, json_encode($arrayPlanteFinal, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    fclose($fpPlanteJson);
   }
 }
-
-$fpCalendrierRequete = fopen('action_calendrier.sql', 'w');
-fwrite($fpCalendrierRequete, $requeteCalendrierCreate);
-fwrite($fpCalendrierRequete, $requeteSautLigne);
-fwrite($fpCalendrierRequete, $requeteCalendrierAlter);
-fwrite($fpCalendrierRequete, $requeteSautLigne);
-fwrite($fpCalendrierRequete, $requeteCalendrier);
-fclose($fpCalendrierRequete);
-
-$fpFamilleRequete = fopen('famille.sql', 'w');
-fwrite($fpFamilleRequete, $requeteFamilleCreate);
-fwrite($fpFamilleRequete, $requeteSautLigne);
-fwrite($fpFamilleRequete, $requeteFamilleAlter);
-fwrite($fpFamilleRequete, $requeteSautLigne);
-fwrite($fpFamilleRequete, $requeteFamille);
-fclose($fpFamilleRequete);
-
-$fpImgRequete = fopen('image.sql', 'w');
-fwrite($fpImgRequete, $requeteImgCreate);
-fwrite($fpImgRequete, $requeteSautLigne);
-fwrite($fpImgRequete, $requeteImgAlter);
-fwrite($fpImgRequete, $requeteSautLigne);
-fwrite($fpImgRequete, $requeteImg);
-fclose($fpImgRequete);
-
-$fpTypeRequete = fopen('type.sql', 'w');
-fwrite($fpTypeRequete, $requeteTypeCreate);
-fwrite($fpTypeRequete, $requeteSautLigne);
-fwrite($fpTypeRequete, $requeteTypeAlter);
-fwrite($fpTypeRequete, $requeteSautLigne);
-fwrite($fpTypeRequete, $requeteType);
-fclose($fpTypeRequete);
-
-$fpPlanteRequete = fopen('plante.sql', 'w');
-fwrite($fpPlanteRequete, $requetePlanteCreate);
-fwrite($fpPlanteRequete, $requeteSautLigne);
-fwrite($fpPlanteRequete, $requetePlanteAlter);
-fwrite($fpPlanteRequete, $requeteSautLigne);
-fwrite($fpPlanteRequete, $requetePlante);
-fclose($fpPlanteRequete);
-
-$fpPlanteTypeRequete = fopen('plante_type.sql', 'w');
-fwrite($fpPlanteTypeRequete, $requetePlanteTypeCreate);
-fwrite($fpPlanteTypeRequete, $requeteSautLigne);
-fwrite($fpPlanteTypeRequete, $requetePlanteTypeAlter);
-fwrite($fpPlanteTypeRequete, $requeteSautLigne);
-fwrite($fpPlanteTypeRequete, $requetePlanteType);
-fclose($fpPlanteTypeRequete);
-
-$fpPlanteCalendrierRequete = fopen('plante_calendrier.sql', 'w');
-fwrite($fpPlanteCalendrierRequete, $requetePlanteCalendrierCreate);
-fwrite($fpPlanteCalendrierRequete, $requeteSautLigne);
-fwrite($fpPlanteCalendrierRequete, $requetePlanteCalendrierAlter);
-fwrite($fpPlanteCalendrierRequete, $requeteSautLigne);
-fwrite($fpPlanteCalendrierRequete, $requetePlanteCalendrier);
-fclose($fpPlanteCalendrierRequete);
-
-
 
 function recursiveChildPrint($object, $arrayMonths) {
   if($object->hasChildNodes()) {
@@ -566,5 +271,10 @@ function recursiveChildPrint($object, $arrayMonths) {
   }
   return $arrayMonths;
 }
+
+$requeteSautLigne = "\n";
+
+
+
 
 ?>
