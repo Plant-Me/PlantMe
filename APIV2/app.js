@@ -93,7 +93,7 @@ app.get("/plante/:id",(req,res) => {
 
             plante[0].actions[i] = {
               idActionCalendrier : resultquery2[i].idActionCalendrier,
-              idType : resultquery2[i].type,
+              type : resultquery2[i].type,
               idMois : resultquery2[i].idMois,
               mois : resultquery2[i].nom      
             }      
