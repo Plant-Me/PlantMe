@@ -1,27 +1,68 @@
 package com.plantme.plantme.model;
 
-class ActionCalendrier {
-    private int id;
-    private String actionName;
+public class ActionCalendrier {
 
-    public ActionCalendrier(int id, String actionName) {
-        this.id = id;
-        this.actionName = actionName;
+
+    private Integer idActionCalendrier;
+
+    private String type;
+
+    private Integer idMois;
+
+    private String mois;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public ActionCalendrier() {
     }
 
-    public int getId() {
-        return id;
+    /**
+     *
+     * @param idActionCalendrier
+     * @param mois
+     * @param idMois
+     * @param type
+     */
+    public ActionCalendrier(Integer idActionCalendrier, String type, Integer idMois, String mois) {
+        super();
+        this.idActionCalendrier = idActionCalendrier;
+        this.type = type;
+        this.idMois = idMois;
+        this.mois = mois;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Integer getIdActionCalendrier() {
+        return idActionCalendrier;
     }
 
-    public String getActionName() {
-        return actionName;
+    public void setIdActionCalendrier(Integer idActionCalendrier) {
+        this.idActionCalendrier = idActionCalendrier;
     }
 
-    public void setActionName(String actionName) {
-        this.actionName = actionName;
+    public String getType() {
+        return type;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getIdMois() {
+        return idMois;
+    }
+
+    public void setIdMois(Integer idMois) {
+        this.idMois = idMois;
+    }
+
+    public String getMois() {
+        return mois;
+    }
+
+    public void setMois(String mois) {
+        this.mois = mois;
+    }
+
 }
