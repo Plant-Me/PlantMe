@@ -1,13 +1,20 @@
 package com.plantme.plantme.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +24,26 @@ import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.adapter.Calendrier;
+import com.plantme.plantme.Service.PlantMeService;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
-import com.plantme.plantme.model.ActionCalendrier;
-import com.plantme.plantme.model.Plant;
-import com.plantme.plantme.model.UserPlant;
+import com.plantme.plantme.adapter.PlantViewAdapter;
+import com.plantme.plantme.model.Calendrier;
+import com.plantme.plantme.model.GlideApp;
+import com.plantme.plantme.model.retrofitEntity.Action;
+import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
+import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+//import com.plantme.plantme.model.Plant;
+//import com.plantme.plantme.model.UserPlant;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +51,7 @@ import java.util.List;
 public class GeneralPlantDetailsFragment extends Fragment {
 
     private MainActivity mainActivity;
-    private Plant plant;
+    //private Plant plant;
     private TextView nomFrancais;
     private TextView nomLatin;
     private TextView famille;
@@ -51,13 +70,40 @@ public class GeneralPlantDetailsFragment extends Fragment {
     private TextView calendriers;
     private RecyclerView rvCalendriersDetail;
     private Button buttonAjoutPlante;
+    private ImageView imageView;
+
+    private ResultAllPlant resultIntent;
+    private int idPlanteToSearch;
 
 
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if ("Data_plant".equals(intent.getAction()) == true)
+            {
+                //Les données sont passées et peuvent être récupérées via :
+                // intent.getSerializableExtra("DATA_EXTRA");
+                // intent.getIntExtra("DATA_EXTRA", 2);
+                //etc.
+                resultIntent = (ResultAllPlant) intent.getSerializableExtra("DATA_EXTRA");
+                idPlanteToSearch = resultIntent.getIdPlante();
+                Log.d("plante a cherche", "onReceive: " + idPlanteToSearch);
+            }else {
+                Log.d("plante a cherche", "jai rien recu");
+            }
+        }
+    };
     public GeneralPlantDetailsFragment() {
         // Required empty public constructor
     }
 
-
+    public interface GetPlantCallback {
+        void onGetPlant(List<ResultOnePlant> resultOnePlant);
+        void onError();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,6 +124,7 @@ public class GeneralPlantDetailsFragment extends Fragment {
         ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        imageView = view.findViewById(R.id.generalDetailImagePlant);
         nomFrancais = view.findViewById(R.id.generalDetailFrName);
         nomLatin = view.findViewById(R.id.generalDetailsLatinName);
         famille = view.findViewById(R.id.generalDetailFamille);
@@ -104,145 +151,190 @@ public class GeneralPlantDetailsFragment extends Fragment {
             }
         });
 
-        bind(plant);
+        bind();
+
+        //bind();
     }
 
-    public void bind(Plant plant) {
-        nomFrancais.setText(plant.getFrName());
-        if (plant.getLtnName().equals("")) {
-            nomLatin.setVisibility(View.GONE);
-        } else {
-            nomLatin.setText(plant.getLtnName());
-        }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, new IntentFilter("Data_plant"));
+    }
 
-        if (!plant.getFamillePlante().getNomFrancais().equals("") && !plant.getFamillePlante().getNomLatin().equals("")) {
-            famille.setText(plant.getFamillePlante().getNomFrancais() + " / " + plant.getFamillePlante().getNomLatin());
-        } else if (!plant.getFamillePlante().getNomFrancais().equals("")) {
-            famille.setText(plant.getFamillePlante().getNomFrancais());
-        } else if (!plant.getFamillePlante().getNomLatin().equals("")) {
-            famille.setText(plant.getFamillePlante().getNomLatin());
-        } else {
-            famille.setVisibility(View.GONE);
-        }
+    private void getOnePlant(final int id, final GetPlantCallback getPlantCallback) {
 
-        if (plant.getDescription().equals("")) {
-            description.setVisibility(View.GONE);
-            descriptionDetail.setVisibility(View.GONE);
-        } else {
-            descriptionDetail.setText(plant.getDescription());
-        }
+        //retrofit detail plant
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
 
-        if (plant.getType().equals("")) {
-            type.setVisibility(View.GONE);
-            typeDetail.setVisibility(View.GONE);
-        } else {
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.plantDetail(id).enqueue(new Callback<List<ResultOnePlant>>() {
+            @Override
+            public void onResponse(Call<List<ResultOnePlant>> call, Response<List<ResultOnePlant>> response) {
+
+                if (response.isSuccessful()) {
+
+                    //Log.d("plante :", "onResponse: " + resultOnePlant);
+                    getPlantCallback.onGetPlant(response.body());
+                    //Log.d("plante :", "onResponse1: " + resultOnePlantList);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ResultOnePlant>> call, Throwable t) {
+                Log.d("plante :", "onResponse: fail " + t.getMessage());
+            }
+        });
+    }
+
+    public void bind() {
+
+
+        getOnePlant(idPlanteToSearch,new GetPlantCallback() {
+            @Override
+            public void onGetPlant(List<ResultOnePlant> resultOnePlant) {
+
+                GlideApp.with(imageView).load(resultOnePlant.get(0).getImage().getUrl()).placeholder(R.drawable.ic_green_tea).into(imageView);
+                nomFrancais.setText(resultOnePlant.get(0).getNomFr());
+                if (resultOnePlant.get(0).getNomLatin().equals("")) {
+                    nomLatin.setVisibility(View.GONE);
+                } else {
+                    nomLatin.setText(resultOnePlant.get(0).getNomLatin());
+                }
+
+                if (!resultOnePlant.get(0).getFamille().getNom().equals("")) {
+                    famille.setText(resultOnePlant.get(0).getFamille().getNom());
+                } else {
+                    famille.setVisibility(View.GONE);
+                }
+
+                if (resultOnePlant.get(0).getDescription().equals("")) {
+                    description.setVisibility(View.GONE);
+                    descriptionDetail.setVisibility(View.GONE);
+                } else {
+                    descriptionDetail.setText(resultOnePlant.get(0).getDescription());
+                }
+
+                if (resultOnePlant.get(0).getType().size()==0) {
+                    type.setVisibility(View.GONE);
+                    typeDetail.setVisibility(View.GONE);
+                } else {
 //        TODO do all types
-            typeDetail.setText(plant.getType());
-        }
+                    typeDetail.setText(resultOnePlant.get(0).getTypesToString());
+                }
 
-        if (plant.getExposition().equals("")) {
-            exposition.setVisibility(View.GONE);
-            expositionDetail.setVisibility(View.GONE);
-        } else {
-            expositionDetail.setText(plant.getExposition());
-        }
+                if (resultOnePlant.get(0).getExposition().equals("")) {
+                    exposition.setVisibility(View.GONE);
+                    expositionDetail.setVisibility(View.GONE);
+                } else {
+                    expositionDetail.setText(resultOnePlant.get(0).getExposition());
+                }
 
-        if (plant.getUsage().equals("")) {
-            usages.setVisibility(View.GONE);
-            usagesDetail.setVisibility(View.GONE);
-        } else {
-            usagesDetail.setText(plant.getUsage());
-        }
+                if (resultOnePlant.get(0).getUsageMilieu().equals("")) {
+                    usages.setVisibility(View.GONE);
+                    usagesDetail.setVisibility(View.GONE);
+                } else {
+                    usagesDetail.setText(resultOnePlant.get(0).getUsageMilieu());
+                }
 
-        if (plant.getFlowerColor().equals("")) {
-            couleurs.setVisibility(View.GONE);
-            couleursDetail.setVisibility(View.GONE);
-        } else {
-            couleursDetail.setText(plant.getFlowerColor());
-        }
+                if (resultOnePlant.get(0).getCouleurFleurs().equals("")) {
+                    couleurs.setVisibility(View.GONE);
+                    couleursDetail.setVisibility(View.GONE);
+                } else {
+                    couleursDetail.setText(resultOnePlant.get(0).getCouleurFleurs());
+                }
 
-        if (plant.getFlowerColor().equals("")) {
-            couleurs.setVisibility(View.GONE);
-            couleursDetail.setVisibility(View.GONE);
-        } else {
-            couleursDetail.setText(plant.getFlowerColor());
-        }
-
-        if (plant.getGround().equals("")) {
-            sol.setVisibility(View.GONE);
-            solDetail.setVisibility(View.GONE);
-        } else {
-            solDetail.setText(plant.getGround());
-        }
-
-        if (plant.getActionCalendrier().isEmpty()) {
-            calendriers.setVisibility(View.GONE);
-            rvCalendriersDetail.setVisibility(View.GONE);
-        } else {
-            List<ActionCalendrier> actionCalendrierList = plant.getActionCalendrier();
-            List<Calendrier> calendrierList = new ArrayList<>();
-            List<String> actionlist = new ArrayList<>();
-            for (ActionCalendrier actionCalendrier : actionCalendrierList) {
-                if (!actionlist.contains(actionCalendrier.getType())) {
-                    String currentAction = actionCalendrier.getType();
-                    Calendrier newCalendrier = new Calendrier(currentAction);
-                    actionlist.add(currentAction);
-                    for (ActionCalendrier actionCalendrierbis : actionCalendrierList) {
-                        if (actionCalendrierbis.getType().equals(currentAction)) {
-                            switch (actionCalendrierbis.getIdMois()) {
-                                case 1:
-                                    newCalendrier.setJanvier(true);
-                                    break;
-                                case 2:
-                                    newCalendrier.setFevrier(true);
-                                    break;
-                                case 3:
-                                    newCalendrier.setMars(true);
-                                    break;
-                                case 4:
-                                    newCalendrier.setAvril(true);
-                                    break;
-                                case 5:
-                                    newCalendrier.setMai(true);
-                                    break;
-                                case 6:
-                                    newCalendrier.setJuin(true);
-                                    break;
-                                case 7:
-                                    newCalendrier.setJuillet(true);
-                                    break;
-                                case 8:
-                                    newCalendrier.setAout(true);
-                                    break;
-                                case 9:
-                                    newCalendrier.setSeptembre(true);
-                                    break;
-                                case 10:
-                                    newCalendrier.setOctobre(true);
-                                    break;
-                                case 11:
-                                    newCalendrier.setNovembre(true);
-                                    break;
-                                case 12:
-                                    newCalendrier.setDecembre(true);
-                                    break;
+                if (resultOnePlant.get(0).getSol().equals("")) {
+                    sol.setVisibility(View.GONE);
+                    solDetail.setVisibility(View.GONE);
+                } else {
+                    solDetail.setText(resultOnePlant.get(0).getSol());
+                }if (resultOnePlant.get(0).getActions().size()==0) {
+                    calendriers.setVisibility(View.GONE);
+                    rvCalendriersDetail.setVisibility(View.GONE);
+                } else {
+                    List<Action> actionCalendrierList = resultOnePlant.get(0).getActions();
+                    List<Calendrier> calendrierList = new ArrayList<>();
+                    List<String> actionlist = new ArrayList<>();
+                    for (Action actionCalendrier : actionCalendrierList) {
+                        if (!actionlist.contains(actionCalendrier.getType())) {
+                            String currentAction = actionCalendrier.getType();
+                            Calendrier newCalendrier = new Calendrier(currentAction);
+                            actionlist.add(currentAction);
+                            for (Action actionCalendrierbis : actionCalendrierList) {
+                                if (actionCalendrierbis.getType().equals(currentAction)) {
+                                    switch (actionCalendrierbis.getIdMois()) {
+                                        case 1:
+                                            newCalendrier.setJanvier(true);
+                                            break;
+                                        case 2:
+                                            newCalendrier.setFevrier(true);
+                                            break;
+                                        case 3:
+                                            newCalendrier.setMars(true);
+                                            break;
+                                        case 4:
+                                            newCalendrier.setAvril(true);
+                                            break;
+                                        case 5:
+                                            newCalendrier.setMai(true);
+                                            break;
+                                        case 6:
+                                            newCalendrier.setJuin(true);
+                                            break;
+                                        case 7:
+                                            newCalendrier.setJuillet(true);
+                                            break;
+                                        case 8:
+                                            newCalendrier.setAout(true);
+                                            break;
+                                        case 9:
+                                            newCalendrier.setSeptembre(true);
+                                            break;
+                                        case 10:
+                                            newCalendrier.setOctobre(true);
+                                            break;
+                                        case 11:
+                                            newCalendrier.setNovembre(true);
+                                            break;
+                                        case 12:
+                                            newCalendrier.setDecembre(true);
+                                            break;
+                                    }
+                                }
                             }
+                            calendrierList.add(newCalendrier);
                         }
                     }
-                    calendrierList.add(newCalendrier);
+                    CalendrierViewAdapter calendrierViewAdapter = new CalendrierViewAdapter(calendrierList);
+                    rvCalendriersDetail.setLayoutManager(new LinearLayoutManager(getContext()));
+                    rvCalendriersDetail.setAdapter(calendrierViewAdapter);
                 }
+
             }
-            CalendrierViewAdapter calendrierViewAdapter = new CalendrierViewAdapter(calendrierList);
-            rvCalendriersDetail.setLayoutManager(new LinearLayoutManager(getContext()));
-            rvCalendriersDetail.setAdapter(calendrierViewAdapter);
-        }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+
+
 
     }
 
-    public void setPlant(Plant plant) {
+   /* public void setPlant(Plant plant) {
         if (this.plant == null || !this.plant.equals(plant)) {
             this.plant = plant;
         }
-    }
+    }*/
 
 }
+

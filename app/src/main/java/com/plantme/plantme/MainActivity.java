@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,14 +68,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment activeFragment;
     private Fragment previousFragment;
 
-    public interface GetPlantCallback {
-        void onGetPlant(List<ResultOnePlant> resultOnePlant);
-        void onError();
-    }
-    public interface GetAllPlantCallback {
-        void onGetPlant(List<ResultAllPlant> resultAllPlants);
-        void onError();
-    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,198 +91,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         this.setDefaultFragment(homeFragment);
         //Log.d("plante :", "onResponse: " + resultOnePlantList);
 
-        //retofit all plant
-      /*  PlantMeService plantMeService = new Retrofit.Builder()
-                .baseUrl(PlantMeService.ENDPOINT)
-
-                //convertie le json automatiquement
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PlantMeService.class);
-
-        plantMeService.listPlant().enqueue(new Callback<List<ResultAllPlant>>() {
-            @Override
-            public void onResponse(Call<List<ResultAllPlant>> call, Response<List<ResultAllPlant>> response) {
-                resultAllPlantList = response.body();
-                for(int i = 0; i<resultAllPlantList.size();i++){
-                    Log.d("list-plante :", "onResponse: " + resultAllPlantList.get(i).toString());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ResultAllPlant>> call, Throwable t) {
-                Log.d("list-plante :", "onResponse: fail " + t.getMessage());
-            }
-        });*/
-
-   /* getOnePlant(1, new GetPlantCallback() {
-        @Override
-        public void onGetPlant(List<ResultOnePlant> resultOnePlant) {
-            /*resultOnePlant.get(0).setIdPlante(resultOnePlantList.get(0).getIdPlante());
-            resultOnePlant.get(0).setNomFr(resultOnePlantList.get(0).getNomFr());
-            resultOnePlant.get(0).setNomLatin(resultOnePlantList.get(0).getNomLatin());
-            resultOnePlant.get(0).setDescription(resultOnePlantList.get(0).getDescription());
-            resultOnePlant.get(0).setCouleurFleurs(resultOnePlantList.get(0).getCouleurFleurs());
-            resultOnePlant.get(0).setExposition(resultOnePlantList.get(0).getExposition());
-            resultOnePlant.get(0).setSol(resultOnePlantList.get(0).getSol());
-            resultOnePlant.get(0).setUsageMilieu(resultOnePlantList.get(0).getUsageMilieu());
-            resultOnePlant.get(0).setType(resultOnePlantList.get(0).getType());
-            resultOnePlant.get(0).setImage(resultOnePlantList.get(0).getImage());
-            resultOnePlant.get(0).setFamille(resultOnePlantList.get(0).getFamille());
-            resultOnePlant.get(0).setActions(resultOnePlantList.get(0).getActions());*/
-            //resultOnePlantList = resultOnePlant;
-            Log.d("plante :", "onResponse: " + resultOnePlant);
-     /*   }
-
-        @Override
-        public void onError() {
-
-        }
-    });*/
-        getAllPlant( new GetAllPlantCallback() {
-
-            @Override
-            public void onGetPlant(List<ResultAllPlant> resultAllPlants) {
-                for(int i=0;i<resultAllPlants.size();i++){
-                    Log.d("plante :", "onResponse: " + resultAllPlants.get(i));
-
-                }
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-
-
-
-
-
-
-
-                //Liste des plantes
-       /* plantList = new ArrayList<>();
-        Plant orchidee = new Plant("orchidee", "orchideum", "rose", "fleur", "exposition", "sol", "intérieur");
-        Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
-        Plant abricotier = new Plant("abricotier", "abricotierum", "jaune", "arbre", "exposition", "sol", "verger");
-        Plant cerisier = new Plant("cerisier", "cerisierum", "rose", "arbre", "exposition", "sol", "verger");
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 3, "Mars"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 4, "Avril"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 5, "Mai"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 6, "Juin"));
-
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Taille", 9, "Septembre"));
-
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 6, "Juin"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 7, "Juillet"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 8, "Aout"));
-
-        plantList.add(orchidee);
-        plantList.add(bonsai);
-        plantList.add(abricotier);
-        plantList.add(cerisier);
-
-
-        //Les couples UserPlant, UserAction, Date
-        ArrayList<CoupleActionDate> listCoupleActionDateBichon = new ArrayList<>();
-        ArrayList<CoupleActionDate> listCoupleActionDateBonbon = new ArrayList<>();
-
-        //Les UserPlants
-        UserPlant monBichon = new UserPlant(orchidee, "Mon Bichon", listCoupleActionDateBichon);
-        UserPlant bonbon = new UserPlant(bonsai, "Bonbon", listCoupleActionDateBonbon);
-
-        //Liste des plantes utilisateurs
-        plantUserList = new ArrayList<>();
-        plantUserList.add(monBichon);
-        plantUserList.add(bonbon);
-
-
-        //Les UserActions
-        UserAction arroser = new UserAction("Arroser");
-        UserAction tailler = new UserAction("Tailler");
-
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 26 ).getTime()));
-
-        listCoupleActionDate = new ArrayList<>();
-        for(UserPlant userPlant : plantUserList) {
-            listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
-        }
-
-//        actionsPlant = new HashMap<>();
-//        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
-//        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
-*/
-    }
-
-    private void getOnePlant(final int id, final GetPlantCallback getPlantCallback){
-
-        //retrofit detail plant
-        PlantMeService plantMeService = new Retrofit.Builder()
-                .baseUrl(PlantMeService.ENDPOINT)
-
-                //convertie le json automatiquement
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PlantMeService.class);
-
-        plantMeService.plantDetail(id).enqueue(new Callback<List<ResultOnePlant>>() {
-            @Override
-            public void onResponse(Call<List<ResultOnePlant>> call, Response<List<ResultOnePlant>> response) {
-
-                if(response.isSuccessful()){
-
-                    //Log.d("plante :", "onResponse: " + resultOnePlant);
-                    getPlantCallback.onGetPlant(response.body());
-                    //Log.d("plante :", "onResponse1: " + resultOnePlantList);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ResultOnePlant>> call, Throwable t) {
-                Log.d("plante :", "onResponse: fail " + t.getMessage());
-            }
-        });
 
     }
-    private void getAllPlant( final GetAllPlantCallback getAllPlantCallback){
 
-        //retrofit detail plant
-        PlantMeService plantMeService = new Retrofit.Builder()
-                .baseUrl(PlantMeService.ENDPOINT)
 
-                //convertie le json automatiquement
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PlantMeService.class);
-
-        plantMeService.listPlant().enqueue(new Callback<List<ResultAllPlant>>() {
-            @Override
-            public void onResponse(Call<List<ResultAllPlant>> call, Response<List<ResultAllPlant>> response) {
-                getAllPlantCallback.onGetPlant(response.body());
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ResultAllPlant>> call, Throwable t) {
-
-            }
-        });
-
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

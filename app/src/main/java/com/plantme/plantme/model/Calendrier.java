@@ -1,4 +1,4 @@
-package com.plantme.plantme.adapter;
+package com.plantme.plantme.model;
 
 public class Calendrier {
     private final String actionName;

@@ -2,8 +2,9 @@
 package com.plantme.plantme.model.retrofitEntity;
 
 
+import java.io.Serializable;
 
-public class ResultAllPlant {
+public class ResultAllPlant implements Serializable {
 
 
     private Integer idPlante;

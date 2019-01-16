@@ -36,18 +36,6 @@
             app:layout_constraintTop_toTopOf="@+id/detailImagePlant" />
 
         <TextView
-            android:id="@+id/detailType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Type"
-            app:layout_constraintBottom_toTopOf="@+id/detailUsage"
-            app:layout_constraintStart_toEndOf="@+id/detailImagePlant"
-            app:layout_constraintTop_toBottomOf="@+id/detailFrName" />
-
-        <TextView
             android:id="@+id/detailUsage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

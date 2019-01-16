@@ -32,18 +32,6 @@
         app:layout_constraintTop_toTopOf="@+id/ivPlant" />
 
     <TextView
-        android:id="@+id/tvPlantType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Plant Type"
-        app:layout_constraintBottom_toTopOf="@+id/tvPlantUsage"
-        app:layout_constraintStart_toEndOf="@+id/ivPlant"
-        app:layout_constraintTop_toBottomOf="@+id/tvPlantName" />
-
-    <TextView
         android:id="@+id/tvPlantUsage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

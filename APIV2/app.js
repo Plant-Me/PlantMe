@@ -77,15 +77,14 @@ app.get("/plante/:id",(req,res) => {
       let resultquery3 = connectionSync.query(queryString3,[planteId])
         if (resultquery3.length > 0){
           for(let i=0;i<resultquery3.length;i++){
-
+            console.log(resultquery3.length)
             plante[0].type[i] = {
               idType : resultquery3[i].idType,                
               nom : resultquery3[i].nom
             }     
           }
         }else {
-          res.sendStatus(404)
-          return
+          //nothing
         }
         let resultquery2 = connectionSync.query(queryString2,[planteId])
         if (resultquery2.length > 0){

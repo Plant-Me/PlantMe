@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.plantme.plantme.CalendrierViewHolder;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.ActionCalendrier;
+import com.plantme.plantme.model.Calendrier;
 
 import java.util.List;
 

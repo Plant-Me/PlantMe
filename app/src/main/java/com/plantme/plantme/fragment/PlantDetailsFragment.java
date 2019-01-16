@@ -49,7 +49,7 @@ public class PlantDetailsFragment extends Fragment {
         detailFrName = view.findViewById(R.id.detailFrName);
         //detailLtnName = view.findViewById(R.id.detailImagePlant);
         //detailFlowerColor = view.findViewById(R.id.detailImagePlant);
-        detailType = view.findViewById(R.id.detailType);
+        //detailType = view.findViewById(R.id.detailType);
         //detailExposition = view.findViewById(R.id.detailImagePlant);
         //detailGround = view.findViewById(R.id.detailImagePlant);
         detailUsage = view.findViewById(R.id.detailUsage);
@@ -70,7 +70,7 @@ public class PlantDetailsFragment extends Fragment {
         detailFrName = view.findViewById(R.id.detailFrName);
         //detailLtnName = view.findViewById(R.id.detailImagePlant);
         //detailFlowerColor = view.findViewById(R.id.detailImagePlant);
-        detailType = view.findViewById(R.id.detailType);
+       // detailType = view.findViewById(R.id.detailType);
         //detailExposition = view.findViewById(R.id.detailImagePlant);
         //detailGround = view.findViewById(R.id.detailImagePlant);
         detailUsage = view.findViewById(R.id.detailUsage);
