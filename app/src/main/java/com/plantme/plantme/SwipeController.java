@@ -28,7 +28,7 @@ public class SwipeController extends Callback {
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private SwipeControllerActions buttonsActions = null;
     private static final float buttonWidth = 300;
-    private boolean isActionsToday = true;
+    private boolean isActionsToday;
     private RectF rightButton;
     private RectF leftButton;
 
@@ -171,7 +171,7 @@ public class SwipeController extends Callback {
         }
         if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            p.setColor(Color.parseColor("#B2DFDB"));
+            p.setColor(Color.parseColor("#FFCCBC"));
             c.drawRoundRect(rightButton, corners, corners, p);
             drawText("REPORT", c, rightButton, p);
         }
