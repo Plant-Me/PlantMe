@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.plantme.plantme.ActionPlantsViewHolder;
+import com.plantme.plantme.viewHolder.ActionPlantsViewHolder;
 import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.R;
 
@@ -29,7 +29,6 @@ public class ActionViewAdapter extends RecyclerView.Adapter<ActionPlantsViewHold
 
     @Override
     public void onBindViewHolder(ActionPlantsViewHolder actionPlantsViewHolder, int i) {
-
         CoupleActionDate coupleActionDate = listCoupleActionDates.get(i);
         actionPlantsViewHolder.bind(coupleActionDate);
     }

@@ -1,10 +1,11 @@
-package com.plantme.plantme;
+package com.plantme.plantme.viewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserPlant;
 
@@ -21,8 +22,8 @@ public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(UserPlant userPlant) {
-        tvPlantNickName.setText(userPlant.getUserPlant().getImageUrl());
-        tvPlantFrName.setText(userPlant.getPlantName());
+        tvPlantNickName.setText(userPlant.getPlantName());
+        tvPlantFrName.setText(userPlant.getUserPlant().getFrName());
         //ivPlant.setText(userPlant.getUserPlant().getImageUrl());
     }
 }
