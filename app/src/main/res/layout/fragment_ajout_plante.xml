@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".fragment.GeneralPlantDetailsFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/engrais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Engrais :"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchEngrais"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/switchEngrais" />
+
+        <ImageView
+            android:id="@+id/ajoutPlanteImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ajouPlanteNomFr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ajoutPlanteNomLatin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/ajoutPlanteNomFamille"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage"
+            app:layout_constraintTop_toBottomOf="@+id/ajouPlanteNomFr" />
+
+        <TextView
+            android:id="@+id/ajoutPlanteNomFamille"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/ajoutPlanteImage"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage" />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text="Entrez un nom pour votre plante :"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteImage" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="216dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:hint="Entrez un nom pour votre plante"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
+        <TextView
+            android:id="@+id/arrosage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Arrosage :"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchArrosage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/switchArrosage" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerArrosageDay"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerArrosageMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerArrosageDay"
+            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerArrosageYear"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerArrosageMonth"
+            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
+
+        <Switch
+            android:id="@+id/switchArrosage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerEngraisDay"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerEngraisMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerEngraisDay"
+            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+
+        <NumberPicker
+            android:id="@+id/ajoutPlanteNumberPickerEngraisYear"
+            android:layout_width="wrap_content"
+            android:layout_height="121dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerEngraisMonth"
+            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+
+        <Switch
+            android:id="@+id/switchEngrais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteNumberPickerArrosageMonth" />
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.plantme.plantme.Service.PlantMeService;
+import com.plantme.plantme.fragment.AjoutPlanteFragment;
+import com.plantme.plantme.fragment.AllPlantsFragment;
+import com.plantme.plantme.fragment.GeneralPlantDetailsFragment;
 import com.plantme.plantme.fragment.HomeFragment;
 import com.plantme.plantme.fragment.MeteoFragment;
 import com.plantme.plantme.fragment.MyPlantsFragment;
@@ -25,6 +28,7 @@ import com.plantme.plantme.model.retrofitEntity.Image;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 import com.plantme.plantme.model.retrofitEntity.Type;
+import com.plantme.plantme.model.ActionCalendrier;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment myPlantsFragment;
     private Fragment plantDetailsFragment;
     private Fragment meteoFragment;
+    private Fragment allPlantsFragment;
+    private Fragment generalDetailPlantsFragment;
+    private Fragment ajoutPlanteFragment;
 
     //final FragmentManager fm = getSupportFragmentManager();
 
@@ -82,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         myPlantsFragment = new MyPlantsFragment();
         plantDetailsFragment = new PlantDetailsFragment();
         meteoFragment = new MeteoFragment();
+        allPlantsFragment = new AllPlantsFragment();
+        generalDetailPlantsFragment = new GeneralPlantDetailsFragment();
+        ajoutPlanteFragment = new AjoutPlanteFragment();
 
         this.setDefaultFragment(homeFragment);
         //Log.d("plante :", "onResponse: " + resultOnePlantList);
@@ -164,6 +174,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Plant bonsai = new Plant("bonsai", "bonsaium", "blanche", "arbuste", "exposition", "sol", "intérieur");
         Plant abricotier = new Plant("abricotier", "abricotierum", "jaune", "arbre", "exposition", "sol", "verger");
         Plant cerisier = new Plant("cerisier", "cerisierum", "rose", "arbre", "exposition", "sol", "verger");
+
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 3, "Mars"));
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 4, "Avril"));
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 5, "Mai"));
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 6, "Juin"));
+
+
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Taille", 9, "Septembre"));
+
+
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 6, "Juin"));
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 7, "Juillet"));
+        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 8, "Aout"));
 
         plantList.add(orchidee);
         plantList.add(bonsai);
@@ -319,6 +342,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return plantDetailsFragment;
     }
 
+    public Fragment getAllPlantsFragment() {
+        return allPlantsFragment;
+    }
+
+    public Fragment getGeneralDetailPlantsFragment() {
+        return generalDetailPlantsFragment;
+    }
+
+    public Fragment getAjoutPlanteFragment() {
+        return ajoutPlanteFragment;
+    }
+
     /*public void replace(Fragment destFragment) {
         previousFragment = activeFragment;
         fm.beginTransaction().hide(activeFragment).show(destFragment).commit();
@@ -335,6 +370,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void onBackPressed() {
 
         if (activeFragment instanceof PlantDetailsFragment) {
+            replaceFragment(previousFragment);
+        } else if (activeFragment instanceof AllPlantsFragment) {
+            replaceFragment(myPlantsFragment);
+        } else if (activeFragment instanceof GeneralPlantDetailsFragment) {
             replaceFragment(previousFragment);
         } else if (!(activeFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);
@@ -357,6 +396,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onSupportNavigateUp() {
         if (activeFragment instanceof PlantDetailsFragment) {
+            replaceFragment(previousFragment);
+        } else if (activeFragment instanceof AllPlantsFragment) {
+            replaceFragment(myPlantsFragment);
+        } else if (activeFragment instanceof GeneralPlantDetailsFragment) {
             replaceFragment(previousFragment);
         } else if (!(activeFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);

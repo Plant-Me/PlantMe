@@ -46,7 +46,7 @@ public class PlantViewAdapter extends RecyclerView.Adapter<PlantsViewHolder> imp
     }
 
     public List<Plant> getPlantList() {
-        return plantList;
+        return plantListFiltered;
     }
 
     @Override
@@ -86,6 +86,5 @@ public class PlantViewAdapter extends RecyclerView.Adapter<PlantsViewHolder> imp
             }
         };
     }
-
 }
 */
