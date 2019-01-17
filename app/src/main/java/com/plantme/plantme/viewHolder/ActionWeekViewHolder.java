@@ -14,13 +14,13 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.GregorianCalendar;
 
-public class ActionPlantsViewHolder extends RecyclerView.ViewHolder {
+public class ActionWeekViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivActionImage;
     private TextView tvMyPlantName;
     private TextView tvActionName;
     private TextView tvActionDate;
 
-    public ActionPlantsViewHolder(View viewItem) {
+    public ActionWeekViewHolder(View viewItem) {
         super(viewItem);
 
         ivActionImage = viewItem.findViewById(R.id.ivActionImage);

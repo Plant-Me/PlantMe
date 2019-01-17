@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class CoupleActionDate {
+public class CoupleActionDate implements Comparable<CoupleActionDate> {
     private String plantName;
     private UserAction userAction;
     private Date date;
@@ -46,5 +46,18 @@ public class CoupleActionDate {
 
     public void setValidated(boolean validated) {
         isValidated = validated;
+    }
+
+    @Override
+    public int compareTo(CoupleActionDate o) {
+        int returnValue = 0;
+        if(o.getDate().after(this.getDate())) {
+            returnValue = -1;
+        } else if(o.getDate().before(this.getDate())) {
+            returnValue = 1;
+        } else {
+            returnValue = 0;
+        }
+        return returnValue;
     }
 }

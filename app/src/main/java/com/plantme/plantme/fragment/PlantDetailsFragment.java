@@ -29,13 +29,8 @@ public class PlantDetailsFragment extends Fragment {
     UserPlant userPlant;
     ImageView detailImagePlant;
     TextView detailFrName;
-    TextView detailLtnName;
-    TextView detailFlowerColor;
     TextView detailType;
-    TextView detailExposition;
-    TextView detailGround;
     TextView detailUsage;
-    TextView detailActionType;
 
     View view;
 
@@ -51,13 +46,8 @@ public class PlantDetailsFragment extends Fragment {
         ab.setDisplayHomeAsUpEnabled(true);
         detailImagePlant = view.findViewById(R.id.detailImagePlant);
         detailFrName = view.findViewById(R.id.detailFrName);
-        //detailLtnName = view.findViewById(R.id.detailImagePlant);
-        //detailFlowerColor = view.findViewById(R.id.detailImagePlant);
         detailType = view.findViewById(R.id.detailType);
-        //detailExposition = view.findViewById(R.id.detailImagePlant);
-        //detailGround = view.findViewById(R.id.detailImagePlant);
         detailUsage = view.findViewById(R.id.detailUsage);
-        //detailActionType = view.findViewById(R.id.detailImagePlant);
     }
 
     @Override
@@ -66,19 +56,11 @@ public class PlantDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
         this.view = view;
-
-//        Bundle bundle = getArguments();
-//        plant = (Plant) bundle.getSerializable("selectedPlant");
 //
         detailImagePlant = view.findViewById(R.id.detailImagePlant);
         detailFrName = view.findViewById(R.id.detailFrName);
-        //detailLtnName = view.findViewById(R.id.detailImagePlant);
-        //detailFlowerColor = view.findViewById(R.id.detailImagePlant);
         detailType = view.findViewById(R.id.detailType);
-        //detailExposition = view.findViewById(R.id.detailImagePlant);
-        //detailGround = view.findViewById(R.id.detailImagePlant);
         detailUsage = view.findViewById(R.id.detailUsage);
-        //detailActionType = view.findViewById(R.id.detailImagePlant);
 
         bind(userPlant);
 

@@ -1,13 +1,22 @@
 package com.plantme.plantme;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +25,7 @@ import com.plantme.plantme.fragment.HomeFragment;
 import com.plantme.plantme.fragment.MeteoFragment;
 import com.plantme.plantme.fragment.MyPlantsFragment;
 import com.plantme.plantme.fragment.PlantDetailsFragment;
+import com.plantme.plantme.fragment.SelectActionPlantsFragment;
 import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserAction;
@@ -23,7 +33,6 @@ import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -32,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private TextView mTextMessage;
     private List<Plant> plantList;
     private List<UserPlant> plantUserList;
-    List<CoupleActionDate> listCoupleActionDate;
+    private List<CoupleActionDate> listCoupleActionDate;
+    private List<UserAction> listUserActions;
 
     private boolean wasInitialized = false;
 
@@ -41,18 +51,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment myPlantsFragment;
     private Fragment plantDetailsFragment;
     private Fragment meteoFragment;
-
-    //final FragmentManager fm = getSupportFragmentManager();
+    private Fragment selectActionFragment;
 
     private Fragment activeFragment;
     private Fragment previousFragment;
+    private int YOUR_PI_REQ_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         mTextMessage = findViewById(R.id.message);
 
@@ -63,9 +71,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         myPlantsFragment = new MyPlantsFragment();
         plantDetailsFragment = new PlantDetailsFragment();
         meteoFragment = new MeteoFragment();
+        selectActionFragment = new SelectActionPlantsFragment();
         this.setDefaultFragment(homeFragment);
-
-
 
         //Liste des plantes
         plantList = new ArrayList<>();
@@ -97,31 +104,38 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //Les UserActions
         UserAction arroser = new UserAction("Arroser");
         UserAction tailler = new UserAction("Tailler");
+        UserAction planter = new UserAction("Planter");
+        UserAction fertiliser = new UserAction("Fertiliser");
+        UserAction rempoter = new UserAction("Rempoter");
 
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 17 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 18 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 19 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 20 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 17 ).getTime()));
+        listUserActions = new ArrayList<>();
+        listUserActions.add(arroser);
+        listUserActions.add(tailler);
+        listUserActions.add(planter);
+        listUserActions.add(fertiliser);
+        listUserActions.add(rempoter);
+
+
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 16).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 17).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 19).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 17).getTime()));
 
         listCoupleActionDate = new ArrayList<>();
-        for(UserPlant userPlant : plantUserList) {
+        for (UserPlant userPlant : plantUserList) {
             listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
         }
-
-//        actionsPlant = new HashMap<>();
-//        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
-//        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:
+                homeFragment = new HomeFragment();
                 replaceFragment(homeFragment);
                 return true;
             case R.id.navigation_meteo:
@@ -140,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     // Replace current Fragment with the destination Fragment.
     public void replaceFragment(Fragment destFragment) {
-
-
         // First get FragmentManager object.
         FragmentManager fragmentManager = this.getSupportFragmentManager();
 
@@ -160,21 +172,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         previousFragment = activeFragment;
         activeFragment = destFragment;
         fragmentTransaction.commit();
-
     }
-
-    public BottomNavigationView getBottomNavigationView() {
-        return bottomNavigationView;
-    }
-    public Fragment getPlantDetailsFragment() {
-        return plantDetailsFragment;
-    }
-
-    /*public void replace(Fragment destFragment) {
-        previousFragment = activeFragment;
-        fm.beginTransaction().hide(activeFragment).show(destFragment).commit();
-        activeFragment = destFragment;
-    }*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_with_filter, menu);
@@ -184,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
-
         if (activeFragment instanceof PlantDetailsFragment) {
             replaceFragment(previousFragment);
         } else if (!(activeFragment instanceof HomeFragment)) {
@@ -193,16 +190,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         } else {
             super.onBackPressed();
         }
-
-//        switch (bottomNavigationView.getSelectedItemId()){
-//            case 2 :{
-//                if(manager.getBackStackEntryCount() >0){
-//                    manager.getBackStackEntryAt(manager.getBackStackEntryAt())
-//                }
-//                bottomNavigationView.setSelectedItemId(2);
-//            }
-//        }
-
     }
 
     @Override
@@ -226,13 +213,33 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return plantUserList;
     }
 
-//    public Map<String, List<CoupleActionDate>> getActionsPlant() {
-//        return actionsPlant;
-//    }
-
     public List<CoupleActionDate> getListCoupleActionDate() {
         return listCoupleActionDate;
     }
 
+    public List<UserAction> getListUserActions() {
+        return listUserActions;
+    }
 
+    public Fragment getHomeFragment() {
+        return homeFragment;
+    }
+
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public Fragment getPlantDetailsFragment() {
+        return plantDetailsFragment;
+    }
+
+    public Fragment getSelectActionFragment() {
+        return selectActionFragment;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

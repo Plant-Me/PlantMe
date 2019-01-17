@@ -98,14 +98,6 @@ public class MyPlantsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         mainActivity.getMenuInflater().inflate(R.menu.menu_with_filter, menu);
 
-        // Associate searchable configuration with the SearchView
-        /*SearchManager searchManager = (SearchManager) mainActivity.getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(mainActivity.getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);*/
-
         // listening to search query text change
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -124,21 +116,6 @@ public class MyPlantsFragment extends Fragment {
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewPlants);

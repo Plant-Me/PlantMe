@@ -11,6 +11,8 @@
     <string name="report_validation">Report</string>
     <string name="report_cancel">Cancel</string>
     <string name="report_title">Action Report</string>
+    <string name="notification_title">notification_title</string>
+    <string name="notification_desc">notification_desc</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
