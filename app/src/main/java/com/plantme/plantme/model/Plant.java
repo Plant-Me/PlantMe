@@ -1,34 +1,27 @@
-/*package com.plantme.plantme.model;
-
-import com.plantme.plantme.model.databaseEntity.ActionCalendrier;
-import com.plantme.plantme.model.databaseEntity.PlantType;
+package com.plantme.plantme.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Plant implements Serializable {
-
-    private int plantId;
     private String imageUrl;
     private String frName;
     private String ltnName;
     private FamillePlante famillePlante;
     private String description;
     private String flowerColor;
-    private List<PlantType> type;
+    private String type;
     private String exposition;
     private String ground;
     private String usage;
-    private String description;
-    private String family;
-    private List<ActionCalendrier> actionCalendrier;
+    private List<ActionCalendrier> actionCalendrierList;
 
     public Plant() {
 
     }
 
-    public Plant(String frName, String ltnName, String flowerColor, List<PlantType> type, String exposition, String ground, String usage) {
+    public Plant(String frName, String ltnName, FamillePlante famillePlante, String description,  String flowerColor, String type, String exposition, String ground, String usage) {
         this.frName = frName;
         this.ltnName = ltnName;
         this.famillePlante = famillePlante;
@@ -41,26 +34,6 @@ public class Plant implements Serializable {
         this.actionCalendrierList = new ArrayList<>();
     }
 
-    public Plant(int plantId, String imageUrl, String frName, String ltnName, String flowerColor, List<PlantType> type, String exposition, String ground, String usage, List<ActionCalendrier> actionCalendrier) {
-        this.plantId = plantId;
-        this.imageUrl = imageUrl;
-        this.frName = frName;
-        this.ltnName = ltnName;
-        this.flowerColor = flowerColor;
-        this.type = type;
-        this.exposition = exposition;
-        this.ground = ground;
-        this.usage = usage;
-        this.actionCalendrier = actionCalendrier;
-    }
-
-    public int getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(int plantId) {
-        this.plantId = plantId;
-    }
 
     public String getFrName() {
         return frName;
@@ -94,11 +67,11 @@ public class Plant implements Serializable {
         this.flowerColor = flowerColor;
     }
 
-    public List<PlantType> getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(List<PlantType> type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -146,4 +119,3 @@ public class Plant implements Serializable {
         this.actionCalendrierList.add(actionCalendrier);
     }
 }
-*/

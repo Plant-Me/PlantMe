@@ -2,6 +2,8 @@ package com.plantme.plantme.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +27,7 @@ import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
+import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,7 +96,7 @@ public class AjoutPlanteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ajout_plante, container, false);
-
+        selectedPlant = new Plant();
         nomFrancaisPlante = view.findViewById(R.id.ajouPlanteNomFr);
         nomLatinPlante = view.findViewById(R.id.ajoutPlanteNomLatin);
         nomFamillePlante = view.findViewById(R.id.ajoutPlanteNomFamille);
@@ -173,19 +176,27 @@ public class AjoutPlanteFragment extends Fragment {
 
 
 
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         nomFrancaisPlante.setText(selectedPlant.getFrName());
-        if (selectedPlant.getLtnName().equals("")) {
+       /* if (selectedPlant.getLtnName().equals("")) {
             nomLatinPlante.setVisibility(View.GONE);
         } else {
             nomLatinPlante.setText(selectedPlant.getLtnName());
         }
-
-        if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+*/
+        /*if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais() + " / " + selectedPlant.getFamillePlante().getNomLatin());
-        } else if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
+        } else */if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais());
-        } else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
-            nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomLatin());
+       /* } else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+            nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomLatin());*/
         } else {
             nomFamillePlante.setVisibility(View.GONE);
         }
@@ -500,8 +511,6 @@ public class AjoutPlanteFragment extends Fragment {
 //            }
 //        });
 
-
-        return view;
     }
 
     public View.OnClickListener onClick() {

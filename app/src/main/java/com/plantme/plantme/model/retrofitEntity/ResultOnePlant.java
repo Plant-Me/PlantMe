@@ -1,6 +1,9 @@
 
 package com.plantme.plantme.model.retrofitEntity;
 
+import com.plantme.plantme.model.ActionCalendrier;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResultOnePlant {
@@ -177,6 +180,21 @@ public class ResultOnePlant {
         }
         return stringBuilder.toString();
     }
+    public List<ActionCalendrier> getActionList(){
+        List<ActionCalendrier> clone = new ArrayList<>();
+        ActionCalendrier action = new ActionCalendrier();
+        for(int i = 0;i<actions.size();i++){
+            action.setIdActionCalendrier(actions.get(i).getIdActionCalendrier());
+            action.setIdMois(actions.get(i).getIdMois());
+            action.setMois(actions.get(i).getMois());
+            action.setType(actions.get(i).getType());
+            clone.add(action);
+        }
+
+
+        return clone;
+    }
+
 
     @Override
     public String toString() {

@@ -5,7 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
+import com.plantme.plantme.model.CoupleActionDate;
+
 
 public class ActionPlantsViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivActionImage;

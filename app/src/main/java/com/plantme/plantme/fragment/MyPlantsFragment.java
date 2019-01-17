@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
-//import com.plantme.plantme.adapter.UserPlantViewAdapter;
-import com.plantme.plantme.model.databaseEntity.UserPlant;
+import com.plantme.plantme.adapter.UserPlantViewAdapter;
+import com.plantme.plantme.model.UserPlant;
 
 
 /**
@@ -29,7 +29,7 @@ public class MyPlantsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
-    //private UserPlantViewAdapter userPlantViewAdapter;
+    private UserPlantViewAdapter userPlantViewAdapter;
     private SearchView searchView;
 
     private FloatingActionButton addPlantButton;
@@ -101,12 +101,12 @@ public class MyPlantsFragment extends Fragment {
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewPlants);
-        //userPlantViewAdapter = new UserPlantViewAdapter(mainActivity.getPlantUserList());
+        userPlantViewAdapter = new UserPlantViewAdapter(mainActivity.getPlantUserList());
 
         plantDetailsFragment = mainActivity.getPlantDetailsFragment();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //recyclerView.setAdapter(userPlantViewAdapter);
+        recyclerView.setAdapter(userPlantViewAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override

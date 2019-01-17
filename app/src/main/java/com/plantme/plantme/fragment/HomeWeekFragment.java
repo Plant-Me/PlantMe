@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
+
 import com.plantme.plantme.adapter.ActionViewAdapter;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.databaseEntity.UserAction;
+import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.UserAction;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-/*package com.plantme.plantme;
+package com.plantme.plantme;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,4 +25,3 @@ public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
         //ivPlant.setText(userPlant.getPlant().getImageUrl());
     }
 }
-*/

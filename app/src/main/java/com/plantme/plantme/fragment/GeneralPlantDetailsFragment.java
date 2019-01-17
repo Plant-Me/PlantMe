@@ -29,6 +29,7 @@ import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.adapter.PlantViewAdapter;
 import com.plantme.plantme.model.Calendrier;
 import com.plantme.plantme.model.GlideApp;
+import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.retrofitEntity.Action;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
@@ -52,6 +53,7 @@ public class GeneralPlantDetailsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private ResultOnePlant resultOnePlant;
+    private Plant plant;
     private TextView nomFrancais;
     private TextView nomLatin;
     private TextView famille;
@@ -115,7 +117,7 @@ public class GeneralPlantDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        plant = new Plant();
         mainActivity = (MainActivity)getContext();
 
         ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
@@ -146,6 +148,14 @@ public class GeneralPlantDetailsFragment extends Fragment {
             public void onClick(View v) {
                 AjoutPlanteFragment ajoutPlanteFragment = (AjoutPlanteFragment)mainActivity.getAjoutPlanteFragment();
                 ajoutPlanteFragment = new AjoutPlanteFragment();
+                plant.setFrName(resultOnePlant.getNomFr());
+                plant.setExposition(resultOnePlant.getExposition());
+                plant.setFlowerColor(resultOnePlant.getCouleurFleurs());
+                plant.setGround(resultOnePlant.getSol());
+                plant.setImageUrl(resultOnePlant.getImage().getUrl());
+                plant.setType(resultOnePlant.getTypesToString());
+                plant.setUsage(resultOnePlant.getUsageMilieu());
+                plant.setActionCalendrier(resultOnePlant.getActionList());
                 ajoutPlanteFragment.setSelectedPlant(plant);
                 mainActivity.replaceFragment(ajoutPlanteFragment);
             }

@@ -17,9 +17,10 @@ import android.widget.TextView;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
 import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
-import com.plantme.plantme.adapter.Calendrier;
+
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.model.ActionCalendrier;
+import com.plantme.plantme.model.Calendrier;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserPlant;
 

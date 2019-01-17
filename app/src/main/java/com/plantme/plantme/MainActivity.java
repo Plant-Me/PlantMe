@@ -21,8 +21,11 @@ import com.plantme.plantme.fragment.HomeFragment;
 import com.plantme.plantme.fragment.MeteoFragment;
 import com.plantme.plantme.fragment.MyPlantsFragment;
 import com.plantme.plantme.fragment.PlantDetailsFragment;
-import com.plantme.plantme.model.databaseEntity.CoupleActionDate;
-import com.plantme.plantme.model.databaseEntity.UserPlant;
+import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.FamillePlante;
+import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.UserAction;
+import com.plantme.plantme.model.UserPlant;
 import com.plantme.plantme.model.retrofitEntity.Action;
 import com.plantme.plantme.model.retrofitEntity.Famille;
 import com.plantme.plantme.model.retrofitEntity.Image;
@@ -45,12 +48,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;
-    //private List<Plant> plantList;
-    //private List<UserPlant> plantUserList;
+    private List<Plant> plantList;
+    private List<UserPlant> plantUserList;
     List<CoupleActionDate> listCoupleActionDate;
     private List<UserAction> listUserAction;
-    List<ResultAllPlant> resultAllPlantList;
-    List<ResultOnePlant> resultOnePlantList;
     ResultOnePlant resultOnePlant;
 
     private boolean wasInitialized = false;
@@ -91,9 +92,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         this.setDefaultFragment(homeFragment);
         //Log.d("plante :", "onResponse: " + resultOnePlantList);
 
+//List des familles
+        FamillePlante orchys = new FamillePlante("Orchydee", "orchys");
+        FamillePlante bonsaiolo = new FamillePlante("", "bonsaiolo");
+        FamillePlante arbre = new FamillePlante("Arbre", "");
 
-    }
-
+        //Liste des plantes
+        plantList = new ArrayList<>();
+        Plant orchidee = new Plant("orchidee", "orchideum", orchys, "Orchidee Blah", "rose", "fleur", "exposition", "sol", "intérieur");
+        Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo,"Bonsai Blah","blanche", "arbuste", "exposition", "sol", "intérieur");
+        Plant abricotier = new Plant("abricotier", "abricotierum", arbre, "Abricotier Blah","jaune", "arbre", "exposition", "sol", "verger");
+        Plant cerisier = new Plant("cerisier", "cerisierum", arbre, "Cerisier Blah","rose", "arbre", "exposition", "sol", "verger");
 
 
         orchidee.addActionCalendrier(new ActionCalendrier(1, "Taille", 9, "Septembre"));
@@ -148,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
 
     }
+
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -272,13 +284,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.onSupportNavigateUp();
     }
 
-   /* public List<Plant> getPlantList() {
+    public List<Plant> getPlantList() {
         return plantList;
     }
 
     public List<UserPlant> getPlantUserList() {
         return plantUserList;
-    }*/
+    }
 
 //    public Map<String, List<CoupleActionDate>> getActionsPlant() {
 //        return actionsPlant;
