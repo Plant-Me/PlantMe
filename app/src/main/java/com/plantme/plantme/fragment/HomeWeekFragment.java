@@ -85,7 +85,7 @@ public class HomeWeekFragment extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
 
             String dateToday = formatter.format(today.getTime());
-            Date coupleDate = coupleActionDate.getDate();
+            Date coupleDate = coupleActionDate.getDateActuelle();
             String coupleDateString = formatter.format(coupleDate);
 
             Calendar calendar = GregorianCalendar.getInstance();
@@ -95,7 +95,7 @@ public class HomeWeekFragment extends Fragment {
 
             if(coupleDateString.equals(dateToday)) {
                 listCoupleActionDateToday.add(coupleActionDate);
-            } else if (coupleActionDate.getDate().after(today.getTime()) && coupleActionDate.getDate().before(nextSevenDays)) {
+            } else if (coupleActionDate.getDateActuelle().after(today.getTime()) && coupleActionDate.getDateActuelle().before(nextSevenDays)) {
                 listCoupleActionDateNextDays.add(coupleActionDate);
             }
         }

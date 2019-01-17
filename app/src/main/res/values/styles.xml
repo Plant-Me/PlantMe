@@ -11,6 +11,7 @@
     <style name="MyNumberPickerTheme" parent="@android:style/Widget.Material.NumberPicker">
         <item name="colorControlNormal ">#33691e</item>
         <item name="android:background">#b3e5fc</item>
+        <item name="colorControlNormal">@android:color/transparent</item>
     </style>
 
 </resources>

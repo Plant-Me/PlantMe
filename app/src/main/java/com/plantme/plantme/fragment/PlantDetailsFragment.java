@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
+import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
 import com.plantme.plantme.adapter.Calendrier;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.model.ActionCalendrier;
@@ -50,6 +51,7 @@ public class PlantDetailsFragment extends Fragment {
     private TextView sol;
     private TextView solDetail;
     private TextView calendriers;
+    private TextView actions;
     private RecyclerView rvCalendriersDetail;
     private RecyclerView rvActionsDetail;
     private Button buttonShowCalendriers;
@@ -90,6 +92,7 @@ public class PlantDetailsFragment extends Fragment {
         sol = view.findViewById(R.id.sol);
         solDetail = view.findViewById(R.id.plantDetailsSol);
         calendriers = view.findViewById(R.id.calendriers);
+        actions = view.findViewById(R.id.actions);
         rvCalendriersDetail = view.findViewById(R.id.plantDetailsRecyclerViewCalendriers);
         rvActionsDetail = view.findViewById(R.id.plantDetailsRecyclerViewActions);
         buttonShowCalendriers = view.findViewById(R.id.buttonShowCalendriers);
@@ -97,6 +100,7 @@ public class PlantDetailsFragment extends Fragment {
 
 
         bindPlant(userPlant.getPlant());
+        bindUserPlant();
 
         rvCalendriersDetail.setVisibility(View.GONE);
         rvActionsDetail.setVisibility(View.GONE);
@@ -183,6 +187,7 @@ public class PlantDetailsFragment extends Fragment {
 
         if (plant.getActionCalendrier().isEmpty()) {
             calendriers.setVisibility(View.GONE);
+            buttonShowCalendriers.setVisibility(View.GONE);
             rvCalendriersDetail.setVisibility(View.GONE);
         } else {
             List<ActionCalendrier> actionCalendrierList = plant.getActionCalendrier();
@@ -247,6 +252,15 @@ public class PlantDetailsFragment extends Fragment {
 
     public void bindUserPlant() {
         nickname.setText(userPlant.getPlantName());
+        if(userPlant.getListCoupleActionDate().isEmpty()) {
+            actions.setVisibility(View.GONE);
+            buttonShowActions.setVisibility(View.GONE);
+            rvActionsDetail.setVisibility(View.GONE);
+        } else {
+            ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
+            rvActionsDetail.setLayoutManager(new LinearLayoutManager(getContext()));
+            rvActionsDetail.setAdapter(actionPlantDetailAdapter);
+        }
     }
 
     public void setUserPlant(UserPlant userPlant) {

@@ -2,18 +2,29 @@ package com.plantme.plantme.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class CoupleActionDate {
     private String plantName;
     private UserAction userAction;
-    private Date date;
+    private Date dateActuelle;
+    private Date dateInitiale;
+    private String typeRepetition;
+    private int valeurRepetition;
     private SimpleDateFormat sdf;
 
-    public CoupleActionDate(String plantName, UserAction userAction, Date date) {
+    public CoupleActionDate(String plantName, UserAction userAction, Date dateActuelle) {
         this.plantName = plantName;
         this.userAction = userAction;
-        this.date = date;
+        this.dateActuelle = dateActuelle;
+    }
+
+    public CoupleActionDate(String plantName, UserAction userAction, Date dateActuelle, String typeRepetition, int valeurRepetition) {
+        this.plantName = plantName;
+        this.userAction = userAction;
+        this.dateActuelle = dateActuelle;
+        this.dateInitiale = dateActuelle;
+        this.typeRepetition = typeRepetition;
+        this.valeurRepetition = valeurRepetition;
     }
 
     public String getPlantName() {
@@ -32,11 +43,15 @@ public class CoupleActionDate {
         this.userAction = userAction;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateActuelle() {
+        return dateActuelle;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateActuelle(Date dateActuelle) {
+        this.dateActuelle = dateActuelle;
+    }
+
+    public String getRepetition() {
+        return typeRepetition + " (" + valeurRepetition + ")";
     }
 }
