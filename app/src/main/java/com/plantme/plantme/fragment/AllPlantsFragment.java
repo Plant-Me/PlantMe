@@ -24,9 +24,15 @@ import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.Service.PlantMeService;
+import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.adapter.PlantViewAdapter;
+import com.plantme.plantme.model.Calendrier;
+import com.plantme.plantme.model.GlideApp;
+import com.plantme.plantme.model.retrofitEntity.Action;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
+import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -163,6 +169,19 @@ public class AllPlantsFragment extends Fragment {
 
                 //Plant plant = plantViewAdapter.getPlantList().get(position);
                 //((GeneralPlantDetailsFragment) generalPlantDetailsFragment).setPlant(plant);
+                getOnePlant(plantViewAdapter.getPlantList().get(position).getIdPlante(),new GetPlantCallback() {
+                    @Override
+                    public void onGetPlant(List<ResultOnePlant> resultOnePlant) {
+                        ((GeneralPlantDetailsFragment)generalPlantDetailsFragment).setPlant(resultOnePlant.get(0));
+                        mainActivity.replaceFragment(generalPlantDetailsFragment);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
                 final Intent intent = new Intent("Data_plant");
                 intent.putExtra("DATA_EXTRA", plantViewAdapter.getPlantList().get(position));
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
@@ -181,10 +200,43 @@ public class AllPlantsFragment extends Fragment {
             }
         }));
     }
-
-    public void callback() {
-        mainActivity.replaceFragment(generalPlantDetailsFragment);
+    public interface GetPlantCallback {
+        void onGetPlant(List<ResultOnePlant> resultOnePlant);
+        void onError();
     }
+
+    private void getOnePlant(final int id, final GetPlantCallback getPlantCallback) {
+
+        //retrofit detail plant
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
+
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.plantDetail(id).enqueue(new Callback<List<ResultOnePlant>>() {
+            @Override
+            public void onResponse(Call<List<ResultOnePlant>> call, Response<List<ResultOnePlant>> response) {
+
+                if (response.isSuccessful()) {
+
+                    //Log.d("plante :", "onResponse: " + resultOnePlant);
+                    getPlantCallback.onGetPlant(response.body());
+                    //Log.d("plante :", "onResponse1: " + resultOnePlantList);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ResultOnePlant>> call, Throwable t) {
+                Log.d("plante :", "onResponse: fail " + t.getMessage());
+            }
+        });
+    }
+
+
 
 
 }

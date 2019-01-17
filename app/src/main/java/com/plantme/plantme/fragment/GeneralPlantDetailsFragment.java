@@ -51,7 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GeneralPlantDetailsFragment extends Fragment {
 
     private MainActivity mainActivity;
-    //private Plant plant;
+    private ResultOnePlant resultOnePlant;
     private TextView nomFrancais;
     private TextView nomLatin;
     private TextView famille;
@@ -100,10 +100,7 @@ public class GeneralPlantDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public interface GetPlantCallback {
-        void onGetPlant(List<ResultOnePlant> resultOnePlant);
-        void onError();
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,104 +159,71 @@ public class GeneralPlantDetailsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, new IntentFilter("Data_plant"));
     }
 
-    private void getOnePlant(final int id, final GetPlantCallback getPlantCallback) {
 
-        //retrofit detail plant
-        PlantMeService plantMeService = new Retrofit.Builder()
-                .baseUrl(PlantMeService.ENDPOINT)
-
-                //convertie le json automatiquement
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PlantMeService.class);
-
-        plantMeService.plantDetail(id).enqueue(new Callback<List<ResultOnePlant>>() {
-            @Override
-            public void onResponse(Call<List<ResultOnePlant>> call, Response<List<ResultOnePlant>> response) {
-
-                if (response.isSuccessful()) {
-
-                    //Log.d("plante :", "onResponse: " + resultOnePlant);
-                    getPlantCallback.onGetPlant(response.body());
-                    //Log.d("plante :", "onResponse1: " + resultOnePlantList);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ResultOnePlant>> call, Throwable t) {
-                Log.d("plante :", "onResponse: fail " + t.getMessage());
-            }
-        });
-    }
 
     public void bind() {
 
 
-        getOnePlant(idPlanteToSearch,new GetPlantCallback() {
-            @Override
-            public void onGetPlant(List<ResultOnePlant> resultOnePlant) {
-
-                GlideApp.with(imageView).load(resultOnePlant.get(0).getImage().getUrl()).placeholder(R.drawable.ic_green_tea).into(imageView);
-                nomFrancais.setText(resultOnePlant.get(0).getNomFr());
-                if (resultOnePlant.get(0).getNomLatin().equals("")) {
+                GlideApp.with(imageView).load(resultOnePlant.getImage().getUrl()).override(500,500).placeholder(R.drawable.ic_green_tea).into(imageView);
+                nomFrancais.setText(resultOnePlant.getNomFr());
+                if (resultOnePlant.getNomLatin().equals("")) {
                     nomLatin.setVisibility(View.GONE);
                 } else {
-                    nomLatin.setText(resultOnePlant.get(0).getNomLatin());
+                    nomLatin.setText(resultOnePlant.getNomLatin());
                 }
 
-                if (!resultOnePlant.get(0).getFamille().getNom().equals("")) {
-                    famille.setText(resultOnePlant.get(0).getFamille().getNom());
+                if (!resultOnePlant.getFamille().getNom().equals("")) {
+                    famille.setText(resultOnePlant.getFamille().getNom());
                 } else {
                     famille.setVisibility(View.GONE);
                 }
 
-                if (resultOnePlant.get(0).getDescription().equals("")) {
+                if (resultOnePlant.getDescription().equals("")) {
                     description.setVisibility(View.GONE);
                     descriptionDetail.setVisibility(View.GONE);
                 } else {
-                    descriptionDetail.setText(resultOnePlant.get(0).getDescription());
+                    descriptionDetail.setText(resultOnePlant.getDescription());
                 }
 
-                if (resultOnePlant.get(0).getType().size()==0) {
+                if (resultOnePlant.getType().size()==0) {
                     type.setVisibility(View.GONE);
                     typeDetail.setVisibility(View.GONE);
                 } else {
 //        TODO do all types
-                    typeDetail.setText(resultOnePlant.get(0).getTypesToString());
+                    typeDetail.setText(resultOnePlant.getTypesToString());
                 }
 
-                if (resultOnePlant.get(0).getExposition().equals("")) {
+                if (resultOnePlant.getExposition().equals("")) {
                     exposition.setVisibility(View.GONE);
                     expositionDetail.setVisibility(View.GONE);
                 } else {
-                    expositionDetail.setText(resultOnePlant.get(0).getExposition());
+                    expositionDetail.setText(resultOnePlant.getExposition());
                 }
 
-                if (resultOnePlant.get(0).getUsageMilieu().equals("")) {
+                if (resultOnePlant.getUsageMilieu().equals("")) {
                     usages.setVisibility(View.GONE);
                     usagesDetail.setVisibility(View.GONE);
                 } else {
-                    usagesDetail.setText(resultOnePlant.get(0).getUsageMilieu());
+                    usagesDetail.setText(resultOnePlant.getUsageMilieu());
                 }
 
-                if (resultOnePlant.get(0).getCouleurFleurs().equals("")) {
+                if (resultOnePlant.getCouleurFleurs().equals("")) {
                     couleurs.setVisibility(View.GONE);
                     couleursDetail.setVisibility(View.GONE);
                 } else {
-                    couleursDetail.setText(resultOnePlant.get(0).getCouleurFleurs());
+                    couleursDetail.setText(resultOnePlant.getCouleurFleurs());
                 }
 
-                if (resultOnePlant.get(0).getSol().equals("")) {
+                if (resultOnePlant.getSol().equals("")) {
                     sol.setVisibility(View.GONE);
                     solDetail.setVisibility(View.GONE);
                 } else {
-                    solDetail.setText(resultOnePlant.get(0).getSol());
-                }if (resultOnePlant.get(0).getActions().size()==0) {
+                    solDetail.setText(resultOnePlant.getSol());
+                }if (resultOnePlant.getActions().size()==0) {
                     calendriers.setVisibility(View.GONE);
                     rvCalendriersDetail.setVisibility(View.GONE);
                 } else {
-                    List<Action> actionCalendrierList = resultOnePlant.get(0).getActions();
+                    List<Action> actionCalendrierList = resultOnePlant.getActions();
                     List<Calendrier> calendrierList = new ArrayList<>();
                     List<String> actionlist = new ArrayList<>();
                     for (Action actionCalendrier : actionCalendrierList) {
@@ -317,24 +281,18 @@ public class GeneralPlantDetailsFragment extends Fragment {
                     rvCalendriersDetail.setAdapter(calendrierViewAdapter);
                 }
 
-            }
 
-            @Override
-            public void onError() {
-
-            }
-        });
 
 
 
 
     }
 
-   /* public void setPlant(Plant plant) {
-        if (this.plant == null || !this.plant.equals(plant)) {
-            this.plant = plant;
+   public void setPlant(ResultOnePlant plant) {
+        if (this.resultOnePlant == null || !this.resultOnePlant.equals(plant)) {
+            this.resultOnePlant = plant;
         }
-    }*/
+    }
 
 }
 
