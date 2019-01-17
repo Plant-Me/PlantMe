@@ -580,9 +580,29 @@ public class AjoutPlanteFragment extends Fragment {
                 int selectedDay = numberPickerArrosageDay.getValue();
                 int selectedMonth = numberPickerArrosageMonth.getValue();
                 int selectedYear = numberPickerArrosageYear.getValue();
+                String typeRepetition = "";
+                GregorianCalendar selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay);
+                Date nextRepetitionDate = null;
+                switch (spinnerTypeRepetitionArrosage.getSelectedItemPosition()) {
+                    case 0:
+                        typeRepetition = "Jours";
+                        selectedDate.add(Calendar.DAY_OF_MONTH, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 1:
+                        typeRepetition = "Semaines";
+                        selectedDate.add(Calendar.WEEK_OF_YEAR, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 2:
+                        typeRepetition = "Mois";
+                        selectedDate.add(Calendar.MONTH, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                }
+                int valeurRepetition = compteurRepetitionArrosage;
 
 
-                Date selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay + compteurRepetitionArrosage).getTime();
 
                 UserAction selectedUserAction = null;
                 for (UserAction userAction : listUserAction) {
@@ -590,16 +610,35 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, selectedDate));
+                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
             if (switchEngrais.isChecked()) {
                 int selectedDay = numberPickerEngraisDay.getValue();
                 int selectedMonth = numberPickerEngraisMonth.getValue();
                 int selectedYear = numberPickerEngraisYear.getValue();
+                String typeRepetition = "";
+                GregorianCalendar selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay);
+                Date nextRepetitionDate = null;
+                switch (spinnerTypeRepetitionEngrais.getSelectedItemPosition()) {
+                    case 0:
+                        typeRepetition = "Jours";
+                        selectedDate.add(Calendar.DAY_OF_MONTH, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 1:
+                        typeRepetition = "Semaines";
+                        selectedDate.add(Calendar.WEEK_OF_YEAR, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 2:
+                        typeRepetition = "Mois";
+                        selectedDate.add(Calendar.MONTH, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                }
+                int valeurRepetition = compteurRepetitionEngrais;
 
-
-                Date selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay + compteurRepetitionEngrais).getTime();
 
                 UserAction selectedUserAction = null;
                 for (UserAction userAction : listUserAction) {
@@ -607,7 +646,7 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, selectedDate));
+                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
             UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);

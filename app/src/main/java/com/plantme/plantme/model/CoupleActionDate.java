@@ -16,6 +16,8 @@ public class CoupleActionDate {
         this.plantName = plantName;
         this.userAction = userAction;
         this.dateActuelle = dateActuelle;
+        typeRepetition = "";
+        valeurRepetition = 0;
     }
 
     public CoupleActionDate(String plantName, UserAction userAction, Date dateActuelle, String typeRepetition, int valeurRepetition) {
@@ -52,6 +54,16 @@ public class CoupleActionDate {
     }
 
     public String getRepetition() {
-        return typeRepetition + " (" + valeurRepetition + ")";
+        if(typeRepetition != "" && valeurRepetition != 0) {
+            return typeRepetition + " (" + valeurRepetition + ")";
+        }
+        else {
+            return "";
+        }
+    }
+
+    public void setRepetition(String typeRepetition, int valeurRepetition) {
+        this.typeRepetition = typeRepetition;
+        this.valeurRepetition = valeurRepetition;
     }
 }

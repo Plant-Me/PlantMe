@@ -1,6 +1,7 @@
 package com.plantme.plantme.fragment;
 
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,14 +9,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.plantme.plantme.ActionPlantDetailDialog;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
+import com.plantme.plantme.SwipeControllerActionDetailPlante;
+import com.plantme.plantme.SwipeControllerActions;
 import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
 import com.plantme.plantme.adapter.Calendrier;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
@@ -59,6 +64,8 @@ public class PlantDetailsFragment extends Fragment {
 
     private boolean areCalendarsShown;
     private boolean areActionsShown;
+
+    private SwipeControllerActionDetailPlante swipeControllerActions;
 
 
 
@@ -260,6 +267,7 @@ public class PlantDetailsFragment extends Fragment {
             ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
             rvActionsDetail.setLayoutManager(new LinearLayoutManager(getContext()));
             rvActionsDetail.setAdapter(actionPlantDetailAdapter);
+            setUpSwipeController();
         }
     }
 
@@ -302,6 +310,27 @@ public class PlantDetailsFragment extends Fragment {
         };
     }
 
+    private void setUpSwipeController() {
+        swipeControllerActions = new SwipeControllerActionDetailPlante(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                ActionPlantDetailDialog dialog = new ActionPlantDetailDialog();
+                dialog.setCoupleActionDate(userPlant.getListCoupleActionDate().get(position));
+                dialog.show(((MainActivity)getContext()).getSupportFragmentManager(), "dialog");
+            }
+
+        }, true);
+
+        ItemTouchHelper itemTouchHelperToday = new ItemTouchHelper(swipeControllerActions);
+        itemTouchHelperToday.attachToRecyclerView(rvActionsDetail);
+
+        rvActionsDetail.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeControllerActions.onDraw(c);
+            }
+        });
+    }
 
 
 }
