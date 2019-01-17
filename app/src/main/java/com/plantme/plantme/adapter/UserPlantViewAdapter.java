@@ -10,7 +10,6 @@ import android.widget.Filterable;
 
 import com.plantme.plantme.UserPlantsViewHolder;
 import com.plantme.plantme.R;
-import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class UserPlantViewAdapter extends RecyclerView.Adapter<UserPlantsViewHol
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getPlantName().toLowerCase().contains(charString.toLowerCase()) || row.getUserPlant().getFrName().toLowerCase().contains(charString.toLowerCase())) {
+                        if (row.getPlantName().toLowerCase().contains(charString.toLowerCase()) || row.getPlant().getFrName().toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(row);
                         }
                     }

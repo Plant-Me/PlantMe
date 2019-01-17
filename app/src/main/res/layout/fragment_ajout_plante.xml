@@ -13,18 +13,6 @@
         android:layout_height="match_parent">
 
 
-        <TextView
-            android:id="@+id/engrais"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Engrais :"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/switchEngrais"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/switchEngrais" />
-
         <ImageView
             android:id="@+id/ajoutPlanteImage"
             android:layout_width="wrap_content"
@@ -41,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:text="TextView"
+            android:text="Nom Fr"
             app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +40,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="TextView"
+            android:text="Nom Latin"
             app:layout_constraintBottom_toTopOf="@+id/ajoutPlanteNomFamille"
             app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage"
             app:layout_constraintTop_toBottomOf="@+id/ajouPlanteNomFr" />
@@ -62,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="TextView"
+            android:text="Famille Fr/Latin"
             app:layout_constraintBottom_toBottomOf="@+id/ajoutPlanteImage"
             app:layout_constraintStart_toEndOf="@+id/ajoutPlanteImage" />
 
@@ -80,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteImage" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/nickNameValue"
             android:layout_width="216dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -96,37 +84,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Arrosage :"
+            android:text="Alertes arrosage :"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/switchArrosage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/switchArrosage" />
-
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerArrosageDay"
-            android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
-
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerArrosageMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerArrosageDay"
-            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
-
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerArrosageYear"
-            android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerArrosageMonth"
-            app:layout_constraintTop_toBottomOf="@+id/switchArrosage" />
 
         <Switch
             android:id="@+id/switchArrosage"
@@ -135,32 +98,114 @@
             android:layout_marginEnd="8dp"
             android:textSize="8sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText" />
+            app:layout_constraintTop_toBottomOf="@+id/nickNameValue" />
 
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerEngraisDay"
-            android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginStart="8dp"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/datePickerArrosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+            app:layout_constraintTop_toBottomOf="@+id/switchArrosage">
 
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerEngraisMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerEngraisDay"
-            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+            <TextView
+                android:id="@+id/dernierArrosage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Selectionnez la date du dernier arrosage :"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <NumberPicker
-            android:id="@+id/ajoutPlanteNumberPickerEngraisYear"
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerArrosageDay"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dernierArrosage" />
+
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerArrosageMonth"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintEnd_toStartOf="@+id/ajoutPlanteNumberPickerArrosageYear"
+                app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerArrosageDay"
+                app:layout_constraintTop_toTopOf="@+id/ajoutPlanteNumberPickerArrosageDay" />
+
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerArrosageYear"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ajoutPlanteNumberPickerArrosageMonth" />
+
+            <TextView
+                android:id="@+id/arroser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Arroser tous les :"
+                app:layout_constraintBottom_toBottomOf="@+id/valueOfDaysArrosage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/valueOfDaysArrosage" />
+
+            <TextView
+                android:id="@+id/valueOfDaysArrosage"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/colorButtonNormal"
+                android:text="X Days"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonMinusArrosage"
+                app:layout_constraintEnd_toStartOf="@+id/buttonMinusArrosage"
+                app:layout_constraintTop_toTopOf="@+id/buttonMinusArrosage" />
+
+            <Button
+                android:id="@+id/buttonMinusArrosage"
+                style="@android:style/Widget.Material.Light.Button.Small"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="-"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonPlusArrosage"
+                app:layout_constraintEnd_toStartOf="@+id/buttonPlusArrosage"
+                app:layout_constraintTop_toTopOf="@+id/buttonPlusArrosage" />
+
+            <Button
+                android:id="@+id/buttonPlusArrosage"
+                style="@android:style/Widget.Material.Light.Button.Small"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="+"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteNumberPickerArrosageYear" />
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/engrais"
             android:layout_width="wrap_content"
-            android:layout_height="121dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerEngraisMonth"
-            app:layout_constraintTop_toBottomOf="@+id/switchEngrais" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Alertes engrais :"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchEngrais"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/switchEngrais" />
 
         <Switch
             android:id="@+id/switchEngrais"
@@ -169,7 +214,115 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteNumberPickerArrosageMonth" />
+            app:layout_constraintTop_toBottomOf="@+id/datePickerArrosage" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/datePickerEngrais"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchEngrais">
+
+            <TextView
+                android:id="@+id/derniereFertilisation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Selectionnez la date de la dernière fertilisation :"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerEngraisDay"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/derniereFertilisation" />
+
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerEngraisMonth"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintEnd_toStartOf="@+id/ajoutPlanteNumberPickerEngraisYear"
+                app:layout_constraintStart_toEndOf="@+id/ajoutPlanteNumberPickerEngraisDay"
+                app:layout_constraintTop_toTopOf="@+id/ajoutPlanteNumberPickerEngraisDay" />
+
+            <NumberPicker
+                android:id="@+id/ajoutPlanteNumberPickerEngraisYear"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ajoutPlanteNumberPickerEngraisMonth" />
+
+            <TextView
+                android:id="@+id/fertiliser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Fertiliser tous les :"
+                app:layout_constraintBottom_toBottomOf="@+id/valueOfDaysEngrais"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/valueOfDaysEngrais" />
+
+            <TextView
+                android:id="@+id/valueOfDaysEngrais"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/colorButtonNormal"
+                android:text="X Days"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonMinusEngrais"
+                app:layout_constraintEnd_toStartOf="@+id/buttonMinusEngrais"
+                app:layout_constraintTop_toTopOf="@+id/buttonMinusEngrais" />
+
+            <Button
+                android:id="@+id/buttonMinusEngrais"
+                style="@android:style/Widget.Material.Light.Button.Small"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="-"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonPlusEngrais"
+                app:layout_constraintEnd_toStartOf="@+id/buttonPlusEngrais"
+                app:layout_constraintTop_toTopOf="@+id/buttonPlusEngrais" />
+
+            <Button
+                android:id="@+id/buttonPlusEngrais"
+                style="@android:style/Widget.Material.Light.Button.Small"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="+"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ajoutPlanteNumberPickerEngraisYear" />
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/buttonSauvegarder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Sauvegarder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datePickerEngrais" />
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

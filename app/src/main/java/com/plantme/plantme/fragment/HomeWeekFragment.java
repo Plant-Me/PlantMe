@@ -117,7 +117,7 @@ public class HomeWeekFragment extends Fragment {
 //            @Override
 //            public void onClick(View view, int position) {
 //                Plant plant = actionViewAdapterToday.getPlantList().get(position);
-//                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+//                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(plant);
 //                mainActivity.replaceFragment(plantDetailsFragment);
 //
 //            }
@@ -125,7 +125,7 @@ public class HomeWeekFragment extends Fragment {
 //            @Override
 //            public void onLongClick(View view, int position) {
 //                Plant plant = actionViewAdapterToday.getPlantList().get(position);
-//                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+//                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(plant);
 //                mainActivity.replaceFragment(plantDetailsFragment);
 //            }
 //        }));

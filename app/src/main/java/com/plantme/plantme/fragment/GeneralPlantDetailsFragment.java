@@ -100,7 +100,10 @@ public class GeneralPlantDetailsFragment extends Fragment {
         buttonAjoutPlante.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.replaceFragment(mainActivity.getAjoutPlanteFragment());
+                AjoutPlanteFragment ajoutPlanteFragment = (AjoutPlanteFragment)mainActivity.getAjoutPlanteFragment();
+                ajoutPlanteFragment = new AjoutPlanteFragment();
+                ajoutPlanteFragment.setSelectedPlant(plant);
+                mainActivity.replaceFragment(ajoutPlanteFragment);
             }
         });
 
@@ -152,13 +155,6 @@ public class GeneralPlantDetailsFragment extends Fragment {
             usagesDetail.setVisibility(View.GONE);
         } else {
             usagesDetail.setText(plant.getUsage());
-        }
-
-        if (plant.getFlowerColor().equals("")) {
-            couleurs.setVisibility(View.GONE);
-            couleursDetail.setVisibility(View.GONE);
-        } else {
-            couleursDetail.setText(plant.getFlowerColor());
         }
 
         if (plant.getFlowerColor().equals("")) {

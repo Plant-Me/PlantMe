@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private List<Plant> plantList;
     private List<UserPlant> plantUserList;
     List<CoupleActionDate> listCoupleActionDate;
+    private List<UserAction> listUserAction;
 
     private boolean wasInitialized = false;
 
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         meteoFragment = new MeteoFragment();
         allPlantsFragment = new AllPlantsFragment();
         generalDetailPlantsFragment = new GeneralPlantDetailsFragment();
-        ajoutPlanteFragment = new AjoutPlanteFragment();
 
         this.setDefaultFragment(homeFragment);
 
@@ -119,19 +119,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         plantUserList.add(monBichon);
         plantUserList.add(bonbon);
 
-
+        listUserAction = new ArrayList<>();
         //Les UserActions
         UserAction arroser = new UserAction("Arroser");
-        UserAction tailler = new UserAction("Tailler");
+        UserAction fertiliser = new UserAction("Fertiliser");
+        listUserAction.add(arroser);
+        listUserAction.add(fertiliser);
 
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
         listCoupleActionDateBonbon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 26 ).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 26 ).getTime()));
 
         listCoupleActionDate = new ArrayList<>();
         for(UserPlant userPlant : plantUserList) {
@@ -254,7 +256,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         } else if (activeFragment instanceof AllPlantsFragment) {
             replaceFragment(myPlantsFragment);
         } else if (activeFragment instanceof GeneralPlantDetailsFragment) {
-            replaceFragment(previousFragment);
+            replaceFragment(allPlantsFragment);
+        } else if (activeFragment instanceof AjoutPlanteFragment) {
+            replaceFragment(generalDetailPlantsFragment);
         } else if (!(activeFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
@@ -279,5 +283,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public List<CoupleActionDate> getListCoupleActionDate() {
         return listCoupleActionDate;
+    }
+
+    public List<UserAction> getListUserAction() {
+        return listUserAction;
     }
 }

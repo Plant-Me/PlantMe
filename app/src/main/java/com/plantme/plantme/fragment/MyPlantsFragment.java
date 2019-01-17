@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
@@ -113,7 +112,7 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
+                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
 
             }
@@ -121,7 +120,7 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public void onLongClick(View view, int position) {
                 UserPlant userPlant = userPlantViewAdapter.getUserPlantList().get(position);
-                ((PlantDetailsFragment) plantDetailsFragment).setPlant(userPlant);
+                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(userPlant);
                 mainActivity.replaceFragment(plantDetailsFragment);
             }
         }));
