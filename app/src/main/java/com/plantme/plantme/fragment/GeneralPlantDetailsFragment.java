@@ -144,7 +144,10 @@ public class GeneralPlantDetailsFragment extends Fragment {
         buttonAjoutPlante.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.replaceFragment(mainActivity.getAjoutPlanteFragment());
+                AjoutPlanteFragment ajoutPlanteFragment = (AjoutPlanteFragment)mainActivity.getAjoutPlanteFragment();
+                ajoutPlanteFragment = new AjoutPlanteFragment();
+                ajoutPlanteFragment.setSelectedPlant(plant);
+                mainActivity.replaceFragment(ajoutPlanteFragment);
             }
         });
 

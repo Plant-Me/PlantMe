@@ -6,13 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:numberPickerStyle">@style/MyNumberPickerTheme</item>
-
     </style>
 
     <style name="MyNumberPickerTheme" parent="@android:style/Widget.Material.NumberPicker">
         <item name="colorControlNormal ">#33691e</item>
         <item name="android:background">#b3e5fc</item>
+        <item name="colorControlNormal">@android:color/transparent</item>
     </style>
 
 </resources>

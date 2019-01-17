@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.plantme.plantme.model.databaseEntity.UserPlant;
+import com.plantme.plantme.model.UserPlant;
 
 public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
     private TextView tvPlantNickName;
@@ -20,9 +20,9 @@ public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(UserPlant userPlant) {
-        tvPlantNickName.setText(userPlant.getUserPlant().getImageUrl());
+        tvPlantNickName.setText(userPlant.getPlant().getImageUrl());
         tvPlantFrName.setText(userPlant.getPlantName());
-        //ivPlant.setText(userPlant.getUserPlant().getImageUrl());
+        //ivPlant.setText(userPlant.getPlant().getImageUrl());
     }
 }
 */

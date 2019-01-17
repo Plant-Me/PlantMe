@@ -88,7 +88,7 @@ public class HomeWeekFragment extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
 
             String dateToday = formatter.format(today.getTime());
-            Date coupleDate = coupleActionDate.getDate();
+            Date coupleDate = coupleActionDate.getDateActuelle();
             String coupleDateString = formatter.format(coupleDate);
 
             Calendar calendar = GregorianCalendar.getInstance();
@@ -98,7 +98,7 @@ public class HomeWeekFragment extends Fragment {
 
             if(coupleDateString.equals(dateToday)) {
                 listCoupleActionDateToday.add(coupleActionDate);
-            } else if (coupleActionDate.getDate().after(today.getTime()) && coupleActionDate.getDate().before(nextSevenDays)) {
+            } else if (coupleActionDate.getDateActuelle().after(today.getTime()) && coupleActionDate.getDateActuelle().before(nextSevenDays)) {
                 listCoupleActionDateNextDays.add(coupleActionDate);
             }
         }
@@ -120,7 +120,7 @@ public class HomeWeekFragment extends Fragment {
 //            @Override
 //            public void onClick(View view, int position) {
 //                Plant plant = actionViewAdapterToday.getPlantList().get(position);
-//                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+//                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(plant);
 //                mainActivity.replaceFragment(plantDetailsFragment);
 //
 //            }
@@ -128,7 +128,7 @@ public class HomeWeekFragment extends Fragment {
 //            @Override
 //            public void onLongClick(View view, int position) {
 //                Plant plant = actionViewAdapterToday.getPlantList().get(position);
-//                ((PlantDetailsFragment) plantDetailsFragment).setPlant(plant);
+//                ((PlantDetailsFragment) plantDetailsFragment).setUserPlant(plant);
 //                mainActivity.replaceFragment(plantDetailsFragment);
 //            }
 //        }));
