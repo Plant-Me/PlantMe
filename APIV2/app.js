@@ -112,13 +112,18 @@ app.get("/plante/:id",(req,res) => {
 app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
 
   const utilisateurId = req.params.idUtilisateur
-  const queryString1 = "select DISTINCT image.url,plante.usageMilieu,plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.nom_personnel,plante.nomFr from image,plante,plantes_utilisateur,plante_type where image.idImage = plante.id_image and plante_type.id_plante = plante.idPlante and plantes_utilisateur.id_plante = plante.idPlante and plantes_utilisateur.id_utilisateur = ?"
+  const queryString1 = "select DISTINCT plantes_utilisateur.nom_personnel, plante.idPlante,plante.nomFr,plante.nomLatin,plante.description,plante.couleurFleurs,plante.exposition,plante.sol,plante.usageMilieu,famille.idFamille,famille.nom as nomFamille,famille.nomLatin as nomFamilleLatin,image.idImage,image.url from plante left JOIN plantes_utilisateur on plante.idPlante = plantes_utilisateur.id_plante left join image on plante.id_image = image.idImage left join famille on plante.id_famille = famille.idFamille where plantes_utilisateur.id_utilisateur = ?"
   const queryString3 = "SELECT  id_plante from plantes_utilisateur where id_utilisateur = ?"
   const queryString2 = "SELECT type.idType,type.nom from type,plante_type where plante_type.id_type = type.idType and plante_type.id_plante = ?"
+  const queryString4 = "SELECT * FROM plante_calendrier inner join action_calendrier on action_calendrier.idActionCalendrier = plante_calendrier.id_action_calendrier inner join mois on mois.idMois = plante_calendrier.id_mois WHERE plante_calendrier.id_plante = ?"
   let resultquery1 = connectionSync.query(queryString1,[utilisateurId])
   if (resultquery1.length > 0){
     let plante = resultquery1.map((row) => {
-    return {url:row.url,usageMilieu:row.usageMilieu,idPlanteUtilisateur:row.id_plante_utilisateur,nomPersonnel:row.nom_personnel,nomFr:row.nomFr,type:[]}
+      return {idPlante:row.idPlante, nomFr:row.nomFr, nomLatin:row.nomLatin,nomPersonnel:row.nom_personnel,description:row.description,
+        couleurFleurs:row.couleurFleurs, exposition:row.exposition,
+        sol:row.sol, usageMilieu:row.usageMilieu,type : [],image : {idImage:row.idImage,url:row.url},
+        famille : {idFamille:row.idFamille,nom:row.nomFamille,nomLatin:row.nomFamilleLatin}, 
+        actions : []}
     })
 
     let resultquery3 = connectionSync.query(queryString3,[utilisateurId])
@@ -140,7 +145,23 @@ app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
           res.sendStatus(404)
           return
         }
+        let resultquery4 = connectionSync.query(queryString4,[resultquery3[i].id_plante])
+      if (resultquery4.length > 0){
+        for(let k=0;k<resultquery4.length;k++){
+
+          plante[i].actions[k] = {
+            idActionCalendrier : resultquery4[k].idActionCalendrier,
+            type : resultquery4[k].type,
+            idMois : resultquery4[k].idMois,
+            mois : resultquery4[k].nom      
+          }      
+        }
+      }else {
+        res.sendStatus(404)
+        return
       }
+      }
+      
       
     }else {
       console.log("not found")
@@ -257,22 +278,52 @@ app.post("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
   const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
+  const queryString2 = "select * from plantes_utilisateur where id_utilisateur = ? and id_plante = ? and nom_personnel = ?"
+
   console.log("plante " + plantesUtilisateur)
   for(let i=0;i<plantesUtilisateur.length;i++){
             
-    connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel],(err,rows,fields)=> {
-      if (err){
-        console.log("error " + err)
-        res.sendStatus(404)
-        return
-      }
-      else {
-        res.status(200).send('PlantesUtilisateur inserted')
-      }   
-  })
-  }
-  
- 
+    let resultquery2 = connectionSync.query(queryString2,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
+        if (!resultquery2.length > 0){
+          connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel],(err,rows,fields)=> {
+            if (err){
+              console.log("error " + err)
+              res.sendStatus(404)
+              return
+            }
+            else {
+              res.status(200).send('PlantesUtilisateur inserted')
+            }   
+        })
+        }
+          }
+          
+})
+
+app.get("/plantesUtilisateur",(req,res) => {
+
+  let plantesUtilisateur = req.body
+  const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
+  const queryString2 = "select * from plantes_utilisateur where id_utilisateur = ? and id_plante = ? and nom_personnel = ?"
+
+  console.log("plante " + plantesUtilisateur)
+  for(let i=0;i<plantesUtilisateur.length;i++){
+            
+    let resultquery2 = connectionSync.query(queryString2,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
+        if (!resultquery2.length > 0){
+          connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel],(err,rows,fields)=> {
+            if (err){
+              console.log("error " + err)
+              res.sendStatus(404)
+              return
+            }
+            else {
+              res.status(200).send('PlantesUtilisateur inserted')
+            }   
+        })
+        }
+          }
+          
 })
 
 

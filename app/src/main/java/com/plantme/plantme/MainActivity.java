@@ -81,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         saveUserPlantIntoDatabase();
         super.onStop();
     }
+    public interface GetAllUserPlantCallback {
+        void onGetPlant(List<ResultAllPlant> resultAllPlants);
+        void onError();
+    }
 
     private void saveUserPlantIntoDatabase(){
 
@@ -141,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FamillePlante arbre = new FamillePlante("Arbre", "");
 
         //Liste des plantes
-        plantList = new ArrayList<>();
+        //plantList = new ArrayList<>();
         planteUtilisateurList=new ArrayList<>();
         /*Plant orchidee = new Plant("orchidee", "orchideum", orchys, "Orchidee Blah", "rose", "fleur", "exposition", "sol", "intérieur");
         Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo,"Bonsai Blah","blanche", "arbuste", "exposition", "sol", "intérieur");
@@ -199,6 +203,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        actionsPlant = new HashMap<>();
 //        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
 //        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
+
+    }
+
+    private void populateUserListFromDb(){
 
     }
 
