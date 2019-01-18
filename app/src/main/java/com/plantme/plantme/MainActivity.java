@@ -1,5 +1,7 @@
 package com.plantme.plantme;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,6 +11,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.plantme.plantme.fragment.AjoutPlanteFragment;
@@ -27,7 +33,6 @@ import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -123,15 +128,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //Les UserActions
         UserAction arroser = new UserAction("Arroser");
         UserAction fertiliser = new UserAction("Fertiliser");
+        UserAction tailler = new UserAction("Tailler");
+        UserAction planter = new UserAction("Planter");
+        UserAction tester = new UserAction("Tester");
         listUserAction.add(arroser);
         listUserAction.add(fertiliser);
 
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 17 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 19 ).getTime(), "jours", 6));
-        listCoupleActionDateBichon.add(new CoupleActionDate(bonbon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), tester, new GregorianCalendar(2019, Calendar.JANUARY, 19 ).getTime(), "Jours", 6));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), planter, new GregorianCalendar(2019, Calendar.JANUARY, 16 ).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 26 ).getTime()));
 
@@ -287,5 +295,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public List<UserAction> getListUserAction() {
         return listUserAction;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
     }
 }

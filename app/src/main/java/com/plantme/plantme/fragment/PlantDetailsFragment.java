@@ -62,6 +62,7 @@ public class PlantDetailsFragment extends Fragment {
     private RecyclerView rvActionsDetail;
     private Button buttonShowCalendriers;
     private Button buttonShowActions;
+    private Button buttonSettingsActions;
 
     private boolean areCalendarsShown;
     private boolean areActionsShown;
@@ -102,6 +103,7 @@ public class PlantDetailsFragment extends Fragment {
         rvActionsDetail = view.findViewById(R.id.plantDetailsRecyclerViewActions);
         buttonShowCalendriers = view.findViewById(R.id.buttonShowCalendriers);
         buttonShowActions = view.findViewById(R.id.buttonShowActions);
+        buttonSettingsActions = view.findViewById(R.id.settingsRecyclerViewActions);
 
 
         bindPlant(userPlant.getPlant());
@@ -109,8 +111,10 @@ public class PlantDetailsFragment extends Fragment {
 
         rvCalendriersDetail.setVisibility(View.GONE);
         rvActionsDetail.setVisibility(View.GONE);
+        buttonSettingsActions.setVisibility(View.GONE);
         buttonShowCalendriers.setOnClickListener(onClick());
         buttonShowActions.setOnClickListener(onClick());
+        buttonSettingsActions.setOnClickListener(onClick());
         areCalendarsShown = false;
         areActionsShown = false;
 
@@ -260,6 +264,7 @@ public class PlantDetailsFragment extends Fragment {
             actions.setVisibility(View.GONE);
             buttonShowActions.setVisibility(View.GONE);
             rvActionsDetail.setVisibility(View.GONE);
+            buttonSettingsActions.setVisibility(View.GONE);
         } else {
             final ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
             rvActionsDetail.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -314,31 +319,33 @@ public class PlantDetailsFragment extends Fragment {
                     case R.id.buttonShowActions:
                         if (areActionsShown) {
                             rvActionsDetail.setVisibility(View.GONE);
+                            buttonSettingsActions.setVisibility(View.GONE);
                             buttonShowActions.setBackgroundResource(R.drawable.ic_arrow_down);
                             areActionsShown = false;
                         } else {
                             rvActionsDetail.setVisibility(View.VISIBLE);
+                            buttonSettingsActions.setVisibility(View.VISIBLE);
                             buttonShowActions.setBackgroundResource(R.drawable.ic_arrow_up);
                             areActionsShown = true;
                         }
                         break;
                     case R.id.settingsRecyclerViewActions:
-                        List<UserAction> userActionList = new ArrayList<>();
-                        for(CoupleActionDate coupleActionDate : userPlant.getListCoupleActionDate()) {
-                            if(!userActionList.contains(coupleActionDate.getUserAction())) {
-                                userActionList.add(coupleActionDate.getUserAction());
-                            }
-                        }
-                        startDialogFragment(userActionList);
+//                        List<UserAction> userActionList = new ArrayList<>();
+//                        for(CoupleActionDate coupleActionDate : userPlant.getListCoupleActionDate()) {
+//                            if(!userActionList.contains(coupleActionDate.getUserAction())) {
+//                                userActionList.add(coupleActionDate.getUserAction());
+//                            }
+//                        }
+                        startDialogFragment(userPlant.getListCoupleActionDate());
                         break;
                 }
             }
         };
     }
 
-    public void startDialogFragment(List<UserAction> userActionList) {
+    public void startDialogFragment(List<CoupleActionDate> coupleActionDates) {
         ActionPlantDetailDialog dialog = new ActionPlantDetailDialog();
-        dialog.setUserActionList(userActionList);
+        dialog.setUserActionList(coupleActionDates);
         dialog.show(((MainActivity) getContext()).getSupportFragmentManager(), "dialog");
     }
 

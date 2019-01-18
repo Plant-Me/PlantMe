@@ -280,7 +280,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonShowActions" />
 
-        <ImageButton
+        <Button
             android:id="@+id/settingsRecyclerViewActions"
             android:layout_width="15dp"
             android:layout_height="15dp"

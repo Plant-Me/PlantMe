@@ -66,4 +66,12 @@ public class CoupleActionDate {
         this.typeRepetition = typeRepetition;
         this.valeurRepetition = valeurRepetition;
     }
+
+    public String getTypeRepetition() {
+        return typeRepetition;
+    }
+
+    public int getValeurRepetition() {
+        return valeurRepetition;
+    }
 }
