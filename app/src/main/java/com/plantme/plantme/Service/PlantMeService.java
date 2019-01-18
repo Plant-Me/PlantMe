@@ -4,6 +4,7 @@ import com.plantme.plantme.model.PlanteUtilisateur;
 import com.plantme.plantme.model.UserPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
+import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
 
 import java.util.List;
 
@@ -29,5 +30,9 @@ public interface PlantMeService {
 
     @POST("/plantesUtilisateur")
     Call<List<PlanteUtilisateur>> addAllPlantUserInDatabase(@Body List<PlanteUtilisateur> planteUtilisateur);
+
+    @GET("/utilisateur/{id}/plante")
+    Call<List<UtilisateurAllPlant>> listUtilisateurAllPlant(@Path("id") int id);
+
 
 }

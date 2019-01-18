@@ -34,6 +34,7 @@ import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 import com.plantme.plantme.model.retrofitEntity.Type;
 import com.plantme.plantme.model.ActionCalendrier;
+import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onStop();
     }
     public interface GetAllUserPlantCallback {
-        void onGetPlant(List<ResultAllPlant> resultAllPlants);
+        void onGetPlant(List<UtilisateurAllPlant> utilisateurAllPlants);
         void onError();
     }
 
@@ -110,6 +111,33 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
+
+    }
+    private void getAllUserPlant(final GetAllUserPlantCallback getAllUserPlantCallback){
+
+        PlantMeService plantMeService = new Retrofit.Builder()
+                .baseUrl(PlantMeService.ENDPOINT)
+
+                //convertie le json automatiquement
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PlantMeService.class);
+
+        plantMeService.listUtilisateurAllPlant(3).enqueue(new Callback<List<UtilisateurAllPlant>>() {
+            @Override
+            public void onResponse(Call<List<UtilisateurAllPlant>> call, Response<List<UtilisateurAllPlant>> response) {
+                if(response.isSuccessful()){
+                    getAllUserPlantCallback.onGetPlant(response.body());
+                }else{
+                    getAllUserPlantCallback.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UtilisateurAllPlant>> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -208,6 +236,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void populateUserListFromDb(){
 
+        getAllUserPlant(new GetAllUserPlantCallback() {
+
+            @Override
+            public void onGetPlant(List<UtilisateurAllPlant> utilisateurAllPlants) {
+                plantUserList.add(new Plant(utilisateurAllPlants.get(0).getIdPlante(), utilisateurAllPlants.get(0).getImage().getUrl(), utilisateurAllPlants.get(0).getNomFr(), utilisateurAllPlants.get(0).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(0).getFamille().getNom(),utilisateurAllPlants.get(0).getNomLatin()), utilisateurAllPlants.get(0).getDescription(), utilisateurAllPlants.get(0).getCouleurFleurs(), utilisateurAllPlants.get(0).getTypesToString(), utilisateurAllPlants.get(0).getExposition(), utilisateurAllPlants.get(0).getSol(), utilisateurAllPlants.get(0).getUsageMilieu(), utilisateurAllPlants.get(0).getActionList()))
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
 
