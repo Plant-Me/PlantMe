@@ -55,7 +55,7 @@ public class CoupleActionDate {
 
     public String getRepetition() {
         if(typeRepetition != "" && valeurRepetition != 0) {
-            return typeRepetition + " (" + valeurRepetition + ")";
+            return "tous les " + valeurRepetition + " " + typeRepetition;
         }
         else {
             return "";

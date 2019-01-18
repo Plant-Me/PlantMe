@@ -1,18 +1,23 @@
-package com.plantme.plantme;
+package com.plantme.plantme.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.fragment.HomeWeekFragment;
 import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.UserAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +25,7 @@ import java.util.List;
 public class ActionPlantDetailDialog extends DialogFragment {
 
     private CoupleActionDate coupleActionDate;
-    private HomeWeekFragment homeWeekFragment;
+    List<UserAction> userActionList;
 
     private int compteurRepetition;
 
@@ -30,7 +35,11 @@ public class ActionPlantDetailDialog extends DialogFragment {
 
     private Button buttonMinus;
     private Button buttonPlus;
-    private int position;
+    private TextView valeurRepetitionActuelle;
+    private TextView repetitionActuelle;
+
+    private RecyclerView recyclerViewActions;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,14 +53,41 @@ public class ActionPlantDetailDialog extends DialogFragment {
         spinnerRepetitions = view.findViewById(R.id.actionDialogSpinnerTypeRepetition);
         buttonMinus = view.findViewById(R.id.actionDialogButtonMinus);
         buttonPlus = view.findViewById(R.id.actionDialogButtonPlus);
+        repetitionActuelle = view.findViewById(R.id.repetitionActuelle);
+        valeurRepetitionActuelle = view.findViewById(R.id.valeurRepetition);
+
+        recyclerViewActions = view.findViewById(R.id.recyclerViewActionDialog);
+
+        
+
 
         buttonMinus.setOnClickListener(onClick());
         buttonPlus.setOnClickListener(onClick());
 
+        if(!coupleActionDate.getRepetition().equals("")) {
+            valeurRepetitionActuelle.setText(coupleActionDate.getRepetition());
+        } else {
+            repetitionActuelle.setVisibility(View.GONE);
+            valeurRepetitionActuelle.setVisibility(View.GONE);
+        }
+        compteurRepetition = 1;
+
         listTypeRepetition = new ArrayList<>();
-        listTypeRepetition.add("jours");
-        listTypeRepetition.add("semaines");
-        listTypeRepetition.add("mois");
+        listTypeRepetition.add("tous les jours");
+        listTypeRepetition.add("toutes les semaines");
+        listTypeRepetition.add("tous les mois");
+
+        spinnerRepetitions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                compteurRepetition = 1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         spinnerAdapter = new ArrayAdapter<>(getActivity(),
@@ -157,11 +193,8 @@ public class ActionPlantDetailDialog extends DialogFragment {
     }
 
 
-        public void setCoupleActionDate (CoupleActionDate coupleActionDate){
-            this.coupleActionDate = coupleActionDate;
-        }
 
-        public void setPosition ( int position){
-            this.position = position;
-        }
+    public void setUserActionList(List<UserAction> userActionList) {
+        this.userActionList = userActionList;
     }
+}

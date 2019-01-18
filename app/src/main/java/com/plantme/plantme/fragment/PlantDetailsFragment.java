@@ -16,16 +16,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.plantme.plantme.ActionPlantDetailDialog;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
-import com.plantme.plantme.SwipeControllerActionDetailPlante;
-import com.plantme.plantme.SwipeControllerActions;
+import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
 import com.plantme.plantme.adapter.Calendrier;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.model.ActionCalendrier;
+import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.User;
+import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
@@ -65,9 +66,6 @@ public class PlantDetailsFragment extends Fragment {
     private boolean areCalendarsShown;
     private boolean areActionsShown;
 
-    private SwipeControllerActionDetailPlante swipeControllerActions;
-
-
 
     View view;
 
@@ -79,9 +77,9 @@ public class PlantDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-        
+
         nickname = view.findViewById(R.id.plantDetailNickname);
         nomFrancais = view.findViewById(R.id.plantDetailFrName);
         nomLatin = view.findViewById(R.id.plantDetailsLatinName);
@@ -124,7 +122,6 @@ public class PlantDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
         this.view = view;
-
 
 
         // Inflate the layout for this fragment
@@ -259,20 +256,40 @@ public class PlantDetailsFragment extends Fragment {
 
     public void bindUserPlant() {
         nickname.setText(userPlant.getPlantName());
-        if(userPlant.getListCoupleActionDate().isEmpty()) {
+        if (userPlant.getListCoupleActionDate().isEmpty()) {
             actions.setVisibility(View.GONE);
             buttonShowActions.setVisibility(View.GONE);
             rvActionsDetail.setVisibility(View.GONE);
         } else {
-            ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
+            final ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
             rvActionsDetail.setLayoutManager(new LinearLayoutManager(getContext()));
             rvActionsDetail.setAdapter(actionPlantDetailAdapter);
-            setUpSwipeController();
+            rvActionsDetail.addOnItemTouchListener(new RecyclerTouchListener(getContext(), rvActionsDetail, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+
+
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    CoupleActionDate coupleActionDate = userPlant.getListCoupleActionDate().get(position);
+
+                }
+            }));
+
+            rvActionsDetail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    return false;
+                }
+            });
         }
     }
 
     public void setUserPlant(UserPlant userPlant) {
-        if(this.userPlant == null || !this.userPlant.equals(userPlant)) {
+        if (this.userPlant == null || !this.userPlant.equals(userPlant)) {
             this.userPlant = userPlant;
 
         }
@@ -282,9 +299,9 @@ public class PlantDetailsFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch(v.getId()) {
+                switch (v.getId()) {
                     case R.id.buttonShowCalendriers:
-                        if(areCalendarsShown) {
+                        if (areCalendarsShown) {
                             rvCalendriersDetail.setVisibility(View.GONE);
                             buttonShowCalendriers.setBackgroundResource(R.drawable.ic_arrow_down);
                             areCalendarsShown = false;
@@ -295,7 +312,7 @@ public class PlantDetailsFragment extends Fragment {
                         }
                         break;
                     case R.id.buttonShowActions:
-                        if(areActionsShown) {
+                        if (areActionsShown) {
                             rvActionsDetail.setVisibility(View.GONE);
                             buttonShowActions.setBackgroundResource(R.drawable.ic_arrow_down);
                             areActionsShown = false;
@@ -305,31 +322,24 @@ public class PlantDetailsFragment extends Fragment {
                             areActionsShown = true;
                         }
                         break;
+                    case R.id.settingsRecyclerViewActions:
+                        List<UserAction> userActionList = new ArrayList<>();
+                        for(CoupleActionDate coupleActionDate : userPlant.getListCoupleActionDate()) {
+                            if(!userActionList.contains(coupleActionDate.getUserAction())) {
+                                userActionList.add(coupleActionDate.getUserAction());
+                            }
+                        }
+                        startDialogFragment(userActionList);
+                        break;
                 }
             }
         };
     }
 
-    private void setUpSwipeController() {
-        swipeControllerActions = new SwipeControllerActionDetailPlante(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(int position) {
-                ActionPlantDetailDialog dialog = new ActionPlantDetailDialog();
-                dialog.setCoupleActionDate(userPlant.getListCoupleActionDate().get(position));
-                dialog.show(((MainActivity)getContext()).getSupportFragmentManager(), "dialog");
-            }
-
-        }, true);
-
-        ItemTouchHelper itemTouchHelperToday = new ItemTouchHelper(swipeControllerActions);
-        itemTouchHelperToday.attachToRecyclerView(rvActionsDetail);
-
-        rvActionsDetail.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeControllerActions.onDraw(c);
-            }
-        });
+    public void startDialogFragment(List<UserAction> userActionList) {
+        ActionPlantDetailDialog dialog = new ActionPlantDetailDialog();
+        dialog.setUserActionList(userActionList);
+        dialog.show(((MainActivity) getContext()).getSupportFragmentManager(), "dialog");
     }
 
 
