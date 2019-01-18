@@ -37,7 +37,7 @@ public class HomeMonthFragment extends Fragment {
 
     private MainActivity mainActivity;
 
-    CalendarView calendarView;
+    private CalendarView calendarView;
     private RecyclerView recyclerView;
     private ActionCalendarViewAdapter actionCalendarViewAdapter;
     private List<CoupleActionDate> listCoupleActionDate;
@@ -48,7 +48,7 @@ public class HomeMonthFragment extends Fragment {
     private GregorianCalendar date;
     private Calendar today;
 
-
+    private  List<UserPlant> userPlantList;
     public HomeMonthFragment() {
         // Required empty public constructor
     }
@@ -66,11 +66,15 @@ public class HomeMonthFragment extends Fragment {
             @SuppressLint("RestrictedApi")
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                listCoupleActionDate.clear();
+                for(UserPlant userPlant : userPlantList) {
+                    listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
+                }
                 listCoupleActionDateOfDay.clear();
                 date = new GregorianCalendar(year, month, dayOfMonth);
                 String formattedDate = formatter.format(date.getTime());
 
-                if(formattedDate.equals(dateToday) || date.before(today) ) {
+                if(formattedDate.equals(dateToday) || (date.before(today)) ) {
                     floatingActionButton.setVisibility(View.GONE);
                 } else {
                     floatingActionButton.setVisibility(View.VISIBLE);
@@ -79,12 +83,18 @@ public class HomeMonthFragment extends Fragment {
 
                 //On associe une action au recyclerview en fonction de la date de l'action
                 for (CoupleActionDate coupleActionDate : listCoupleActionDate) {
-                    Date coupleDate = coupleActionDate.getDate();
+                    Date coupleDate = coupleActionDate.getDateActuelle();
                     String coupleDateString = formatter.format(coupleDate);
 
-                    if (coupleDateString.equals(formattedDate)) {
+                    if (coupleDateString.equals(formattedDate) && !coupleActionDate.isValidated()) {
                         listCoupleActionDateOfDay.add(coupleActionDate);
                     }
+                }
+
+                if (listCoupleActionDateOfDay.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
 
                 actionCalendarViewAdapter.notifyDataSetChanged();
@@ -112,7 +122,7 @@ public class HomeMonthFragment extends Fragment {
         floatingActionButton = view.findViewById(R.id.floatingActionButtonAddAction);
 
 //        listCoupleActionDate = mainActivity.getListCoupleActionDate();
-        List<UserPlant> userPlantList = mainActivity.getPlantUserList();
+        userPlantList = mainActivity.getPlantUserList();
         listCoupleActionDateOfDay = new ArrayList<>();
 
 
@@ -125,10 +135,10 @@ public class HomeMonthFragment extends Fragment {
         for (CoupleActionDate coupleActionDate : listCoupleActionDate) {
             today = new GregorianCalendar();
             dateToday = formatter.format(today.getTime());
-            Date coupleDate = coupleActionDate.getDate();
+            Date coupleDate = coupleActionDate.getDateActuelle();
             String coupleDateString = formatter.format(coupleDate);
 
-            if (coupleDateString.equals(dateToday)) {
+            if (coupleDateString.equals(dateToday) && coupleActionDate.isValidated() == false) {
                 listCoupleActionDateOfDay.add(coupleActionDate);
             }
         }
@@ -159,4 +169,9 @@ public class HomeMonthFragment extends Fragment {
     public void notifyDataSetChanged() {
         actionCalendarViewAdapter.notifyDataSetChanged();
     }
+
+    /*public void
+    public ActionCalendarViewAdapter getActionCalendarViewAdapter() {
+        return actionCalendarViewAdapter;
+    }*/
 }

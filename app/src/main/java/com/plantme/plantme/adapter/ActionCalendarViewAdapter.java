@@ -28,9 +28,9 @@ public class ActionCalendarViewAdapter extends RecyclerView.Adapter<ActionCalend
 
 
     @Override
-    public void onBindViewHolder(ActionCalendarViewHolder actionWeekViewHolder, int i) {
+    public void onBindViewHolder(ActionCalendarViewHolder actionCalendarViewHolder, int i) {
         CoupleActionDate coupleActionDate = listCoupleActionDates.get(i);
-        actionWeekViewHolder.bind(coupleActionDate);
+        actionCalendarViewHolder.bind(coupleActionDate);
     }
 
     @Override

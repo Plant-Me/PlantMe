@@ -2,18 +2,36 @@ package com.plantme.plantme.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class CoupleActionDate implements Comparable<CoupleActionDate> {
+    private UserPlant userPlant;
     private String plantName;
     private UserAction userAction;
-    private Date date;
-    private boolean isValidated = false;
+    private Date dateActuelle;
+    private Date dateInitiale;
+    private String typeRepetition;
+    private int valeurRepetition;
+    private SimpleDateFormat sdf;
+    private boolean validated;
 
-    public CoupleActionDate(String plantName, UserAction userAction, Date date) {
+    public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle) {
         this.plantName = plantName;
         this.userAction = userAction;
-        this.date = date;
+        this.dateActuelle = dateActuelle;
+        this.dateActuelle = dateActuelle;
+        typeRepetition = "";
+        valeurRepetition = 0;
+        this.userPlant = userPlant;
+    }
+
+    public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle, String typeRepetition, int valeurRepetition) {
+        this.plantName = plantName;
+        this.userAction = userAction;
+        this.dateActuelle = dateActuelle;
+        this.dateInitiale = dateActuelle;
+        this.typeRepetition = typeRepetition;
+        this.valeurRepetition = valeurRepetition;
+        this.userPlant = userPlant;
     }
 
     public String getPlantName() {
@@ -32,32 +50,61 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
         this.userAction = userAction;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateActuelle() {
+        return dateActuelle;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateActuelle(Date dateActuelle) {
+        this.dateActuelle = dateActuelle;
+    }
+
+    public String getRepetition() {
+        if(typeRepetition != "" && valeurRepetition != 0) {
+            return "tous les " + valeurRepetition + " " + typeRepetition;
+        }
+       else {
+            return "";
+        }
+    }
+
+    public void setRepetition(String typeRepetition, int valeurRepetition) {
+        this.typeRepetition = typeRepetition;
+        this.valeurRepetition = valeurRepetition;
+    }
+
+    public String getTypeRepetition() {
+        return typeRepetition;
+    }
+
+    public int getValeurRepetition() {
+        return valeurRepetition;
     }
 
     public boolean isValidated() {
-        return isValidated;
+        return validated;
     }
 
     public void setValidated(boolean validated) {
-        isValidated = validated;
+        this.validated = validated;
     }
+
 
     @Override
     public int compareTo(CoupleActionDate o) {
-        int returnValue = 0;
-        if(o.getDate().after(this.getDate())) {
-            returnValue = -1;
-        } else if(o.getDate().before(this.getDate())) {
-            returnValue = 1;
+        if (o.getDateActuelle().after(getDateActuelle())) {
+            return -1;
+        } else if (o.getDateActuelle().before(getDateActuelle())) {
+            return 1;
         } else {
-            returnValue = 0;
+            return 0;
         }
-        return returnValue;
+    }
+
+    public UserPlant getUserPlant() {
+        return userPlant;
+    }
+
+    public Date getDateInitiale() {
+        return dateInitiale;
     }
 }

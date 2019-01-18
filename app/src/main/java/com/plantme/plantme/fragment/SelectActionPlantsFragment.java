@@ -96,7 +96,7 @@ public class SelectActionPlantsFragment extends Fragment {
     }
 
     // Il faut ici créer une nouvelle userAction pour la userPlant récupérée au clic.
-    public void updateUserActions(String typeAction) {
+    public void updateUserActions(String typeAction, String typeRepetition, int valeurRepetition) {
         UserAction userAction = null;
         for(UserAction userActionSearch : listUserActions) {
             if(userActionSearch.getActionName().equals(typeAction)) {
@@ -104,7 +104,7 @@ public class SelectActionPlantsFragment extends Fragment {
             }
         }
 
-        CoupleActionDate coupleActionDate = new CoupleActionDate(userPlant.getPlantName(), userAction, selectedDate);
+        CoupleActionDate coupleActionDate = new CoupleActionDate(userPlant ,userPlant.getPlantName(), userAction, selectedDate, typeRepetition, valeurRepetition);
 
         List<CoupleActionDate> userPlantListCoupleActionDate = userPlant.getListCoupleActionDate();
 
@@ -113,10 +113,6 @@ public class SelectActionPlantsFragment extends Fragment {
         ((HomeFragment) mainActivity.getHomeFragment()).notifyDataSetChanged();
     }
 
-    public void createNewAction(UserAction userAction, int position, UserPlant userPlant) {
-
-
-    }
 
     public void setSelectedDate(Date selectedDate) {
         this.selectedDate = selectedDate;

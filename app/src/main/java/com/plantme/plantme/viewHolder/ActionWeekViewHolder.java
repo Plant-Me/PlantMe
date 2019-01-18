@@ -37,7 +37,7 @@ public class ActionWeekViewHolder extends RecyclerView.ViewHolder {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-        Date coupleDate = coupleActionDate.getDate();
+        Date coupleDate = coupleActionDate.getDateActuelle();
         Date today = new Date();
         String dateToday = formatter.format(today.getTime());
         String coupleDateString = formatter.format(coupleDate.getTime());
