@@ -71,6 +71,15 @@ public class Plant implements Serializable {
         return type;
     }
 
+    public void setFamillePlante(FamillePlante famillePlante) {
+        this.famillePlante = famillePlante;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
     public void setType(String type) {
         this.type = type;
     }
@@ -80,7 +89,7 @@ public class Plant implements Serializable {
     }
 
     public void setExposition(String exposition) {
-        exposition = exposition;
+        this.exposition = exposition;
     }
 
     public String getGround() {
@@ -96,7 +105,7 @@ public class Plant implements Serializable {
     }
 
     public void setUsage(String usage) {
-        usage = usage;
+        this.usage = usage;
     }
 
     public List<ActionCalendrier> getActionCalendrier() {
@@ -117,5 +126,22 @@ public class Plant implements Serializable {
 
     public void addActionCalendrier(ActionCalendrier actionCalendrier) {
         this.actionCalendrierList.add(actionCalendrier);
+    }
+
+    @Override
+    public String toString() {
+        return "Plant{" +
+                "imageUrl='" + imageUrl + '\'' +
+                ", frName='" + frName + '\'' +
+                ", ltnName='" + ltnName + '\'' +
+                ", famillePlante=" + famillePlante +
+                ", description='" + description + '\'' +
+                ", flowerColor='" + flowerColor + '\'' +
+                ", type='" + type + '\'' +
+                ", exposition='" + exposition + '\'' +
+                ", ground='" + ground + '\'' +
+                ", usage='" + usage + '\'' +
+                ", actionCalendrierList=" + actionCalendrierList +
+                '}';
     }
 }

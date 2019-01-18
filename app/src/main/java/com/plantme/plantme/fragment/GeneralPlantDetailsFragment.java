@@ -28,6 +28,7 @@ import com.plantme.plantme.Service.PlantMeService;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.adapter.PlantViewAdapter;
 import com.plantme.plantme.model.Calendrier;
+import com.plantme.plantme.model.FamillePlante;
 import com.plantme.plantme.model.GlideApp;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.retrofitEntity.Action;
@@ -53,7 +54,6 @@ public class GeneralPlantDetailsFragment extends Fragment {
 
     private MainActivity mainActivity;
     private ResultOnePlant resultOnePlant;
-    private Plant plant;
     private TextView nomFrancais;
     private TextView nomLatin;
     private TextView famille;
@@ -117,7 +117,7 @@ public class GeneralPlantDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        plant = new Plant();
+
         mainActivity = (MainActivity)getContext();
 
         ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
@@ -148,7 +148,10 @@ public class GeneralPlantDetailsFragment extends Fragment {
             public void onClick(View v) {
                 AjoutPlanteFragment ajoutPlanteFragment = (AjoutPlanteFragment)mainActivity.getAjoutPlanteFragment();
                 ajoutPlanteFragment = new AjoutPlanteFragment();
+                Plant plant = new Plant();
                 plant.setFrName(resultOnePlant.getNomFr());
+                plant.setDescription(resultOnePlant.getDescription());
+                plant.setFamillePlante(new FamillePlante(resultOnePlant.getFamille().getNom()));
                 plant.setExposition(resultOnePlant.getExposition());
                 plant.setFlowerColor(resultOnePlant.getCouleurFleurs());
                 plant.setGround(resultOnePlant.getSol());

@@ -226,6 +226,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return ajoutPlanteFragment;
     }
 
+    public Fragment getMyPlantsFragment() {
+        return myPlantsFragment;
+    }
+
+
     /*public void replace(Fragment destFragment) {
         previousFragment = activeFragment;
         fm.beginTransaction().hide(activeFragment).show(destFragment).commit();

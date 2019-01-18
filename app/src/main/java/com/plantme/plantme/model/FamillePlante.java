@@ -9,6 +9,9 @@ public class FamillePlante {
         this.nomLatin = nomLatin;
     }
 
+    public FamillePlante(String nomFrancais) {
+        this.nomFrancais = nomFrancais;
+    }
 
     public String getNomFrancais() {
         return nomFrancais;
@@ -16,5 +19,13 @@ public class FamillePlante {
 
     public String getNomLatin() {
         return nomLatin;
+    }
+
+    public void setNomFrancais(String nomFrancais) {
+        this.nomFrancais = nomFrancais;
+    }
+
+    public void setNomLatin(String nomLatin) {
+        this.nomLatin = nomLatin;
     }
 }

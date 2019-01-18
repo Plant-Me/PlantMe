@@ -69,7 +69,7 @@ public class MyPlantsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d("", "onQueryTextChange: " + s);
-                //userPlantViewAdapter.getFilter().filter(s);
+                userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
 
@@ -77,7 +77,7 @@ public class MyPlantsFragment extends Fragment {
             public boolean onQueryTextChange(String s) {
                 //CharSequence charSequence = searchView.getQuery();
                 Log.d("", "onQueryTextChange: " + s);
-                //userPlantViewAdapter.getFilter().filter(s);
+                userPlantViewAdapter.getFilter().filter(s);
                 return false;
             }
         });

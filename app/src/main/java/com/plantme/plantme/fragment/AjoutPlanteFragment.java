@@ -96,7 +96,6 @@ public class AjoutPlanteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ajout_plante, container, false);
-        selectedPlant = new Plant();
         nomFrancaisPlante = view.findViewById(R.id.ajouPlanteNomFr);
         nomLatinPlante = view.findViewById(R.id.ajoutPlanteNomLatin);
         nomFamillePlante = view.findViewById(R.id.ajoutPlanteNomFamille);
@@ -185,17 +184,19 @@ public class AjoutPlanteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nomFrancaisPlante.setText(selectedPlant.getFrName());
+        Log.d("TAG", "onViewCreated: "+selectedPlant.getExposition());
+        //Log.d("TAG", "onViewCreated: "+selectedPlant.toString());
        /* if (selectedPlant.getLtnName().equals("")) {
             nomLatinPlante.setVisibility(View.GONE);
         } else {
             nomLatinPlante.setText(selectedPlant.getLtnName());
         }
 */
-        /*if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+       /* if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais() + " / " + selectedPlant.getFamillePlante().getNomLatin());
-        } else */if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
+        } else*/ if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais());
-       /* } else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+        /*} else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomLatin());*/
         } else {
             nomFamillePlante.setVisibility(View.GONE);
@@ -621,7 +622,7 @@ public class AjoutPlanteFragment extends Fragment {
 
             UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);
             mainActivity.getPlantUserList().add(newUserPlant);
-            mainActivity.replaceFragment(mainActivity.getAllPlantsFragment());
+            mainActivity.replaceFragment(mainActivity.getMyPlantsFragment());
         } else {
             Toast toast = Toast.makeText(getContext(), "Veuillez entrer un nom pour votre plante.", Toast.LENGTH_SHORT);
             toast.show();

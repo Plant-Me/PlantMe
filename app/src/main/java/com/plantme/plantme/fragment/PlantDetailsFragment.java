@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
@@ -21,6 +22,7 @@ import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.model.ActionCalendrier;
 import com.plantme.plantme.model.Calendrier;
+import com.plantme.plantme.model.GlideApp;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserPlant;
 
@@ -35,6 +37,7 @@ public class PlantDetailsFragment extends Fragment {
 
 
     private UserPlant userPlant;
+    private ImageView ivMyPlant;
     private TextView nickname;
     private TextView nomFrancais;
     private TextView nomLatin;
@@ -75,7 +78,8 @@ public class PlantDetailsFragment extends Fragment {
 
         ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-        
+
+        ivMyPlant=view.findViewById(R.id.plantDetailImagePlant);
         nickname = view.findViewById(R.id.plantDetailNickname);
         nomFrancais = view.findViewById(R.id.plantDetailFrName);
         nomLatin = view.findViewById(R.id.plantDetailsLatinName);
@@ -126,19 +130,20 @@ public class PlantDetailsFragment extends Fragment {
     }
 
     public void bindPlant(Plant plant) {
+        GlideApp.with(ivMyPlant).load(plant.getImageUrl()).placeholder(R.drawable.ic_green_tea).into(ivMyPlant);
         nomFrancais.setText(plant.getFrName());
-        if (plant.getLtnName().equals("")) {
+       /* if (plant.getLtnName().equals("")) {
             nomLatin.setVisibility(View.GONE);
         } else {
             nomLatin.setText(plant.getLtnName());
-        }
+        }*/
 
-        if (!plant.getFamillePlante().getNomFrancais().equals("") && !plant.getFamillePlante().getNomLatin().equals("")) {
+       /* if (!plant.getFamillePlante().getNomFrancais().equals("") && !plant.getFamillePlante().getNomLatin().equals("")) {
             famille.setText(plant.getFamillePlante().getNomFrancais() + " / " + plant.getFamillePlante().getNomLatin());
-        } else if (!plant.getFamillePlante().getNomFrancais().equals("")) {
+        } else*/ if (!plant.getFamillePlante().getNomFrancais().equals("")) {
             famille.setText(plant.getFamillePlante().getNomFrancais());
-        } else if (!plant.getFamillePlante().getNomLatin().equals("")) {
-            famille.setText(plant.getFamillePlante().getNomLatin());
+       /* } else if (!plant.getFamillePlante().getNomLatin().equals("")) {
+            famille.setText(plant.getFamillePlante().getNomLatin());*/
         } else {
             famille.setVisibility(View.GONE);
         }

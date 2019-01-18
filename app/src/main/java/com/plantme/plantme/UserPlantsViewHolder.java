@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.plantme.plantme.model.GlideApp;
 import com.plantme.plantme.model.UserPlant;
 
 public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
@@ -17,11 +19,12 @@ public class UserPlantsViewHolder extends RecyclerView.ViewHolder {
 
         tvPlantNickName = viewItem.findViewById(R.id.tvPlantNickName);
         tvPlantFrName = viewItem.findViewById(R.id.tvPlantFrName);
+        ivPlant = viewItem.findViewById(R.id.ivPlant);
     }
 
     public void bind(UserPlant userPlant) {
-        tvPlantNickName.setText(userPlant.getPlant().getImageUrl());
-        tvPlantFrName.setText(userPlant.getPlantName());
-        //ivPlant.setText(userPlant.getPlant().getImageUrl());
+        tvPlantNickName.setText(userPlant.getPlantName());
+        tvPlantFrName.setText(userPlant.getPlant().getFrName());
+        GlideApp.with(ivPlant).load(userPlant.getPlant().getImageUrl()).placeholder(R.drawable.ic_green_tea).into(ivPlant);        //ivPlant.setText(userPlant.getPlant().getImageUrl());
     }
 }
