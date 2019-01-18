@@ -186,18 +186,18 @@ public class AjoutPlanteFragment extends Fragment {
         nomFrancaisPlante.setText(selectedPlant.getFrName());
         Log.d("TAG", "onViewCreated: "+selectedPlant.getExposition());
         //Log.d("TAG", "onViewCreated: "+selectedPlant.toString());
-       /* if (selectedPlant.getLtnName().equals("")) {
+        if (selectedPlant.getLtnName().equals("")) {
             nomLatinPlante.setVisibility(View.GONE);
         } else {
             nomLatinPlante.setText(selectedPlant.getLtnName());
         }
-*/
-       /* if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+
+        if (!selectedPlant.getFamillePlante().getNomFrancais().equals("") && !selectedPlant.getFamillePlante().getNomLatin().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais() + " / " + selectedPlant.getFamillePlante().getNomLatin());
-        } else*/ if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
+        } else if (!selectedPlant.getFamillePlante().getNomFrancais().equals("")) {
             nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomFrancais());
-        /*} else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
-            nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomLatin());*/
+        } else if (!selectedPlant.getFamillePlante().getNomLatin().equals("")) {
+            nomFamillePlante.setText(selectedPlant.getFamillePlante().getNomLatin());
         } else {
             nomFamillePlante.setVisibility(View.GONE);
         }

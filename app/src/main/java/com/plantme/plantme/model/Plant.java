@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Plant implements Serializable {
+    private int idPlant;
     private String imageUrl;
     private String frName;
     private String ltnName;
@@ -21,7 +22,23 @@ public class Plant implements Serializable {
 
     }
 
-    public Plant(String frName, String ltnName, FamillePlante famillePlante, String description,  String flowerColor, String type, String exposition, String ground, String usage) {
+
+    public Plant(int idPlant, String imageUrl, String frName, String ltnName, FamillePlante famillePlante, String description, String flowerColor, String type, String exposition, String ground, String usage, List<ActionCalendrier> actionCalendrierList) {
+        this.idPlant = idPlant;
+        this.imageUrl = imageUrl;
+        this.frName = frName;
+        this.ltnName = ltnName;
+        this.famillePlante = famillePlante;
+        this.description = description;
+        this.flowerColor = flowerColor;
+        this.type = type;
+        this.exposition = exposition;
+        this.ground = ground;
+        this.usage = usage;
+        this.actionCalendrierList = actionCalendrierList;
+    }
+
+    public Plant(String frName, String ltnName, FamillePlante famillePlante, String description, String flowerColor, String type, String exposition, String ground, String usage) {
         this.frName = frName;
         this.ltnName = ltnName;
         this.famillePlante = famillePlante;
@@ -126,6 +143,22 @@ public class Plant implements Serializable {
 
     public void addActionCalendrier(ActionCalendrier actionCalendrier) {
         this.actionCalendrierList.add(actionCalendrier);
+    }
+
+    public int getIdPlant() {
+        return idPlant;
+    }
+
+    public void setIdPlant(int idPlant) {
+        this.idPlant = idPlant;
+    }
+
+    public List<ActionCalendrier> getActionCalendrierList() {
+        return actionCalendrierList;
+    }
+
+    public void setActionCalendrierList(List<ActionCalendrier> actionCalendrierList) {
+        this.actionCalendrierList = actionCalendrierList;
     }
 
     @Override

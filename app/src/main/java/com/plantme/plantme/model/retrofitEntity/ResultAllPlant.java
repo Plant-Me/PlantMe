@@ -9,6 +9,7 @@ public class ResultAllPlant implements Serializable {
 
     private Integer idPlante;
     private String nomFr;
+    private String nomLatin;
     private String usageMilieu;
     private Image image;
 
@@ -30,6 +31,14 @@ public class ResultAllPlant implements Serializable {
         super();
         this.idPlante = idPlante;
         this.nomFr = nomFr;
+        this.usageMilieu = usageMilieu;
+        this.image = image;
+    }
+
+    public ResultAllPlant(Integer idPlante, String nomFr, String nomLatin, String usageMilieu, Image image) {
+        this.idPlante = idPlante;
+        this.nomFr = nomFr;
+        this.nomLatin = nomLatin;
         this.usageMilieu = usageMilieu;
         this.image = image;
     }
@@ -64,6 +73,14 @@ public class ResultAllPlant implements Serializable {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public String getNomLatin() {
+        return nomLatin;
+    }
+
+    public void setNomLatin(String nomLatin) {
+        this.nomLatin = nomLatin;
     }
 
     @Override

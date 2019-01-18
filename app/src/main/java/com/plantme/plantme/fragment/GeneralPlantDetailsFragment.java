@@ -150,8 +150,10 @@ public class GeneralPlantDetailsFragment extends Fragment {
                 ajoutPlanteFragment = new AjoutPlanteFragment();
                 Plant plant = new Plant();
                 plant.setFrName(resultOnePlant.getNomFr());
+                plant.setIdPlant(resultOnePlant.getIdPlante());
+                plant.setLtnName(resultOnePlant.getNomLatin());
                 plant.setDescription(resultOnePlant.getDescription());
-                plant.setFamillePlante(new FamillePlante(resultOnePlant.getFamille().getNom()));
+                plant.setFamillePlante(new FamillePlante(resultOnePlant.getFamille().getNom(),resultOnePlant.getFamille().getNomLatin()));
                 plant.setExposition(resultOnePlant.getExposition());
                 plant.setFlowerColor(resultOnePlant.getCouleurFleurs());
                 plant.setGround(resultOnePlant.getSol());
