@@ -36,7 +36,7 @@ app.get("/", (req,res) => {
 app.get("/plante",(req,res) => {
 
   
-  const queryString = "SELECT idPlante,id_image,nomFr,url, usageMilieu from plante inner JOIN image on plante.id_image = image.idImage "
+  const queryString = "SELECT idPlante,id_image,nomFr,nomLatin,url, usageMilieu from plante inner JOIN image on plante.id_image = image.idImage "
   connectionAsync.query(queryString,(err,rows,fields)=> {
     if (err){
       console.log("error " + err)
@@ -44,7 +44,7 @@ app.get("/plante",(req,res) => {
       return
     }
     const plante = rows.map((row) => {
-      return {idPlante:row.idPlante, nomFr:row.nomFr, usageMilieu:row.usageMilieu,
+      return {idPlante:row.idPlante, nomFr:row.nomFr,nomLatin:row.nomLatin, usageMilieu:row.usageMilieu,
         image :{idImage:row.id_image,url:row.url}}
     })
     res.json(plante)
@@ -60,7 +60,7 @@ app.get("/plante/:id",(req,res) => {
 
   const planteId = req.params.id
   const queryString3 = "SELECT type.idType,type.nom from type,plante_type where plante_type.id_type = type.idType and plante_type.id_plante = ?"
-  const queryString = "SELECT idPlante,nomFr,plante.nomLatin,description,couleurFleurs,exposition,sol,usageMilieu,famille.idFamille,famille.nom as nomFamille,image.idImage,image.url from plante inner JOIN famille on plante.id_famille = famille.idFamille INNER JOIN image on plante.id_image = image.idImage  where plante.idPlante = ?"
+  const queryString = "SELECT idPlante,nomFr,plante.nomLatin,description,couleurFleurs,exposition,sol,usageMilieu,famille.idFamille,famille.nom as nomFamille,famille.nomLatin as nomFamilleLatin,image.idImage,image.url from plante inner JOIN famille on plante.id_famille = famille.idFamille INNER JOIN image on plante.id_image = image.idImage  where plante.idPlante = ?"
   const queryString2 = "SELECT * FROM plante_calendrier inner join action_calendrier on action_calendrier.idActionCalendrier = plante_calendrier.id_action_calendrier inner join mois on mois.idMois = plante_calendrier.id_mois WHERE plante_calendrier.id_plante = ?"
   
   let resultquery1 = connectionSync.query(queryString,[planteId])
@@ -69,7 +69,7 @@ app.get("/plante/:id",(req,res) => {
         return {idPlante:row.idPlante, nomFr:row.nomFr, nomLatin:row.nomLatin,description:row.description,
           couleurFleurs:row.couleurFleurs, exposition:row.exposition,
           sol:row.sol, usageMilieu:row.usageMilieu,type : [],image : {idImage:row.idImage,url:row.url},
-          famille : {idFamille:row.idFamille,nom:row.nomFamille}, 
+          famille : {idFamille:row.idFamille,nom:row.nomFamille,nomLatin:row.nomFamilleLatin}, 
           actions : []
       
         }
