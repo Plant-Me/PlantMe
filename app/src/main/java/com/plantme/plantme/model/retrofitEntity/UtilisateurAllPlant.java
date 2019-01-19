@@ -33,6 +33,8 @@ public class UtilisateurAllPlant {
 
     private List<Action> actions = null;
 
+    private List<ActionUtilisateur> actionUtilisateur = null;
+
     /**
      * No args constructor for use in serialization
      *
@@ -71,6 +73,31 @@ public class UtilisateurAllPlant {
         this.image = image;
         this.famille = famille;
         this.actions = actions;
+    }
+
+    public UtilisateurAllPlant(Integer idPlante, String nomFr, String nomLatin, String nomPersonnel, String description, String couleurFleurs, String exposition, String sol, String usageMilieu, List<Type> type, Image image, Famille famille, List<Action> actions, List<ActionUtilisateur> actionUtilisateur) {
+        this.idPlante = idPlante;
+        this.nomFr = nomFr;
+        this.nomLatin = nomLatin;
+        this.nomPersonnel = nomPersonnel;
+        this.description = description;
+        this.couleurFleurs = couleurFleurs;
+        this.exposition = exposition;
+        this.sol = sol;
+        this.usageMilieu = usageMilieu;
+        this.type = type;
+        this.image = image;
+        this.famille = famille;
+        this.actions = actions;
+        this.actionUtilisateur = actionUtilisateur;
+    }
+
+    public List<ActionUtilisateur> getActionUtilisateurs() {
+        return actionUtilisateur;
+    }
+
+    public void setActionUtilisateurs(List<ActionUtilisateur> actionUtilisateur) {
+        this.actionUtilisateur = actionUtilisateur;
     }
 
     public Integer getIdPlante() {
@@ -204,4 +231,8 @@ public class UtilisateurAllPlant {
 
         return clone;
     }
+
+
+
+
 }

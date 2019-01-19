@@ -177,4 +177,9 @@ public class Plant implements Serializable {
                 ", actionCalendrierList=" + actionCalendrierList +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return idPlant == ((Plant)obj).getIdPlant();
+    }
 }

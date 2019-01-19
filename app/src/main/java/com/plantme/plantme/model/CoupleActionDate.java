@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CoupleActionDate {
+    private UserPlant userPlant;
     private String plantName;
     private UserAction userAction;
     private Date dateActuelle;
@@ -11,6 +12,13 @@ public class CoupleActionDate {
     private String typeRepetition;
     private int valeurRepetition;
     private SimpleDateFormat sdf;
+
+    public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle) {
+        this.userPlant = userPlant;
+        this.plantName = plantName;
+        this.userAction = userAction;
+        this.dateActuelle = dateActuelle;
+    }
 
     public CoupleActionDate(String plantName, UserAction userAction, Date dateActuelle) {
         this.plantName = plantName;
@@ -54,4 +62,6 @@ public class CoupleActionDate {
     public String getRepetition() {
         return typeRepetition + " (" + valeurRepetition + ")";
     }
+
+
 }

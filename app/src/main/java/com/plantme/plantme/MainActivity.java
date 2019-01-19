@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         void onError();
     }
 
+
+
     private void saveUserPlantIntoDatabase(){
 
         PlantMeService plantMeService = new Retrofit.Builder()
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FamillePlante arbre = new FamillePlante("Arbre", "");
 
         //Liste des plantes
-        //plantList = new ArrayList<>();
+        plantList = new ArrayList<>();
         planteUtilisateurList=new ArrayList<>();
         /*Plant orchidee = new Plant("orchidee", "orchideum", orchys, "Orchidee Blah", "rose", "fleur", "exposition", "sol", "intérieur");
         Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo,"Bonsai Blah","blanche", "arbuste", "exposition", "sol", "intérieur");
@@ -209,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         listUserAction = new ArrayList<>();
         //Les UserActions
-        UserAction arroser = new UserAction("Arroser");
-        UserAction fertiliser = new UserAction("Fertiliser");
-        listUserAction.add(arroser);
-        listUserAction.add(fertiliser);
+        //UserAction arroser = new UserAction("Arroser");
+        //UserAction fertiliser = new UserAction("Fertiliser");
+        //listUserAction.add(arroser);
+        //listUserAction.add(fertiliser);
 
        /* listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
@@ -223,15 +225,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 15 ).getTime()));
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 26 ).getTime()));*/
 
-        listCoupleActionDate = new ArrayList<>();
-        for(UserPlant userPlant : plantUserList) {
-            listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
-        }
 
 //        actionsPlant = new HashMap<>();
 //        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
 //        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
-
+        populateUserListFromDb();
+        Log.d("", "onCreate: ");
     }
 
     private void populateUserListFromDb(){
@@ -240,7 +239,41 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             @Override
             public void onGetPlant(List<UtilisateurAllPlant> utilisateurAllPlants) {
-                plantUserList.add(new Plant(utilisateurAllPlants.get(0).getIdPlante(), utilisateurAllPlants.get(0).getImage().getUrl(), utilisateurAllPlants.get(0).getNomFr(), utilisateurAllPlants.get(0).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(0).getFamille().getNom(),utilisateurAllPlants.get(0).getNomLatin()), utilisateurAllPlants.get(0).getDescription(), utilisateurAllPlants.get(0).getCouleurFleurs(), utilisateurAllPlants.get(0).getTypesToString(), utilisateurAllPlants.get(0).getExposition(), utilisateurAllPlants.get(0).getSol(), utilisateurAllPlants.get(0).getUsageMilieu(), utilisateurAllPlants.get(0).getActionList()))
+                List<CoupleActionDate> coupleActionDates = new ArrayList<>();
+                Log.d("test", "onGetPlant: " + utilisateurAllPlants.get(0));
+                Plant newPlant = new Plant(utilisateurAllPlants.get(0).getIdPlante(), utilisateurAllPlants.get(0).getImage().getUrl(), utilisateurAllPlants.get(0).getNomFr(),
+                        utilisateurAllPlants.get(0).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(0).getFamille().getNom(),utilisateurAllPlants.get(0).getNomLatin()),
+                        utilisateurAllPlants.get(0).getDescription(), utilisateurAllPlants.get(0).getCouleurFleurs(), utilisateurAllPlants.get(0).getTypesToString(),
+                        utilisateurAllPlants.get(0).getExposition(), utilisateurAllPlants.get(0).getSol(), utilisateurAllPlants.get(0).getUsageMilieu(),
+                        utilisateurAllPlants.get(0).getActionList());
+                if(!plantList.contains(newPlant)) {
+                    plantList.add(newPlant);
+                }
+                int positionPlant = -1;
+                for(int i = 0; i<plantList.size(); i++) {
+                    if(plantList.get(i) == newPlant) {
+                        positionPlant = i;
+                    }
+                }
+                UserAction userAction = new UserAction(utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getIdActionutilisateur(), utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getNomAction());
+                if(!listUserAction.contains(userAction)) {
+                    listUserAction.add(userAction);
+                }
+
+                int positionAction = -1;
+                for(int i = 0; i<listUserAction.size(); i++) {
+                    if(listUserAction.get(i) == userAction) {
+                        positionAction = i;
+                    }
+                }
+
+
+                UserPlant newUserPlant = new UserPlant(plantList.get(positionPlant),utilisateurAllPlants.get(0).getNomPersonnel(), coupleActionDates);
+                CoupleActionDate coupleActionDate = new CoupleActionDate(newUserPlant, utilisateurAllPlants.get(0).getNomPersonnel(), listUserAction.get(positionAction), utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getDate());
+                coupleActionDates.add(coupleActionDate);
+
+
+                plantUserList.add(newUserPlant);
             }
 
             @Override
