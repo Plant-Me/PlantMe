@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.plantme.plantme.PlantsViewHolder;
+import com.plantme.plantme.viewHolder.PlantsViewHolder;
 import com.plantme.plantme.R;
 import com.plantme.plantme.model.Plant;
 

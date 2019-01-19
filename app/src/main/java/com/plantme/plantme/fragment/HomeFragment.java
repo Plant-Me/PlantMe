@@ -23,11 +23,12 @@ import com.plantme.plantme.R;
 public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
     private TabLayout tabLayout;
-    Fragment homeDayFragment;
-    Fragment homeMonthFragment;
+    private Fragment homeWeekFragment;
+    private Fragment homeMonthFragment;
+
 
 //    FragmentManager fragmentManager;
-    Fragment otherFragment;
+    private Fragment otherFragment;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,17 +54,12 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
 
-        homeDayFragment = new HomeWeekFragment();
+        homeWeekFragment = new HomeWeekFragment();
         homeMonthFragment = new HomeMonthFragment();
-
-//        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();
 
         otherFragment = homeMonthFragment;
 
-//        fragmentManager.beginTransaction().add(R.id.containerHome, homeDayFragment, "2").hide(homeMonthFragment).commit();
-//        fragmentManager.beginTransaction().add(R.id.containerHome, homeMonthFragment, "1").commit();
-
-        this.setDefaultFragment(homeDayFragment);
+        this.setDefaultFragment(homeWeekFragment);
     }
 
     private void setDefaultFragment(Fragment defaultFragment)
@@ -92,13 +88,11 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         switch (tab.getPosition()) {
             case 0 :
                 replaceFragment(otherFragment);
-//                fragmentManager.beginTransaction().hide(otherFragment).show(homeDayFragment).commit();
                 otherFragment = homeMonthFragment;
                 break;
             case 1 :
                 replaceFragment(otherFragment);
-//                fragmentManager.beginTransaction().hide(otherFragment).show(homeMonthFragment).commit();
-                otherFragment = homeDayFragment;
+                otherFragment = homeWeekFragment;
                 break;
         }
     }
@@ -111,5 +105,10 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    public void notifyDataSetChanged() {
+        ((HomeWeekFragment)homeWeekFragment).notifyDataSetChanged();
+        ((HomeMonthFragment)homeMonthFragment).notifyDataSetChanged();
     }
 }

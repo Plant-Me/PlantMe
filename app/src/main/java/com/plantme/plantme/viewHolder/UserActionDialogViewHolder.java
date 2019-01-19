@@ -1,4 +1,4 @@
-package com.plantme.plantme;
+package com.plantme.plantme.viewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.model.UserAction;
 

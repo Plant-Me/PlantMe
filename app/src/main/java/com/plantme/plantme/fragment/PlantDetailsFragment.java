@@ -38,7 +38,6 @@ import java.util.List;
  */
 public class PlantDetailsFragment extends Fragment {
 
-
     private UserPlant userPlant;
     private TextView nickname;
     private TextView nomFrancais;
@@ -67,6 +66,7 @@ public class PlantDetailsFragment extends Fragment {
     private boolean areCalendarsShown;
     private boolean areActionsShown;
 
+    /**ImageView detailImagePlant;*/
 
     View view;
 
@@ -104,6 +104,7 @@ public class PlantDetailsFragment extends Fragment {
         buttonShowCalendriers = view.findViewById(R.id.buttonShowCalendriers);
         buttonShowActions = view.findViewById(R.id.buttonShowActions);
         buttonSettingsActions = view.findViewById(R.id.settingsRecyclerViewActions);
+        /**detailImagePlant = view.findViewById(R.id.detailImagePlant);*/
 
 
         bindPlant(userPlant.getPlant());

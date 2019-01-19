@@ -5,7 +5,4 @@
         android:color="@color/gris" />
 
     <solid android:color="@color/gris" />
-
-    <corners android:radius="25dp" />
-
 </shape>

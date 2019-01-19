@@ -605,6 +605,7 @@ public class AjoutPlanteFragment extends Fragment {
 
             List<CoupleActionDate> coupleActionDateList = new ArrayList<>();
 
+            UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);
 
             if (switchArrosage.isChecked()) {
                 int selectedDay = numberPickerArrosageDay.getValue();
@@ -643,7 +644,7 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
+                coupleActionDateList.add(new CoupleActionDate(newUserPlant, nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
             if (switchEngrais.isChecked()) {
@@ -682,10 +683,9 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
+                coupleActionDateList.add(new CoupleActionDate(newUserPlant, nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
-            UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);
             mainActivity.getPlantUserList().add(newUserPlant);
             mainActivity.replaceFragment(mainActivity.getAllPlantsFragment());
         } else {

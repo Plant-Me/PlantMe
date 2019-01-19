@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.plantme.plantme.ActionPlantsViewHolder;
 import com.plantme.plantme.R;
-import com.plantme.plantme.UserActionDialogViewHolder;
+import com.plantme.plantme.viewHolder.UserActionDialogViewHolder;
 import com.plantme.plantme.model.CoupleActionDate;
 
 import java.util.List;
