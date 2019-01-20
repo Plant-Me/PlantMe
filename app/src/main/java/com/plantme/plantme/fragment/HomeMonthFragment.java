@@ -48,6 +48,7 @@ public class HomeMonthFragment extends Fragment {
     private GregorianCalendar date;
     private Calendar today;
 
+
     private  List<UserPlant> userPlantList;
     public HomeMonthFragment() {
         // Required empty public constructor
@@ -101,6 +102,7 @@ public class HomeMonthFragment extends Fragment {
 
             }
         });
+
 
         setUpRecyclerView(view);
 

@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.plantme.plantme.ReportActionDialogFragment;
 import com.plantme.plantme.SwipeController;
 import com.plantme.plantme.SwipeControllerActions;
-import com.plantme.plantme.adapter.ActionCalendarViewAdapter;
 import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.adapter.ActionWeekViewAdapter;
 import com.plantme.plantme.MainActivity;
@@ -37,7 +36,6 @@ import android.view.LayoutInflater;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -58,10 +56,6 @@ public class HomeWeekFragment extends Fragment {
     private List<CoupleActionDate> listCoupleActionDatePast;
     private TextView tvNextDays;
     private TextView tvPastDays;
-    private TextView tvToday;
-
-    private ActionCalendarViewAdapter actionCalendarViewAdapter;
-    private Fragment homeMonthFragment;
 
     private View view;
 
@@ -81,9 +75,7 @@ public class HomeWeekFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home_week, container, false);
 
-        mainActivity = (MainActivity)getContext();
-        homeMonthFragment = (HomeMonthFragment) mainActivity.getHomeMonthFragment();
-
+        mainActivity = (MainActivity) getContext();
         tvNextDays = view.findViewById(R.id.nextDays);
         tvPastDays = view.findViewById(R.id.pastDays);
 
@@ -95,7 +87,7 @@ public class HomeWeekFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
 
         super.onViewCreated(view, savedInstanceState);
@@ -110,7 +102,7 @@ public class HomeWeekFragment extends Fragment {
         List<UserPlant> userPlantList = mainActivity.getPlantUserList();
 
         listCoupleActionDate = new ArrayList<>();
-        for(UserPlant userPlant : userPlantList) {
+        for (UserPlant userPlant : userPlantList) {
             listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
         }
         listCoupleActionDateToday = new ArrayList<>();
@@ -118,7 +110,7 @@ public class HomeWeekFragment extends Fragment {
         listCoupleActionDatePast = new ArrayList<>();
 
         //On associe une action à un recyclerView en fonction de la date de l'action
-        for(CoupleActionDate coupleActionDate : listCoupleActionDate) {
+        for (CoupleActionDate coupleActionDate : listCoupleActionDate) {
             Calendar today = new GregorianCalendar();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
 
@@ -131,7 +123,7 @@ public class HomeWeekFragment extends Fragment {
             calendar.add(Calendar.DAY_OF_MONTH, 7);
             Date nextSevenDays = calendar.getTime();
 
-            if(coupleDateString.equals(dateToday)) {
+            if (coupleDateString.equals(dateToday)) {
                 listCoupleActionDateToday.add(coupleActionDate);
             } else if (coupleActionDate.getDateActuelle().after(today.getTime()) && coupleActionDate.getDateActuelle().before(nextSevenDays)) {
                 listCoupleActionDateNextDays.add(coupleActionDate);
@@ -156,10 +148,15 @@ public class HomeWeekFragment extends Fragment {
         recyclerViewPast.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewPast.setAdapter(actionWeekViewAdapterPast);
 
+        if (listCoupleActionDateNextDays.isEmpty()) {
+            tvNextDays.setVisibility(View.GONE);
+            recyclerViewNextDays.setVisibility(View.GONE);
+        }
 
-        checkIfIsEmpty(listCoupleActionDateNextDays, "NextDays");
-
-        if(!checkIfIsEmpty(listCoupleActionDatePast, "PastDays")) {
+        if (listCoupleActionDatePast.isEmpty()) {
+            tvPastDays.setVisibility(View.GONE);
+            recyclerViewPast.setVisibility(View.GONE);
+        } else {
             swipeControllerPast = new SwipeController(new SwipeControllerActions() {
                 @Override
                 public void onRightClicked(int position) {
@@ -167,11 +164,7 @@ public class HomeWeekFragment extends Fragment {
 
                 @Override
                 public void onLeftClicked(int position) {
-                    CoupleActionDate coupleActionDate = listCoupleActionDatePast.get(position);
-                    coupleActionDate.setValidated(true);
                     removeAction(actionWeekViewAdapterPast, position);
-                    //removeAction(actionWeekViewAdapterPast, position, "past");
-                    checkIfIsEmpty(listCoupleActionDatePast, "PastDays");
                 }
             }, false);
 
@@ -184,8 +177,8 @@ public class HomeWeekFragment extends Fragment {
                     swipeControllerPast.onDraw(c);
                 }
             });
-        }
 
+        }
 
         swipeControllerToday = new SwipeController(new SwipeControllerActions() {
             @Override
@@ -194,13 +187,11 @@ public class HomeWeekFragment extends Fragment {
                 dialog.setCoupleActionDate(listCoupleActionDateToday.get(position));
                 dialog.setHomeWeekFragment(HomeWeekFragment.this);
                 dialog.setPosition(position);
-                dialog.show(((MainActivity)getContext()).getSupportFragmentManager(), "dialog");
+                dialog.show(((MainActivity) getContext()).getSupportFragmentManager(), "dialog");
             }
 
             @Override
             public void onLeftClicked(int position) {
-                CoupleActionDate coupleActionDate = listCoupleActionDateToday.get(position);
-                coupleActionDate.setValidated(true);
                 removeAction(actionWeekViewAdapterToday, position);
             }
         }, true);
@@ -216,73 +207,9 @@ public class HomeWeekFragment extends Fragment {
         });
     }
 
-    public boolean checkIfIsEmpty(List<CoupleActionDate> listCoupleActionDateNextDays, String typeList) {
-        boolean isEmpty = false;
-        if(listCoupleActionDateNextDays.isEmpty()) {
-            switch (typeList) {
-                case "NextDays" :
-                    tvNextDays.setVisibility(View.GONE);
-                    recyclerViewNextDays.setVisibility(View.GONE);
-                    isEmpty = true;
-                    break;
-                case "Today" :
-                    tvToday.setVisibility(View.GONE);
-                    recyclerViewToday.setVisibility(View.GONE);
-                    isEmpty = true;
-                    break;
-                case "PastDays" :
-                    tvPastDays.setVisibility(View.GONE);
-                    recyclerViewPast.setVisibility(View.GONE);
-                    isEmpty = true;
-                    break;
-            }
-        }
-        return isEmpty;
-    }
-
-
-    public void removeAction(ActionWeekViewAdapter actionWeekViewAdapter, int position) {
-        CoupleActionDate coupleActionDate = actionWeekViewAdapter.getListCoupleActionDates().get(position);
-        if(!coupleActionDate.getRepetition().equals("")) {
-            createNextRepetition(coupleActionDate, position);
-        }
-
-        coupleActionDate.getUserPlant().getListCoupleActionDate().remove(coupleActionDate);
+    public void removePositionToday(ActionWeekViewAdapter actionWeekViewAdapter, int position) {
         actionWeekViewAdapter.getListCoupleActionDates().remove(position);
-
         actionWeekViewAdapter.notifyDataSetChanged();
-        notifyDataSetChanged();
-
-        if(actionWeekViewAdapterNextDays.getListCoupleActionDates().size() > 0) {
-            tvNextDays.setVisibility(View.VISIBLE);
-            recyclerViewNextDays.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void createNextRepetition(CoupleActionDate coupleActionDate, int position) {
-        String typeRepetition = coupleActionDate.getTypeRepetition();
-        int valeurRepetition = coupleActionDate.getValeurRepetition();
-        Date dateInitialeRepetiton = coupleActionDate.getDateInitiale();
-        UserPlant userPlant = coupleActionDate.getUserPlant();
-        UserAction userAction = coupleActionDate.getUserAction();
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(dateInitialeRepetiton);
-        switch (typeRepetition) {
-            case "Jours":
-                calendar.add(Calendar.DAY_OF_MONTH, valeurRepetition);
-                break;
-            case "Semaines":
-                calendar.add(Calendar.WEEK_OF_YEAR, valeurRepetition);
-                break;
-            case "Mois":
-                calendar.add(Calendar.MONTH, valeurRepetition);
-                break;
-        }
-
-        Date newDate = calendar.getTime();
-        CoupleActionDate nextRepetitionAction = new CoupleActionDate(userPlant, userPlant.getPlantName(), userAction, newDate, typeRepetition, valeurRepetition);
-        userPlant.getListCoupleActionDate().add(nextRepetitionAction);
     }
 
     public void addPositionNextDays(int position) {
@@ -300,46 +227,137 @@ public class HomeWeekFragment extends Fragment {
         Date newDate = calendar.getTime();
         coupleActionDate.setDateActuelle(newDate);
 
-
         addPositionNextDays(position);
-        removeAction(actionWeekViewAdapterToday, position);
-        //removeAction(actionWeekViewAdapterToday, position, "");
-
+        removePositionToday(actionWeekViewAdapterToday, position);
     }
 
+    public void removeAction(ActionWeekViewAdapter actionWeekViewAdapter, int position) {
+        CoupleActionDate coupleActionDate = actionWeekViewAdapter.getListCoupleActionDates().get(position);
+        if (!coupleActionDate.getRepetition().equals("")) {
+            createNextRepetition(coupleActionDate, position);
+        }
+
+        coupleActionDate.getUserPlant().getListCoupleActionDate().remove(coupleActionDate);
+        actionWeekViewAdapter.getListCoupleActionDates().remove(position);
+
+        actionWeekViewAdapter.notifyDataSetChanged();
+        notifyDataSetChanged();
+
+        if (actionWeekViewAdapterNextDays.getListCoupleActionDates().size() > 0) {
+            tvNextDays.setVisibility(View.VISIBLE);
+            recyclerViewNextDays.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void createNextRepetition(CoupleActionDate coupleActionDate, int position) {
+        String typeRepetition = coupleActionDate.getTypeRepetition();
+        int valeurRepetition = coupleActionDate.getValeurRepetition();
+        Date dateInitialeRepetiton = coupleActionDate.getDateInitiale();
+        UserPlant userPlant = coupleActionDate.getUserPlant();
+        UserAction userAction = coupleActionDate.getUserAction();
+
+        Calendar today = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(dateInitialeRepetiton);
+
+        switch (typeRepetition) {
+            case "Jours":
+                today.add(Calendar.DAY_OF_MONTH, valeurRepetition);
+                do {
+                    calendar.add(Calendar.DAY_OF_MONTH, valeurRepetition);
+                } while (calendar.getTime().before(today.getTime()));
+                break;
+            case "Semaines":
+                today.add(Calendar.WEEK_OF_YEAR, valeurRepetition);
+                do {
+                    calendar.add(Calendar.WEEK_OF_YEAR, valeurRepetition);
+                } while (calendar.getTime().before(today.getTime()));
+                break;
+            case "Mois":
+                today.add(Calendar.MONTH, valeurRepetition);
+                do {
+                    calendar.add(Calendar.MONTH, valeurRepetition);
+                } while (calendar.getTime().before(today.getTime()));
+                break;
+        }
+
+        Date newDate = calendar.getTime();
+        CoupleActionDate nextRepetitionAction = new CoupleActionDate(userPlant, userPlant.getPlantName(), userAction, newDate, typeRepetition, valeurRepetition);
+        userPlant.getListCoupleActionDate().add(nextRepetitionAction);
+    }
 
 
     public void updateUserActions(CoupleActionDate coupleActionDate, String report, int position) {
         switch (report) {
-            case "1 day" :
+            case "1 day":
                 setNewDate(coupleActionDate, 1, position);
                 break;
-            case "2 days" :
+            case "2 days":
                 setNewDate(coupleActionDate, 2, position);
                 break;
-            case "3 days" :
+            case "3 days":
                 setNewDate(coupleActionDate, 3, position);
                 break;
-            case "4 days" :
+            case "4 days":
                 setNewDate(coupleActionDate, 4, position);
                 break;
-            case "5 days" :
+            case "5 days":
                 setNewDate(coupleActionDate, 5, position);
                 break;
-            case "6 days" :
+            case "6 days":
                 setNewDate(coupleActionDate, 6, position);
                 break;
-            case "7 days" :
+            case "7 days":
                 setNewDate(coupleActionDate, 7, position);
                 break;
         }
     }
 
     public void notifyDataSetChanged() {
-        setUpRecyclerView(view);
+        updateListsFromMain();
         actionWeekViewAdapterPast.notifyDataSetChanged();
         actionWeekViewAdapterNextDays.notifyDataSetChanged();
         actionWeekViewAdapterToday.notifyDataSetChanged();
+    }
+
+
+    public void updateListsFromMain() {
+        List<UserPlant> userPlantList = mainActivity.getPlantUserList();
+
+        listCoupleActionDate.clear();
+        for (UserPlant userPlant : userPlantList) {
+            listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
+        }
+        listCoupleActionDateToday.clear();
+        listCoupleActionDateNextDays.clear();
+        listCoupleActionDatePast.clear();
+
+        //On associe une action à un recyclerView en fonction de la date de l'action
+        for (CoupleActionDate coupleActionDate : listCoupleActionDate) {
+            Calendar today = new GregorianCalendar();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
+
+            String dateToday = formatter.format(today.getTime());
+            Date coupleDate = coupleActionDate.getDateActuelle();
+            String coupleDateString = formatter.format(coupleDate);
+
+            Calendar calendar = GregorianCalendar.getInstance();
+            calendar.setTime(today.getTime());
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+            Date nextSevenDays = calendar.getTime();
+
+            if (coupleDateString.equals(dateToday)) {
+                listCoupleActionDateToday.add(coupleActionDate);
+            } else if (coupleActionDate.getDateActuelle().after(today.getTime()) && coupleActionDate.getDateActuelle().before(nextSevenDays)) {
+                listCoupleActionDateNextDays.add(coupleActionDate);
+            } else if (coupleActionDate.getDateActuelle().before(today.getTime())) {
+                listCoupleActionDatePast.add(coupleActionDate);
+            }
+        }
+
+        Collections.sort(listCoupleActionDateToday);
+        Collections.sort(listCoupleActionDatePast);
+        Collections.sort(listCoupleActionDateNextDays);
     }
 
 

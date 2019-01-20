@@ -27,7 +27,7 @@ public class SwipeController extends Callback {
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
     private SwipeControllerActions buttonsActions = null;
-    private static final float buttonWidth = 300;
+    private static final float buttonWidth = 250;
     private boolean isActionsToday;
     private RectF rightButton;
     private RectF leftButton;
@@ -94,11 +94,12 @@ public class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
-                    else if (dX > buttonWidth) buttonShowedState  = ButtonsState.LEFT_VISIBLE;
+                    if (dX < -100) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                    else if (dX > 100) buttonShowedState  = ButtonsState.LEFT_VISIBLE;
 
                     if (buttonShowedState != ButtonsState.GONE) {
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                        //drawButtons(c, viewHolder);
                         setItemsClickable(recyclerView, false);
                     }
                 }

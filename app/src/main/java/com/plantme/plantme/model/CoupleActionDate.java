@@ -17,6 +17,7 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
         this.plantName = plantName;
         this.userAction = userAction;
         this.dateActuelle = dateActuelle;
+        this.dateInitiale = dateActuelle;
         typeRepetition = "";
         valeurRepetition = 0;
         this.userPlant = userPlant;
@@ -103,5 +104,9 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
         } else {
             return 0;
         }
+    }
+
+    public void setDateInitiale(Date dateInitiale) {
+        this.dateInitiale = dateInitiale;
     }
 }

@@ -10,10 +10,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -175,37 +177,65 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
-        if (activeFragment instanceof PlantDetailsFragment) {
-            replaceFragment(previousFragment);
-        } else if (activeFragment instanceof AllPlantsFragment) {
+        Fragment currentFragment = getVisibleFragment();
+        if (currentFragment instanceof PlantDetailsFragment) {
             replaceFragment(myPlantsFragment);
-        } else if (activeFragment instanceof GeneralPlantDetailsFragment) {
-            replaceFragment(previousFragment);
-        } else if (!(activeFragment instanceof HomeFragment)) {
+        } else if (currentFragment instanceof AllPlantsFragment) {
+            replaceFragment(myPlantsFragment);
+        } else if (currentFragment instanceof GeneralPlantDetailsFragment) {
+            replaceFragment(allPlantsFragment);
+        } else if (currentFragment instanceof AjoutPlanteFragment) {
+            replaceFragment(generalDetailPlantsFragment);
+        } else if (currentFragment instanceof SelectActionPlantsFragment) {
+            Bundle args = new Bundle();
+            args.putInt("selectedTab", 1);
+            homeFragment = new HomeFragment();
+            homeFragment.setArguments(args);
+            replaceFragment(homeFragment);
+        } else if (!(currentFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         } else {
             super.onBackPressed();
+
         }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (activeFragment instanceof PlantDetailsFragment) {
-            replaceFragment(previousFragment);
-        } else if (activeFragment instanceof AllPlantsFragment) {
+        Fragment currentFragment = getVisibleFragment();
+        if (currentFragment instanceof PlantDetailsFragment) {
             replaceFragment(myPlantsFragment);
-        } else if (activeFragment instanceof GeneralPlantDetailsFragment) {
+        } else if (currentFragment instanceof AllPlantsFragment) {
+            replaceFragment(myPlantsFragment);
+        } else if (currentFragment instanceof GeneralPlantDetailsFragment) {
             replaceFragment(allPlantsFragment);
-        } else if (activeFragment instanceof AjoutPlanteFragment) {
+        } else if (currentFragment instanceof AjoutPlanteFragment) {
             replaceFragment(generalDetailPlantsFragment);
-        } else if (!(activeFragment instanceof HomeFragment)) {
+        } else if (!(currentFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         } else {
-            super.onBackPressed();
+            currentFragment = ((HomeFragment) homeFragment).getVisibleFragment();
+            if (currentFragment instanceof SelectActionPlantsFragment) {
+                ((HomeFragment) homeFragment).replaceFragment(((HomeFragment) homeFragment).getHomeMonthFragment());
+            } else {
+                super.onSupportNavigateUp();
+            }
         }
         return super.onSupportNavigateUp();
+    }
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -225,9 +255,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         plantList = new ArrayList<>();
         plantList = new ArrayList<>();
         Plant orchidee = new Plant("orchidee", "orchideum", orchys, "Orchidee Blah", "rose", "fleur", "exposition", "sol", "intérieur");
-        Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo,"Bonsai Blah","blanche", "arbuste", "exposition", "sol", "intérieur");
-        Plant abricotier = new Plant("abricotier", "abricotierum", arbre, "Abricotier Blah","jaune", "arbre", "exposition", "sol", "verger");
-        Plant cerisier = new Plant("cerisier", "cerisierum", arbre, "Cerisier Blah","rose", "arbre", "exposition", "sol", "verger");
+        Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo, "Bonsai Blah", "blanche", "arbuste", "exposition", "sol", "intérieur");
+        Plant abricotier = new Plant("abricotier", "abricotierum", arbre, "Abricotier Blah", "jaune", "arbre", "exposition", "sol", "verger");
+        Plant cerisier = new Plant("cerisier", "cerisierum", arbre, "Cerisier Blah", "rose", "arbre", "exposition", "sol", "verger");
 
         plantList.add(orchidee);
         plantList.add(bonsai);
@@ -278,12 +308,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 16).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 17).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 19).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime(), "Jours", 3));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 17).getTime(), "Semaines", 3));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), planter, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
+        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 19).getTime()));
+
+        CoupleActionDate coupleActionDateTest = new CoupleActionDate(monBichon, monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime(), "Jours", 10);
+        coupleActionDateTest.setDateInitiale(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
+        listCoupleActionDateBichon.add(coupleActionDateTest);
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 19).getTime()));
+        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), planter, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime(), "Mois", 1));
         listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime()));
 
         listCoupleActionDate = new ArrayList<>();
