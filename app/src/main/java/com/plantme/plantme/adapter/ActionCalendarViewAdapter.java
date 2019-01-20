@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.plantme.plantme.viewHolder.ActionCalendarViewHolder;
-import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.R;
+import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.viewHolder.ActionCalendarViewHolder;
 
 import java.util.List;
 

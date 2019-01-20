@@ -11,16 +11,17 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.ReportActionDialogFragment;
 import com.plantme.plantme.SwipeController;
 import com.plantme.plantme.SwipeControllerActions;
 import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.adapter.ActionWeekViewAdapter;
 
-import com.plantme.plantme.adapter.ActionViewAdapter;
+
 import com.plantme.plantme.MainActivity;
-import com.plantme.plantme.R;
-import com.plantme.plantme.model.CoupleActionDate;
+
+
 import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
 

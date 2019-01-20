@@ -13,8 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.plantme.plantme.MainActivity;
-import com.plantme.plantme.R;
+
 //import com.plantme.plantme.adapter.SelectActionPlantsViewAdapter;
+import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.ReportActionDialogFragment;
 import com.plantme.plantme.SelectActionDialogFragment;

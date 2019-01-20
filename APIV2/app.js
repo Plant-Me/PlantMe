@@ -340,7 +340,7 @@ app.post("/plantesUtilisateur",(req,res) => {
        // if (!resultquery2.length > 0){è         
 })
 
-app.get("/plantesUtilisateur",(req,res) => {
+/*app.get("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
   const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
@@ -365,7 +365,7 @@ app.get("/plantesUtilisateur",(req,res) => {
         }
           }
           
-})
+})*/
 
 
 app.delete("/plantesUtilisateur",(req,res) => {

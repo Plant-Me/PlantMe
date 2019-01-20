@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -24,8 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.plantme.plantme.MainActivity;
+
 import com.plantme.plantme.R;
 import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.GlideApp;
 import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
@@ -44,6 +47,7 @@ public class AjoutPlanteFragment extends Fragment {
 
     private Plant selectedPlant;
 
+    private ImageView planteImage;
     private TextView nomFrancaisPlante;
     private TextView nomLatinPlante;
     private TextView nomFamillePlante;
@@ -102,6 +106,7 @@ public class AjoutPlanteFragment extends Fragment {
         nomFrancaisPlante = view.findViewById(R.id.ajouPlanteNomFr);
         nomLatinPlante = view.findViewById(R.id.ajoutPlanteNomLatin);
         nomFamillePlante = view.findViewById(R.id.ajoutPlanteNomFamille);
+        planteImage = view.findViewById(R.id.ajoutPlanteImage);
 
         nickNameValue = view.findViewById(R.id.nickNameValue);
 
@@ -213,6 +218,8 @@ public class AjoutPlanteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        GlideApp.with(planteImage).load(selectedPlant.getImageUrl()).placeholder(R.drawable.ic_green_tea).into(planteImage);
         nomFrancaisPlante.setText(selectedPlant.getFrName());
         Log.d("TAG", "onViewCreated: "+selectedPlant.getExposition());
         //Log.d("TAG", "onViewCreated: "+selectedPlant.toString());

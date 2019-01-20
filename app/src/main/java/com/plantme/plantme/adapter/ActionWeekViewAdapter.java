@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.viewHolder.ActionWeekViewHolder;
 import com.plantme.plantme.model.CoupleActionDate;
-import com.plantme.plantme.R;
+
 
 import java.util.List;
 

@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.plantme.plantme.viewHolder.UserPlantsViewHolder;
 import com.plantme.plantme.R;
+import com.plantme.plantme.viewHolder.UserPlantsViewHolder;
+
 import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.plantme.plantme.R;
 import com.plantme.plantme.model.UserPlant;
 
@@ -19,6 +20,7 @@ public class SelectActionPlantsViewHolder extends RecyclerView.ViewHolder {
 
         tvPlantNickName = viewItem.findViewById(R.id.tvPlantNickName);
         tvPlantFrName = viewItem.findViewById(R.id.tvPlantFrName);
+        //ivPlant = viewItem.findViewById(R.id.)
     }
 
     public void bind(UserPlant userPlant) {

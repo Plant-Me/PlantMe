@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.plantme.plantme.MainActivity;
+
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.adapter.UserPlantViewAdapter;

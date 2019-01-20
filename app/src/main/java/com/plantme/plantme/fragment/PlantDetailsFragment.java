@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
+
 import com.plantme.plantme.R;
 import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
@@ -141,18 +142,18 @@ public class PlantDetailsFragment extends Fragment {
     public void bindPlant(Plant plant) {
         GlideApp.with(ivMyPlant).load(plant.getImageUrl()).placeholder(R.drawable.ic_green_tea).into(ivMyPlant);
         nomFrancais.setText(plant.getFrName());
-       /* if (plant.getLtnName().equals("")) {
+        if (plant.getLtnName().equals("")) {
             nomLatin.setVisibility(View.GONE);
         } else {
             nomLatin.setText(plant.getLtnName());
-        }*/
+        }
 
-       /* if (!plant.getFamillePlante().getNomFrancais().equals("") && !plant.getFamillePlante().getNomLatin().equals("")) {
+        if (!plant.getFamillePlante().getNomFrancais().equals("") && !plant.getFamillePlante().getNomLatin().equals("")) {
             famille.setText(plant.getFamillePlante().getNomFrancais() + " / " + plant.getFamillePlante().getNomLatin());
-        } else*/ if (!plant.getFamillePlante().getNomFrancais().equals("")) {
+        } else if (!plant.getFamillePlante().getNomFrancais().equals("")) {
             famille.setText(plant.getFamillePlante().getNomFrancais());
-       /* } else if (!plant.getFamillePlante().getNomLatin().equals("")) {
-            famille.setText(plant.getFamillePlante().getNomLatin());*/
+        } else if (!plant.getFamillePlante().getNomLatin().equals("")) {
+            famille.setText(plant.getFamillePlante().getNomLatin());
         } else {
             famille.setVisibility(View.GONE);
         }
