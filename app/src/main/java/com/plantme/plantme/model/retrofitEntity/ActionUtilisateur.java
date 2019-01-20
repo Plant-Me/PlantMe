@@ -8,31 +8,47 @@ import java.util.Date;
 
 public class ActionUtilisateur {
 
-    private Integer idActionutilisateur;
+    private Integer idActionUtilisateur;
 
     private String nomAction;
 
     private Date date;
 
+    private Date dateInitiale;
+
+    private String typeRepetition;
+
+    private int valeurRepetition;
 
 
-    public ActionUtilisateur(Integer idActionutilisateur, String nomAction) {
-        this.idActionutilisateur = idActionutilisateur;
+
+    public ActionUtilisateur(Integer idActionUtilisateur, String nomAction, Date date, Date dateInitiale, String typeRepetition, int valeurRepetition) {
+        this.idActionUtilisateur = idActionUtilisateur;
+        this.nomAction = nomAction;
+        this.date = date;
+        this.dateInitiale = dateInitiale;
+        this.typeRepetition = typeRepetition;
+        this.valeurRepetition = valeurRepetition;
+    }
+
+    public ActionUtilisateur(Integer idActionUtilisateur, String nomAction) {
+        this.idActionUtilisateur = idActionUtilisateur;
         this.nomAction = nomAction;
     }
 
-    public ActionUtilisateur(Integer idActionutilisateur, String nomAction, Date date) {
-        this.idActionutilisateur = idActionutilisateur;
+    public ActionUtilisateur(Integer idActionUtilisateur, String nomAction, Date date) {
+        this.idActionUtilisateur = idActionUtilisateur;
         this.nomAction = nomAction;
         this.date = date;
     }
 
-    public Integer getIdActionutilisateur() {
-        return idActionutilisateur;
+
+    public Integer getIdActionUtilisateur() {
+        return idActionUtilisateur;
     }
 
-    public void setIdActionutilisateur(Integer idActionutilisateur) {
-        this.idActionutilisateur = idActionutilisateur;
+    public void setIdActionUtilisateur(Integer idActionUtilisateur) {
+        this.idActionUtilisateur = idActionUtilisateur;
     }
 
     public String getNomAction() {
@@ -50,4 +66,30 @@ public class ActionUtilisateur {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public Date getDateInitiale() {
+        return dateInitiale;
+    }
+
+    public void setDateInitiale(Date dateInitiale) {
+        this.dateInitiale = dateInitiale;
+    }
+
+    public String getTypeRepetition() {
+        return typeRepetition;
+    }
+
+    public void setTypeRepetition(String typeRepetition) {
+        this.typeRepetition = typeRepetition;
+    }
+
+    public int getValeurRepetition() {
+        return valeurRepetition;
+    }
+
+    public void setValeurRepetition(int valeurRepetition) {
+        this.valeurRepetition = valeurRepetition;
+    }
+
+
 }

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,18 +26,12 @@ import com.plantme.plantme.model.Plant;
 import com.plantme.plantme.model.PlanteUtilisateur;
 import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
-import com.plantme.plantme.model.retrofitEntity.Action;
-import com.plantme.plantme.model.retrofitEntity.Famille;
-import com.plantme.plantme.model.retrofitEntity.Image;
-import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
+import com.plantme.plantme.model.retrofitEntity.ActionUtilisateur;
+import com.plantme.plantme.model.retrofitEntity.ResponseLastId;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
-import com.plantme.plantme.model.retrofitEntity.Type;
-import com.plantme.plantme.model.ActionCalendrier;
 import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -89,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
+
+
     private void saveUserPlantIntoDatabase(){
 
         PlantMeService plantMeService = new Retrofit.Builder()
@@ -98,14 +93,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(PlantMeService.class);
-            plantMeService.addAllPlantUserInDatabase(planteUtilisateurList).enqueue(new Callback<List<PlanteUtilisateur>>() {
+
+            plantMeService.addAllPlantUserInDatabase(planteUtilisateurList).enqueue(new Callback<ResponseLastId>() {
                 @Override
-                public void onResponse(Call<List<PlanteUtilisateur>> call, Response<List<PlanteUtilisateur>> response) {
+                public void onResponse(Call<ResponseLastId> call, Response<ResponseLastId> response) {
+                    if(response.isSuccessful()){
+                        Log.d("ResponseLastId", "onResponse: " + response.body().getLastId());
+                    }
 
                 }
 
                 @Override
-                public void onFailure(Call<List<PlanteUtilisateur>> call, Throwable t) {
+                public void onFailure(Call<ResponseLastId> call, Throwable t) {
 
                 }
             });
@@ -145,8 +144,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void populatePlanteUtilisateurList(){
         for(int i = 0;i<plantUserList.size();i++){
-            planteUtilisateurList.add(new PlanteUtilisateur(3,plantUserList.get(i).getPlant().getIdPlant(),plantUserList.get(i).getPlantName()));
-        }
+                List<ActionUtilisateur> actionUtilisateurList = new ArrayList<>();
+                for(CoupleActionDate coupleActionDate : plantUserList.get(i).getListCoupleActionDate()) {
+                    ActionUtilisateur actionUtilisateur = new ActionUtilisateur(coupleActionDate.getUserAction().getIdAction(), coupleActionDate.getUserAction().getActionName(), coupleActionDate.getDateActuelle(), coupleActionDate.getDateInitiale(), coupleActionDate.getTypeRepetition(), coupleActionDate.getValeurRepetition());
+                    actionUtilisateurList.add(actionUtilisateur);
+                }
+
+                planteUtilisateurList.add(new PlanteUtilisateur(plantUserList.get(i).getId(),3,plantUserList.get(i).getPlant().getIdPlant(),plantUserList.get(i).getPlantName(), actionUtilisateurList));
+            }
+
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,10 +218,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         listUserAction = new ArrayList<>();
         //Les UserActions
-        //UserAction arroser = new UserAction("Arroser");
-        //UserAction fertiliser = new UserAction("Fertiliser");
-        //listUserAction.add(arroser);
-        //listUserAction.add(fertiliser);
+        UserAction arroser = new UserAction("Arroser");
+        UserAction fertiliser = new UserAction("Fertiliser");
+        UserAction rempoter = new UserAction("Rempoter");
+        UserAction tailler = new UserAction("Tailler");
+        UserAction recolter = new UserAction("Recolter");
+        listUserAction.add(arroser);
+        listUserAction.add(fertiliser);
+        listUserAction.add(rempoter);
+        listUserAction.add(tailler);
+        listUserAction.add(recolter);
 
        /* listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
@@ -239,41 +252,43 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             @Override
             public void onGetPlant(List<UtilisateurAllPlant> utilisateurAllPlants) {
-                List<CoupleActionDate> coupleActionDates = new ArrayList<>();
                 Log.d("test", "onGetPlant: " + utilisateurAllPlants.get(0));
-                Plant newPlant = new Plant(utilisateurAllPlants.get(0).getIdPlante(), utilisateurAllPlants.get(0).getImage().getUrl(), utilisateurAllPlants.get(0).getNomFr(),
-                        utilisateurAllPlants.get(0).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(0).getFamille().getNom(),utilisateurAllPlants.get(0).getNomLatin()),
-                        utilisateurAllPlants.get(0).getDescription(), utilisateurAllPlants.get(0).getCouleurFleurs(), utilisateurAllPlants.get(0).getTypesToString(),
-                        utilisateurAllPlants.get(0).getExposition(), utilisateurAllPlants.get(0).getSol(), utilisateurAllPlants.get(0).getUsageMilieu(),
-                        utilisateurAllPlants.get(0).getActionList());
-                if(!plantList.contains(newPlant)) {
-                    plantList.add(newPlant);
-                }
-                int positionPlant = -1;
-                for(int i = 0; i<plantList.size(); i++) {
-                    if(plantList.get(i) == newPlant) {
-                        positionPlant = i;
+                for(int i=0;i<utilisateurAllPlants.size();i++){
+                    Plant newPlant = new Plant(utilisateurAllPlants.get(i).getIdPlante(), utilisateurAllPlants.get(i).getImage().getUrl(), utilisateurAllPlants.get(i).getNomFr(),
+                            utilisateurAllPlants.get(i).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(i).getFamille().getNom(),utilisateurAllPlants.get(i).getNomLatin()),
+                            utilisateurAllPlants.get(i).getDescription(), utilisateurAllPlants.get(i).getCouleurFleurs(), utilisateurAllPlants.get(i).getTypesToString(),
+                            utilisateurAllPlants.get(i).getExposition(), utilisateurAllPlants.get(i).getSol(), utilisateurAllPlants.get(i).getUsageMilieu(),
+                            utilisateurAllPlants.get(i).getActionList());
+                    if(!plantList.contains(newPlant)) {
+                        plantList.add(newPlant);
                     }
-                }
-                UserAction userAction = new UserAction(utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getIdActionutilisateur(), utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getNomAction());
-                if(!listUserAction.contains(userAction)) {
-                    listUserAction.add(userAction);
-                }
-
-                int positionAction = -1;
-                for(int i = 0; i<listUserAction.size(); i++) {
-                    if(listUserAction.get(i) == userAction) {
-                        positionAction = i;
+                    int positionPlant = -1;
+                    for(int j = 0; j<plantList.size(); j++) {
+                        if(plantList.get(j).getIdPlant() == newPlant.getIdPlant()) {
+                            positionPlant = j;
+                        }
                     }
+                    List<CoupleActionDate> coupleActionDates = new ArrayList<>();
+                    UserPlant newUserPlant = new UserPlant(utilisateurAllPlants.get(i).getIdPlanteUtilisateur(),plantList.get(positionPlant),utilisateurAllPlants.get(i).getNomPersonnel(), coupleActionDates);
+                    for(int k = 0; k<utilisateurAllPlants.get(i).getActionUtilisateurs().size(); k++) {
+                        Integer actionUtilisateur = utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getIdActionUtilisateur();
+                        if(actionUtilisateur!= null){
+                            UserAction userAction = new UserAction(actionUtilisateur, utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getNomAction());
+                            int positionAction = -1;
+                            for(int l = 0; l<listUserAction.size(); l++) {
+                                if(listUserAction.get(l).getActionName().equals(userAction.getActionName())) {
+                                    positionAction = l;
+                                }
+                            }
+                            CoupleActionDate coupleActionDate = new CoupleActionDate(newUserPlant, utilisateurAllPlants.get(i).getNomPersonnel(), listUserAction.get(positionAction), utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getDate(),utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getDateInitiale(), utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getTypeRepetition(), utilisateurAllPlants.get(i).getActionUtilisateurs().get(k).getValeurRepetition());
+                            coupleActionDates.add(coupleActionDate);
+                        }
+
+                    }
+
+                    plantUserList.add(newUserPlant);
                 }
 
-
-                UserPlant newUserPlant = new UserPlant(plantList.get(positionPlant),utilisateurAllPlants.get(0).getNomPersonnel(), coupleActionDates);
-                CoupleActionDate coupleActionDate = new CoupleActionDate(newUserPlant, utilisateurAllPlants.get(0).getNomPersonnel(), listUserAction.get(positionAction), utilisateurAllPlants.get(0).getActionUtilisateurs().get(0).getDate());
-                coupleActionDates.add(coupleActionDate);
-
-
-                plantUserList.add(newUserPlant);
             }
 
             @Override

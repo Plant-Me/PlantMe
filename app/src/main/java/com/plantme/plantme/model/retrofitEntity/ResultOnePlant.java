@@ -182,8 +182,8 @@ public class ResultOnePlant {
     }
     public List<ActionCalendrier> getActionList(){
         List<ActionCalendrier> clone = new ArrayList<>();
-        ActionCalendrier action = new ActionCalendrier();
         for(int i = 0;i<actions.size();i++){
+            ActionCalendrier action = new ActionCalendrier();
             action.setIdActionCalendrier(actions.get(i).getIdActionCalendrier());
             action.setIdMois(actions.get(i).getIdMois());
             action.setMois(actions.get(i).getMois());

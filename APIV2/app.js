@@ -12,13 +12,13 @@ const bodyParser= require('body-parser')
   host: 'localhost',
   user: 'root',
   password:"",
-  database: 'PlanteMe'
+  database: 'planteme'
 })
 const connectionSync = new mysqlSync({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'PlanteMe'
+  database: 'planteme'
 });
 
 
@@ -112,7 +112,7 @@ app.get("/plante/:id",(req,res) => {
 app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
 
   const utilisateurId = req.params.idUtilisateur
-  const queryString5 = "select plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.id_plante,plantes_utilisateur.nom_personnel,plante_action_utilisateur.date,action_utilisateur.nomAction,plantes_utilisateur.id_utilisateur,action_utilisateur.idActionUtilisateur from plantes_utilisateur left JOIN plante_action_utilisateur on plantes_utilisateur.id_plante_utilisateur = plante_action_utilisateur.id_plante_utilisateur left join action_utilisateur on plante_action_utilisateur.id_action_utilisateur = action_utilisateur.idActionUtilisateur where plantes_utilisateur.id_plante_utilisateur = ?"
+  const queryString5 = "select plante_action_utilisateur.dateInitiale,plante_action_utilisateur.valeurRepetition,plante_action_utilisateur.typeRepetition,plantes_utilisateur.id_plante_utilisateur,plantes_utilisateur.id_plante,plantes_utilisateur.nom_personnel,plante_action_utilisateur.dateActuelle,action_utilisateur.nomAction,plantes_utilisateur.id_utilisateur,action_utilisateur.idActionUtilisateur from plantes_utilisateur left JOIN plante_action_utilisateur on plantes_utilisateur.id_plante_utilisateur = plante_action_utilisateur.id_plante_utilisateur left join action_utilisateur on plante_action_utilisateur.id_action_utilisateur = action_utilisateur.idActionUtilisateur where plantes_utilisateur.id_plante_utilisateur = ?"
   const queryString1 = "select DISTINCT plantes_utilisateur.nom_personnel,plantes_utilisateur.id_plante_utilisateur, plante.idPlante,plante.nomFr,plante.nomLatin,plante.description,plante.couleurFleurs,plante.exposition,plante.sol,plante.usageMilieu,famille.idFamille,famille.nom as nomFamille,famille.nomLatin as nomFamilleLatin,image.idImage,image.url from plante left JOIN plantes_utilisateur on plante.idPlante = plantes_utilisateur.id_plante left join image on plante.id_image = image.idImage left join famille on plante.id_famille = famille.idFamille where plantes_utilisateur.id_utilisateur = ?"
   const queryString3 = "SELECT  id_plante from plantes_utilisateur where id_utilisateur = ?"
   const queryString6 = "select plantes_utilisateur.id_plante_utilisateur from plantes_utilisateur where plantes_utilisateur.id_plante = ?"
@@ -157,7 +157,10 @@ app.get("/utilisateur/:idUtilisateur/plante",(req,res) => {
           plante[i].actionUtilisateur[m] = {
             idActionUtilisateur : resultquery5[m].idActionUtilisateur,
             nomAction : resultquery5[m].nomAction,
-            date : resultquery5[m].date
+            date : resultquery5[m].dateActuelle,
+            dateInitiale :  resultquery5[m].dateInitiale,
+            typeRepetition: resultquery5[m].typeRepetition,
+            valeurRepetition: resultquery5[m].valeurRepetition
              
           }      
         }
@@ -296,26 +299,45 @@ app.post("/plantesUtilisateur",(req,res) => {
 
   let plantesUtilisateur = req.body
   const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
-  const queryString2 = "select * from plantes_utilisateur where id_utilisateur = ? and id_plante = ? and nom_personnel = ?"
+  const queryStringDelete = "DELETE FROM plante_action_utilisateur WHERE plante_action_utilisateur.id_plante_utilisateur = ? "
+  const queryStringActions = "insert into plante_action_utilisateur (id_plante_utilisateur,id_action_utilisateur,dateActuelle, dateInitiale, typeRepetition, valeurRepetition) values (?,?,?,?,?,?)"
+  //const queryString2 = "select * from plantes_utilisateur where id_utilisateur = ? and id_plante = ? and nom_personnel = ?"
 
-  console.log("plante " + plantesUtilisateur)
+  console.log("plante " + JSON.stringify(plantesUtilisateur))
   for(let i=0;i<plantesUtilisateur.length;i++){
+           let idPlanteUtilisateur 
+           if(plantesUtilisateur[i].id_plante_utilisateur != 0){
+            idPlanteUtilisateur = plantesUtilisateur[i].id_plante_utilisateur
+            console.log("coucou " +idPlanteUtilisateur)
+           } else {
             
-    let resultquery2 = connectionSync.query(queryString2,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
-        if (!resultquery2.length > 0){
-          connectionAsync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel],(err,rows,fields)=> {
+          let resultqueryInsert = connectionSync.query(queryString,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
+             console.log("plante " + JSON.stringify(resultqueryInsert))
+          if(resultqueryInsert.affectedRows>0){
+              idPlanteUtilisateur = resultqueryInsert.insertId
+              console.log("test " + resultqueryInsert.insertId)
+            }
+           }
+           console.log("test 2 " + idPlanteUtilisateur)
+           connectionSync.query(queryStringDelete,[idPlanteUtilisateur],(err,rows,fields)=> {
             if (err){
               console.log("error " + err)
               res.sendStatus(404)
               return
             }
             else {
-              res.status(200).send('PlantesUtilisateur inserted')
-            }   
+
+            }
         })
+           for(let j=0;j<plantesUtilisateur[i].actionUtilisateur.length;j++) {
+            connectionAsync.query(queryStringActions, [idPlanteUtilisateur,plantesUtilisateur[i].actionUtilisateur[j].idActionUtilisateur, plantesUtilisateur[i].actionUtilisateur[j].date,plantesUtilisateur[i].actionUtilisateur[j].dateInitiale,plantesUtilisateur[i].actionUtilisateur[j].typeRepetition,plantesUtilisateur[i].actionUtilisateur[j].valeurRepetition ], (err, rows, fields)=>{
+  
+            })
+           }
         }
-          }
-          
+        res.sendStatus(200)
+   // let resultquery2 = connectionSync.query(queryString2,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
+       // if (!resultquery2.length > 0){è         
 })
 
 app.get("/plantesUtilisateur",(req,res) => {
@@ -323,6 +345,7 @@ app.get("/plantesUtilisateur",(req,res) => {
   let plantesUtilisateur = req.body
   const queryString = "insert into plantes_utilisateur (id_utilisateur,id_plante,nom_personnel) values (?,?,?)"
   const queryString2 = "select * from plantes_utilisateur where id_utilisateur = ? and id_plante = ? and nom_personnel = ?"
+  
 
   console.log("plante " + plantesUtilisateur)
   for(let i=0;i<plantesUtilisateur.length;i++){

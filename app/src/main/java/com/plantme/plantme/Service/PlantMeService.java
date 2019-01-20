@@ -2,6 +2,7 @@ package com.plantme.plantme.Service;
 
 import com.plantme.plantme.model.PlanteUtilisateur;
 import com.plantme.plantme.model.UserPlant;
+import com.plantme.plantme.model.retrofitEntity.ResponseLastId;
 import com.plantme.plantme.model.retrofitEntity.ResultAllPlant;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
@@ -9,6 +10,7 @@ import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -29,7 +31,7 @@ public interface PlantMeService {
 
 
     @POST("/plantesUtilisateur")
-    Call<List<PlanteUtilisateur>> addAllPlantUserInDatabase(@Body List<PlanteUtilisateur> planteUtilisateur);
+    Call<ResponseLastId> addAllPlantUserInDatabase(@Body List<PlanteUtilisateur> planteUtilisateur);
 
     @GET("/utilisateur/{id}/plante")
     Call<List<UtilisateurAllPlant>> listUtilisateurAllPlant(@Path("id") int id);

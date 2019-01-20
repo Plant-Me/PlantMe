@@ -9,6 +9,8 @@ public class UtilisateurAllPlant {
 
     private Integer idPlante;
 
+    private Integer idPlanteUtilisateur;
+
     private String nomFr;
 
     private String nomLatin;
@@ -34,6 +36,24 @@ public class UtilisateurAllPlant {
     private List<Action> actions = null;
 
     private List<ActionUtilisateur> actionUtilisateur = null;
+
+    public UtilisateurAllPlant(Integer idPlante, Integer idPlanteUtilisateur, String nomFr, String nomLatin, String nomPersonnel, String description, String couleurFleurs, String exposition, String sol, String usageMilieu, List<Type> type, Image image, Famille famille, List<Action> actions, List<ActionUtilisateur> actionUtilisateur) {
+        this.idPlante = idPlante;
+        this.idPlanteUtilisateur = idPlanteUtilisateur;
+        this.nomFr = nomFr;
+        this.nomLatin = nomLatin;
+        this.nomPersonnel = nomPersonnel;
+        this.description = description;
+        this.couleurFleurs = couleurFleurs;
+        this.exposition = exposition;
+        this.sol = sol;
+        this.usageMilieu = usageMilieu;
+        this.type = type;
+        this.image = image;
+        this.famille = famille;
+        this.actions = actions;
+        this.actionUtilisateur = actionUtilisateur;
+    }
 
     /**
      * No args constructor for use in serialization
@@ -204,14 +224,22 @@ public class UtilisateurAllPlant {
         this.actions = actions;
     }
 
+    public Integer getIdPlanteUtilisateur() {
+        return idPlanteUtilisateur;
+    }
+
+    public void setIdPlanteUtilisateur(Integer idPlanteUtilisateur) {
+        this.idPlanteUtilisateur = idPlanteUtilisateur;
+    }
+
     public String getTypesToString(){
         StringBuilder stringBuilder = new StringBuilder();
         for (Type types:type
         ) {
             if(type.iterator().hasNext()){
-                stringBuilder.append("Type ").append(types.getIdType()).append(": ").append(types.getNom()).append(", ");
+                stringBuilder.append(types.getNom()).append(", ");
             }else {
-                stringBuilder.append("Type ").append(types.getIdType()).append(": ").append(types.getNom());
+                stringBuilder.append(types.getNom());
             }
 
         }
@@ -219,8 +247,8 @@ public class UtilisateurAllPlant {
     }
     public List<ActionCalendrier> getActionList(){
         List<ActionCalendrier> clone = new ArrayList<>();
-        ActionCalendrier action = new ActionCalendrier();
         for(int i = 0;i<actions.size();i++){
+            ActionCalendrier action = new ActionCalendrier();
             action.setIdActionCalendrier(actions.get(i).getIdActionCalendrier());
             action.setIdMois(actions.get(i).getIdMois());
             action.setMois(actions.get(i).getMois());
