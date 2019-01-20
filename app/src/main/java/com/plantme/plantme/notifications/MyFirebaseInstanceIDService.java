@@ -1,4 +1,4 @@
-package com.plantme.plantme;
+package com.plantme.plantme.notifications;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
