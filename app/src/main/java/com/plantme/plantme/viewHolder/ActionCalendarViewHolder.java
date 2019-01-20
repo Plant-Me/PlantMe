@@ -1,19 +1,19 @@
-package com.plantme.plantme;
+package com.plantme.plantme.viewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.plantme.plantme.R;
 import com.plantme.plantme.model.CoupleActionDate;
 
-
-public class ActionPlantsViewHolder extends RecyclerView.ViewHolder {
+public class ActionCalendarViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivActionImage;
     private TextView tvMyPlantName;
     private TextView tvActionName;
 
-    public ActionPlantsViewHolder(View viewItem) {
+    public ActionCalendarViewHolder(View viewItem) {
         super(viewItem);
 
         ivActionImage = viewItem.findViewById(R.id.ivActionImage);
@@ -26,5 +26,4 @@ public class ActionPlantsViewHolder extends RecyclerView.ViewHolder {
         tvMyPlantName.setText(coupleActionDate.getPlantName());
         tvActionName.setText(coupleActionDate.getUserAction().getActionName());
     }
-
 }

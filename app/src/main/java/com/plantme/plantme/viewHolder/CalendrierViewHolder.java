@@ -1,12 +1,14 @@
-package com.plantme.plantme;
+package com.plantme.plantme.viewHolder;
 
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.plantme.plantme.model.Calendrier;
-//import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.R;
+import com.plantme.plantme.adapter.Calendrier;
+import com.plantme.plantme.model.CoupleActionDate;
 
 public class CalendrierViewHolder extends RecyclerView.ViewHolder {
     private TextView nomCalendrier;

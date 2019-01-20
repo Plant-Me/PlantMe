@@ -1,6 +1,7 @@
 package com.plantme.plantme.fragment;
 
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +19,17 @@ import android.widget.TextView;
 
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
+import com.plantme.plantme.RecyclerTouchListener;
 import com.plantme.plantme.adapter.ActionPlantDetailAdapter;
 
 import com.plantme.plantme.adapter.CalendrierViewAdapter;
 import com.plantme.plantme.model.ActionCalendrier;
+import com.plantme.plantme.model.CoupleActionDate;
 import com.plantme.plantme.model.Calendrier;
 import com.plantme.plantme.model.GlideApp;
 import com.plantme.plantme.model.Plant;
+import com.plantme.plantme.model.User;
+import com.plantme.plantme.model.UserAction;
 import com.plantme.plantme.model.UserPlant;
 
 import java.util.ArrayList;
@@ -34,7 +40,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class PlantDetailsFragment extends Fragment {
-
 
     private UserPlant userPlant;
     private ImageView ivMyPlant;
@@ -60,11 +65,12 @@ public class PlantDetailsFragment extends Fragment {
     private RecyclerView rvActionsDetail;
     private Button buttonShowCalendriers;
     private Button buttonShowActions;
+    private Button buttonSettingsActions;
 
     private boolean areCalendarsShown;
     private boolean areActionsShown;
 
-
+    /**ImageView detailImagePlant;*/
 
     View view;
 
@@ -76,7 +82,7 @@ public class PlantDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
         ivMyPlant=view.findViewById(R.id.plantDetailImagePlant);
@@ -102,6 +108,8 @@ public class PlantDetailsFragment extends Fragment {
         rvActionsDetail = view.findViewById(R.id.plantDetailsRecyclerViewActions);
         buttonShowCalendriers = view.findViewById(R.id.buttonShowCalendriers);
         buttonShowActions = view.findViewById(R.id.buttonShowActions);
+        buttonSettingsActions = view.findViewById(R.id.settingsRecyclerViewActions);
+        /**detailImagePlant = view.findViewById(R.id.detailImagePlant);*/
 
 
         bindPlant(userPlant.getPlant());
@@ -109,8 +117,10 @@ public class PlantDetailsFragment extends Fragment {
 
         rvCalendriersDetail.setVisibility(View.GONE);
         rvActionsDetail.setVisibility(View.GONE);
+        buttonSettingsActions.setVisibility(View.GONE);
         buttonShowCalendriers.setOnClickListener(onClick());
         buttonShowActions.setOnClickListener(onClick());
+        buttonSettingsActions.setOnClickListener(onClick());
         areCalendarsShown = false;
         areActionsShown = false;
 
@@ -122,7 +132,6 @@ public class PlantDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_plant_details, container, false);
 
         this.view = view;
-
 
 
         // Inflate the layout for this fragment
@@ -258,19 +267,41 @@ public class PlantDetailsFragment extends Fragment {
 
     public void bindUserPlant() {
         nickname.setText(userPlant.getPlantName());
-        if(userPlant.getListCoupleActionDate().isEmpty()) {
+        if (userPlant.getListCoupleActionDate().isEmpty()) {
             actions.setVisibility(View.GONE);
             buttonShowActions.setVisibility(View.GONE);
             rvActionsDetail.setVisibility(View.GONE);
+            buttonSettingsActions.setVisibility(View.GONE);
         } else {
-            ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
+            final ActionPlantDetailAdapter actionPlantDetailAdapter = new ActionPlantDetailAdapter(userPlant.getListCoupleActionDate());
             rvActionsDetail.setLayoutManager(new LinearLayoutManager(getContext()));
             rvActionsDetail.setAdapter(actionPlantDetailAdapter);
+            rvActionsDetail.addOnItemTouchListener(new RecyclerTouchListener(getContext(), rvActionsDetail, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+
+
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    CoupleActionDate coupleActionDate = userPlant.getListCoupleActionDate().get(position);
+
+                }
+            }));
+
+            rvActionsDetail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    return false;
+                }
+            });
         }
     }
 
     public void setUserPlant(UserPlant userPlant) {
-        if(this.userPlant == null || !this.userPlant.equals(userPlant)) {
+        if (this.userPlant == null || !this.userPlant.equals(userPlant)) {
             this.userPlant = userPlant;
 
         }
@@ -280,9 +311,9 @@ public class PlantDetailsFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch(v.getId()) {
+                switch (v.getId()) {
                     case R.id.buttonShowCalendriers:
-                        if(areCalendarsShown) {
+                        if (areCalendarsShown) {
                             rvCalendriersDetail.setVisibility(View.GONE);
                             buttonShowCalendriers.setBackgroundResource(R.drawable.ic_arrow_down);
                             areCalendarsShown = false;
@@ -293,21 +324,37 @@ public class PlantDetailsFragment extends Fragment {
                         }
                         break;
                     case R.id.buttonShowActions:
-                        if(areActionsShown) {
+                        if (areActionsShown) {
                             rvActionsDetail.setVisibility(View.GONE);
+                            buttonSettingsActions.setVisibility(View.GONE);
                             buttonShowActions.setBackgroundResource(R.drawable.ic_arrow_down);
                             areActionsShown = false;
                         } else {
                             rvActionsDetail.setVisibility(View.VISIBLE);
+                            buttonSettingsActions.setVisibility(View.VISIBLE);
                             buttonShowActions.setBackgroundResource(R.drawable.ic_arrow_up);
                             areActionsShown = true;
                         }
+                        break;
+                    case R.id.settingsRecyclerViewActions:
+//                        List<UserAction> userActionList = new ArrayList<>();
+//                        for(CoupleActionDate coupleActionDate : userPlant.getListCoupleActionDate()) {
+//                            if(!userActionList.contains(coupleActionDate.getUserAction())) {
+//                                userActionList.add(coupleActionDate.getUserAction());
+//                            }
+//                        }
+                        startDialogFragment(userPlant.getListCoupleActionDate());
                         break;
                 }
             }
         };
     }
 
+    public void startDialogFragment(List<CoupleActionDate> coupleActionDates) {
+        ActionPlantDetailDialog dialog = new ActionPlantDetailDialog();
+        dialog.setUserActionList(coupleActionDates);
+        dialog.show(((MainActivity) getContext()).getSupportFragmentManager(), "dialog");
+    }
 
 
 }

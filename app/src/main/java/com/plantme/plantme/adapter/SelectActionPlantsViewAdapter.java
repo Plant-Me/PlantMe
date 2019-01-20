@@ -15,12 +15,12 @@ import com.plantme.plantme.model.UserPlant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPlantViewAdapter extends RecyclerView.Adapter<UserPlantsViewHolder> implements Filterable {
+public class SelectActionPlantsViewAdapter extends RecyclerView.Adapter<UserPlantsViewHolder> implements Filterable {
 
     private final List<UserPlant> userPlantList;
     private List<UserPlant> userPlantListFiltered;
 
-    public UserPlantViewAdapter(List<UserPlant> userPlantList) {
+    public SelectActionPlantsViewAdapter(List<UserPlant> userPlantList) {
         this.userPlantList = userPlantList;
         userPlantListFiltered = new ArrayList<>();
         userPlantListFiltered.addAll(userPlantList);
@@ -81,7 +81,7 @@ public class UserPlantViewAdapter extends RecyclerView.Adapter<UserPlantsViewHol
                 userPlantListFiltered = (ArrayList<UserPlant>) filterResults.values;
 
                 // refresh the list with filtered data
-                UserPlantViewAdapter.this.notifyDataSetChanged();
+                SelectActionPlantsViewAdapter.this.notifyDataSetChanged();
             }
         };
     }

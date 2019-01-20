@@ -253,7 +253,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Actions Planifiées"
+            android:text="Actions Planifiées :"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/buttonShowActions"
@@ -279,6 +279,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonShowActions" />
+
+        <Button
+            android:id="@+id/settingsRecyclerViewActions"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/ic_baseline_settings"
+            app:layout_constraintBottom_toBottomOf="@+id/actions"
+            app:layout_constraintStart_toEndOf="@+id/actions"
+            app:layout_constraintTop_toTopOf="@+id/actions" />
 
     </android.support.constraint.ConstraintLayout>
 

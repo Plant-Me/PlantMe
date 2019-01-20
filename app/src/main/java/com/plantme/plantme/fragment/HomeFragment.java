@@ -16,23 +16,48 @@ import android.view.ViewGroup;
 import com.plantme.plantme.MainActivity;
 import com.plantme.plantme.R;
 
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
+    MainActivity mainActivity;
     private TabLayout tabLayout;
-    Fragment homeDayFragment;
-    Fragment homeMonthFragment;
+    private Fragment homeWeekFragment;
+    private Fragment homeMonthFragment;
+    private Fragment selectActionFragment;
 
-//    FragmentManager fragmentManager;
-    Fragment otherFragment;
+    private int activeTab;
+    private boolean isFirstRun = true;
+
+
+    //    FragmentManager fragmentManager;
+    private Fragment activeFragment;
 
     public HomeFragment() {
+
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        homeWeekFragment = new HomeWeekFragment();
+        homeMonthFragment = new HomeMonthFragment();
+        selectActionFragment = new SelectActionPlantsFragment();
+
+        activeFragment = homeWeekFragment;
+        if (getArguments() != null) {
+
+            activeTab = getArguments().getInt("selectedTab");
+        } else {
+            activeTab = 0;
+        }
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +67,9 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout = rootView.findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(this);
 
+        mainActivity = (MainActivity) getActivity();
+
+
         return rootView;
     }
 
@@ -50,30 +78,19 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         super.onViewCreated(view, savedInstanceState);
 
 
-        ActionBar ab = ((MainActivity)getContext()).getSupportActionBar();
+        ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
+        setDefaultFragment(activeFragment);
+        tabLayout.getTabAt(activeTab).select();
 
-        homeDayFragment = new HomeWeekFragment();
-        homeMonthFragment = new HomeMonthFragment();
-
-//        fragmentManager = ((MainActivity)getContext()).getSupportFragmentManager();
-
-        otherFragment = homeMonthFragment;
-
-//        fragmentManager.beginTransaction().add(R.id.containerHome, homeDayFragment, "2").hide(homeMonthFragment).commit();
-//        fragmentManager.beginTransaction().add(R.id.containerHome, homeMonthFragment, "1").commit();
-
-        this.setDefaultFragment(homeDayFragment);
     }
 
-    private void setDefaultFragment(Fragment defaultFragment)
-    {
+    private void setDefaultFragment(Fragment defaultFragment) {
         this.replaceFragment(defaultFragment);
     }
 
     // Replace current Fragment with the destination Fragment.
-    public void replaceFragment(Fragment destFragment)
-    {
+    public void replaceFragment(Fragment destFragment) {
         // First get FragmentManager object.
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -83,22 +100,35 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         // Replace the layout holder with the required Fragment object.
         fragmentTransaction.replace(R.id.containerHome, destFragment);
 
+
         // Commit the Fragment replace action.
         fragmentTransaction.commit();
+    }
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         switch (tab.getPosition()) {
-            case 0 :
-                replaceFragment(otherFragment);
-//                fragmentManager.beginTransaction().hide(otherFragment).show(homeDayFragment).commit();
-                otherFragment = homeMonthFragment;
+            case 0:
+                replaceFragment(homeWeekFragment);
+                activeFragment = homeWeekFragment;
+                activeTab = 0;
                 break;
-            case 1 :
-                replaceFragment(otherFragment);
-//                fragmentManager.beginTransaction().hide(otherFragment).show(homeMonthFragment).commit();
-                otherFragment = homeDayFragment;
+            case 1:
+                replaceFragment(homeMonthFragment);
+                activeFragment = homeMonthFragment;
+                activeTab = 1;
                 break;
         }
     }
@@ -112,4 +142,32 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
+    public Fragment getHomeWeekFragment() {
+        return homeWeekFragment;
+    }
+
+    public Fragment getHomeMonthFragment() {
+        return homeMonthFragment;
+    }
+
+    public Fragment getSelectActionFragment() {
+        return selectActionFragment;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+
+    public Fragment getActiveFragment() {
+        return activeFragment;
+    }
+
+    public void notifyDataSetChanged() {
+        ((HomeWeekFragment) homeWeekFragment).notifyDataSetChanged();
+        ((HomeMonthFragment) homeMonthFragment).notifyDataSetChanged();
+    }
+
+
 }

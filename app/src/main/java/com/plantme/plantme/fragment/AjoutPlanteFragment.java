@@ -1,6 +1,7 @@
 package com.plantme.plantme.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -91,6 +93,7 @@ public class AjoutPlanteFragment extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -131,11 +134,13 @@ public class AjoutPlanteFragment extends Fragment {
 
 
         listTypeArrosage = new ArrayList<>();
+        listTypeArrosage.add("jamais");
         listTypeArrosage.add("tous les jours");
         listTypeArrosage.add("toutes les semaines");
         listTypeArrosage.add("tous les mois");
 
         listTypeEngrais = new ArrayList<>();
+        listTypeEngrais.add("jamais");
         listTypeEngrais.add("tous les jours");
         listTypeEngrais.add("toutes les semaines");
         listTypeEngrais.add("tous les mois");
@@ -149,6 +154,13 @@ public class AjoutPlanteFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 compteurRepetitionArrosage = 1;
+                if(position == 0) {
+                    buttonMinusArrosage.setVisibility(View.INVISIBLE);
+                    buttonPlusArrosage.setVisibility(View.INVISIBLE);
+                } else {
+                    buttonMinusArrosage.setVisibility(View.VISIBLE);
+                    buttonPlusArrosage.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -165,6 +177,13 @@ public class AjoutPlanteFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 compteurRepetitionEngrais = 1;
+                if(position == 0) {
+                    buttonMinusEngrais.setVisibility(View.INVISIBLE);
+                    buttonPlusEngrais.setVisibility(View.INVISIBLE);
+                } else {
+                    buttonMinusEngrais.setVisibility(View.VISIBLE);
+                    buttonPlusEngrais.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -174,6 +193,17 @@ public class AjoutPlanteFragment extends Fragment {
         });
 
 
+//        nickNameValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(!hasFocus) {
+//
+//                    InputMethodManager imm =  (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//
+//                }
+//            }
+//        });
 
 
 
@@ -527,11 +557,11 @@ public class AjoutPlanteFragment extends Fragment {
                         break;
                     case R.id.buttonPlusArrosage:
                         if (spinnerTypeRepetitionArrosage.getSelectedItemPosition() == 0) {
-                            if (compteurRepetitionArrosage < 7) {
+                            if (compteurRepetitionArrosage < 10) {
                                 compteurRepetitionArrosage++;
                             }
                         } else if (spinnerTypeRepetitionArrosage.getSelectedItemPosition() == 1) {
-                            if (compteurRepetitionArrosage < 4) {
+                            if (compteurRepetitionArrosage < 6) {
                                 compteurRepetitionArrosage++;
                             }
                         } else {
@@ -549,11 +579,11 @@ public class AjoutPlanteFragment extends Fragment {
                         break;
                     case R.id.buttonPlusEngrais:
                         if (spinnerTypeRepetitionEngrais.getSelectedItemPosition() == 0) {
-                            if (compteurRepetitionEngrais < 7) {
+                            if (compteurRepetitionEngrais < 10) {
                                 compteurRepetitionEngrais++;
                             }
                         } else if (spinnerTypeRepetitionEngrais.getSelectedItemPosition() == 1) {
-                            if (compteurRepetitionEngrais < 4) {
+                            if (compteurRepetitionEngrais < 6) {
                                 compteurRepetitionEngrais++;
                             }
                         } else {
@@ -585,14 +615,38 @@ public class AjoutPlanteFragment extends Fragment {
 
             List<CoupleActionDate> coupleActionDateList = new ArrayList<>();
 
+            UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);
 
             if (switchArrosage.isChecked()) {
                 int selectedDay = numberPickerArrosageDay.getValue();
                 int selectedMonth = numberPickerArrosageMonth.getValue();
                 int selectedYear = numberPickerArrosageYear.getValue();
+                String typeRepetition = "";
+                GregorianCalendar selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay);
+                Date nextRepetitionDate = null;
+                int valeurRepetition = compteurRepetitionArrosage;
+                switch (spinnerTypeRepetitionArrosage.getSelectedItemPosition()) {
+                    case 0:
+                        valeurRepetition = 0;
+                        break;
+                    case 1:
+                        typeRepetition = "Jours";
+                        selectedDate.add(Calendar.DAY_OF_MONTH, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 2:
+                        typeRepetition = "Semaines";
+                        selectedDate.add(Calendar.WEEK_OF_YEAR, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 3:
+                        typeRepetition = "Mois";
+                        selectedDate.add(Calendar.MONTH, compteurRepetitionArrosage);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                }
 
 
-                Date selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay + compteurRepetitionArrosage).getTime();
 
                 UserAction selectedUserAction = null;
                 for (UserAction userAction : listUserAction) {
@@ -600,16 +654,38 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, selectedDate));
+                coupleActionDateList.add(new CoupleActionDate(newUserPlant, nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
             if (switchEngrais.isChecked()) {
                 int selectedDay = numberPickerEngraisDay.getValue();
                 int selectedMonth = numberPickerEngraisMonth.getValue();
                 int selectedYear = numberPickerEngraisYear.getValue();
+                String typeRepetition = "";
+                GregorianCalendar selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay);
+                Date nextRepetitionDate = null;
+                int valeurRepetition = compteurRepetitionEngrais;
+                switch (spinnerTypeRepetitionEngrais.getSelectedItemPosition()) {
+                    case 0:
+                        valeurRepetition = 0;
+                        break;
+                    case 1:
+                        typeRepetition = "Jours";
+                        selectedDate.add(Calendar.DAY_OF_MONTH, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 2:
+                        typeRepetition = "Semaines";
+                        selectedDate.add(Calendar.WEEK_OF_YEAR, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                    case 3:
+                        typeRepetition = "Mois";
+                        selectedDate.add(Calendar.MONTH, compteurRepetitionEngrais);
+                        nextRepetitionDate = selectedDate.getTime();
+                        break;
+                }
 
-
-                Date selectedDate = new GregorianCalendar(selectedYear, selectedMonth - 1, selectedDay + compteurRepetitionEngrais).getTime();
 
                 UserAction selectedUserAction = null;
                 for (UserAction userAction : listUserAction) {
@@ -617,10 +693,9 @@ public class AjoutPlanteFragment extends Fragment {
                         selectedUserAction = userAction;
                     }
                 }
-                coupleActionDateList.add(new CoupleActionDate(nickname, selectedUserAction, selectedDate));
+                coupleActionDateList.add(new CoupleActionDate(newUserPlant, nickname, selectedUserAction, nextRepetitionDate, typeRepetition, valeurRepetition));
             }
 
-            UserPlant newUserPlant = new UserPlant(selectedPlant, nickname, coupleActionDateList);
             mainActivity.getPlantUserList().add(newUserPlant);
             mainActivity.replaceFragment(mainActivity.getMyPlantsFragment());
         } else {
@@ -634,26 +709,26 @@ public class AjoutPlanteFragment extends Fragment {
             if (compteurRepetitionArrosage == 1) {
                 int selectedPosition = spinnerTypeRepetitionArrosage.getSelectedItemPosition();
                 switch (selectedPosition) {
-                    case 0:
+                    case 1:
                         listTypeArrosage.set(selectedPosition, "tous les jours");
                         break;
-                    case 1:
+                    case 2:
                         listTypeArrosage.set(selectedPosition, "toutes les semaines");
                         break;
-                    case 2:
+                    case 3:
                         listTypeArrosage.set(selectedPosition, "tous les mois");
                         break;
                 }
             } else {
                 int selectedPosition = spinnerTypeRepetitionArrosage.getSelectedItemPosition();
                 switch (selectedPosition) {
-                    case 0:
+                    case 1:
                         listTypeArrosage.set(selectedPosition, "tous les " + compteurRepetitionArrosage + " jours");
                         break;
-                    case 1:
+                    case 2:
                         listTypeArrosage.set(selectedPosition, "toutes les " + compteurRepetitionArrosage + " semaines");
                         break;
-                    case 2:
+                    case 3:
                         listTypeArrosage.set(selectedPosition, "tous les " + compteurRepetitionArrosage + " mois");
                         break;
                 }
@@ -663,26 +738,26 @@ public class AjoutPlanteFragment extends Fragment {
             if (compteurRepetitionEngrais == 1) {
                 int selectedPosition = spinnerTypeRepetitionEngrais.getSelectedItemPosition();
                 switch (selectedPosition) {
-                    case 0:
+                    case 1:
                         listTypeEngrais.set(selectedPosition, "tous les jours");
                         break;
-                    case 1:
+                    case 2:
                         listTypeEngrais.set(selectedPosition, "toutes les semaines");
                         break;
-                    case 2:
+                    case 3:
                         listTypeEngrais.set(selectedPosition, "tous les mois");
                         break;
                 }
             } else {
                 int selectedPosition = spinnerTypeRepetitionEngrais.getSelectedItemPosition();
                 switch (selectedPosition) {
-                    case 0:
+                    case 1:
                         listTypeEngrais.set(selectedPosition, "tous les " + compteurRepetitionEngrais + " jours");
                         break;
-                    case 1:
+                    case 2:
                         listTypeEngrais.set(selectedPosition, "toutes les " + compteurRepetitionEngrais + " semaines");
                         break;
-                    case 2:
+                    case 3:
                         listTypeEngrais.set(selectedPosition, "tous les " + compteurRepetitionEngrais + " mois");
                         break;
                 }

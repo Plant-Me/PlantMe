@@ -6,33 +6,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.plantme.plantme.ActionPlantsViewHolder;
-
-import com.plantme.plantme.R;
+import com.plantme.plantme.viewHolder.ActionCalendarViewHolder;
 import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.R;
 
 import java.util.List;
 
-public class ActionViewAdapter extends RecyclerView.Adapter<ActionPlantsViewHolder> {
+public class ActionCalendarViewAdapter extends RecyclerView.Adapter<ActionCalendarViewHolder> {
     private final List<CoupleActionDate> listCoupleActionDates;
 
-    public ActionViewAdapter(List<CoupleActionDate> listCoupleActionDates) {
+    public ActionCalendarViewAdapter(List<CoupleActionDate> listCoupleActionDates) {
         this.listCoupleActionDates = listCoupleActionDates;
     }
 
     @NonNull
     @Override
-    public ActionPlantsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rv_plant_actions_day, viewGroup, false);
-        return new ActionPlantsViewHolder(view);
+    public ActionCalendarViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rv_calendar_actions, viewGroup, false);
+        return new ActionCalendarViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(ActionPlantsViewHolder actionPlantsViewHolder, int i) {
-
+    public void onBindViewHolder(ActionCalendarViewHolder actionCalendarViewHolder, int i) {
         CoupleActionDate coupleActionDate = listCoupleActionDates.get(i);
-        actionPlantsViewHolder.bind(coupleActionDate);
+        actionCalendarViewHolder.bind(coupleActionDate);
     }
 
     @Override

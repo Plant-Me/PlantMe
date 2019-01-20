@@ -162,13 +162,13 @@
                 style="@android:style/Widget.Material.Light.Button.Small"
                 android:layout_width="20dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/button_small"
                 android:padding="0dp"
                 android:text="-"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerTypeRepetitionArrosage"
-                app:layout_constraintStart_toEndOf="@+id/spinnerTypeRepetitionArrosage"
+                app:layout_constraintEnd_toStartOf="@+id/buttonPlusArrosage"
                 app:layout_constraintTop_toTopOf="@+id/spinnerTypeRepetitionArrosage" />
 
             <Button
@@ -176,21 +176,23 @@
                 style="@android:style/Widget.Material.Light.Button.Small"
                 android:layout_width="20dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/button_small"
                 android:padding="0dp"
                 android:text="+"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/buttonMinusArrosage"
-                app:layout_constraintStart_toEndOf="@+id/buttonMinusArrosage"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/buttonMinusArrosage" />
 
             <Spinner
                 android:id="@+id/spinnerTypeRepetitionArrosage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/arroser"
+                app:layout_constraintEnd_toStartOf="@+id/buttonMinusArrosage"
                 app:layout_constraintStart_toEndOf="@+id/arroser"
                 app:layout_constraintTop_toBottomOf="@+id/arroser"
                 app:layout_constraintTop_toTopOf="@+id/arroser" />
@@ -267,7 +269,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Repeter"
+                android:text="Répéter"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -279,13 +281,13 @@
                 style="@android:style/Widget.Material.Light.Button.Small"
                 android:layout_width="20dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/button_small"
                 android:padding="0dp"
                 android:text="-"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerTypeRepetitionEngrais"
-                app:layout_constraintStart_toEndOf="@+id/spinnerTypeRepetitionEngrais"
+                app:layout_constraintEnd_toStartOf="@+id/buttonPlusEngrais"
                 app:layout_constraintTop_toTopOf="@+id/spinnerTypeRepetitionEngrais" />
 
             <Button
@@ -293,18 +295,18 @@
                 style="@android:style/Widget.Material.Light.Button.Small"
                 android:layout_width="20dp"
                 android:layout_height="15dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/button_small"
                 android:padding="0dp"
                 android:text="+"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/buttonMinusEngrais"
-                app:layout_constraintStart_toEndOf="@+id/buttonMinusEngrais"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/buttonMinusEngrais" />
 
             <Spinner
                 android:id="@+id/spinnerTypeRepetitionEngrais"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"

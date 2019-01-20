@@ -1,7 +1,7 @@
 package com.plantme.plantme.model;
 
 public class PlantType {
-        String type;
+    private String type;
 
         public PlantType(String type) {
             this.type = type;
