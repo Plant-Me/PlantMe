@@ -13,22 +13,15 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
     private int valeurRepetition;
     private boolean validated;
 
-    public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle) {
+
     public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle) {
         this.userPlant = userPlant;
-        this.plantName = plantName;
-        this.userAction = userAction;
-        this.dateActuelle = dateActuelle;
-    }
-
-    public CoupleActionDate(String plantName, UserAction userAction, Date dateActuelle) {
         this.plantName = plantName;
         this.userAction = userAction;
         this.dateActuelle = dateActuelle;
         this.dateInitiale = dateActuelle;
         typeRepetition = "";
         valeurRepetition = 0;
-        this.userPlant = userPlant;
     }
 
     public CoupleActionDate(UserPlant userPlant, String plantName, UserAction userAction, Date dateActuelle, String typeRepetition, int valeurRepetition) {
@@ -89,13 +82,6 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
         this.valeurRepetition = valeurRepetition;
     }
 
-    public String getTypeRepetition() {
-        return typeRepetition;
-    }
-
-    public int getValeurRepetition() {
-        return valeurRepetition;
-    }
 
     public boolean isValidated() {
         return validated;
@@ -103,14 +89,6 @@ public class CoupleActionDate implements Comparable<CoupleActionDate> {
 
     public void setValidated(boolean validated) {
         this.validated = validated;
-    }
-
-    public UserPlant getUserPlant() {
-        return userPlant;
-    }
-
-    public Date getDateInitiale() {
-        return dateInitiale;
     }
 
     @Override

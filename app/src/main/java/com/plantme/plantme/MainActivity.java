@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private List<UserPlant> plantUserList;
     private List<CoupleActionDate> listCoupleActionDate;
     private List<UserAction> listUserActions;
-    List<CoupleActionDate> listCoupleActionDate;
     private List<UserAction> listUserAction;
     ResultOnePlant resultOnePlant;
 
@@ -393,22 +392,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    public Fragment getAllPlantsFragment() {
-        return allPlantsFragment;
-    }
-
-    public Fragment getGeneralDetailPlantsFragment() {
-        return generalDetailPlantsFragment;
-    }
-
-    public Fragment getAjoutPlanteFragment() {
-        return ajoutPlanteFragment;
-    }
-
-    public Fragment getMyPlantsFragment() {
-        return myPlantsFragment;
-    }
-
 
     /*public void replace(Fragment destFragment) {
         previousFragment = activeFragment;
@@ -485,11 +468,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return null;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //startService(new Intent(this, NotificationService.class));
-    }
+
 
     public void initializeDatas() {
 
