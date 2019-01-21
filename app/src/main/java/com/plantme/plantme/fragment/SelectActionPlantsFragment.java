@@ -70,7 +70,7 @@ public class SelectActionPlantsFragment extends Fragment {
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.rvActions);
         listUserPlants = mainActivity.getPlantUserList();
-        listUserActions = mainActivity.getListUserActions();
+        listUserActions = mainActivity.getListUserAction();
 
         selectActionPlantsViewAdapter = new SelectActionPlantsViewAdapter(listUserPlants);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

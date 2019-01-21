@@ -46,6 +46,10 @@ public class MyPlantsFragment extends Fragment {
 
     }
 
+    public void notifyDataSetChanged() {
+        userPlantViewAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

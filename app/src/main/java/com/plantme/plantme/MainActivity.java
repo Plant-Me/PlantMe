@@ -45,6 +45,7 @@ import com.plantme.plantme.model.retrofitEntity.ResponseLastId;
 import com.plantme.plantme.model.retrofitEntity.ResultOnePlant;
 import com.plantme.plantme.model.retrofitEntity.UtilisateurAllPlant;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private List<PlanteUtilisateur> planteUtilisateurList;
     private List<UserPlant> plantUserList;
     private List<CoupleActionDate> listCoupleActionDate;
-    private List<UserAction> listUserActions;
     private List<UserAction> listUserAction;
     ResultOnePlant resultOnePlant;
 
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void populatePlanteUtilisateurList(){
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for(int i = 0;i<plantUserList.size();i++){
                 List<ActionUtilisateur> actionUtilisateurList = new ArrayList<>();
                 for(CoupleActionDate coupleActionDate : plantUserList.get(i).getListCoupleActionDate()) {
@@ -199,12 +200,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         this.setDefaultFragment(homeFragment);
         //Log.d("plante :", "onResponse: " + resultOnePlantList);
 
-        initializeDatas();
+       // initializeDatas();
 
         //List des familles
-        FamillePlante orchys = new FamillePlante("Orchydee", "orchys");
-        FamillePlante bonsaiolo = new FamillePlante("", "bonsaiolo");
-        FamillePlante arbre = new FamillePlante("Arbre", "");
+       // FamillePlante orchys = new FamillePlante("Orchydee", "orchys");
+       // FamillePlante bonsaiolo = new FamillePlante("", "bonsaiolo");
+        //FamillePlante arbre = new FamillePlante("Arbre", "");
 
         //Liste des plantes
         plantList = new ArrayList<>();
@@ -264,11 +265,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         listUserAction = new ArrayList<>();
         //Les UserActions
-        UserAction arroser = new UserAction("Arroser");
-        UserAction fertiliser = new UserAction("Fertiliser");
-        UserAction rempoter = new UserAction("Rempoter");
-        UserAction tailler = new UserAction("Tailler");
-        UserAction recolter = new UserAction("Recolter");
+        UserAction arroser = new UserAction(1,"Arroser");
+        UserAction fertiliser = new UserAction(5,"Fertiliser");
+        UserAction rempoter = new UserAction(2,"Rempoter");
+        UserAction tailler = new UserAction(4,"Tailler");
+        UserAction recolter = new UserAction(3,"Recolter");
         listUserAction.add(arroser);
         listUserAction.add(fertiliser);
         listUserAction.add(rempoter);
@@ -288,8 +289,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        actionsPlant = new HashMap<>();
 //        actionsPlant.put(monBichon.getPlantName(), monBichon.getListCoupleActionDate());
 //        actionsPlant.put(bonbon.getPlantName(), bonbon.getListCoupleActionDate());
-        populateUserListFromDb();
+        //populateUserListFromDb();
         Log.d("", "onCreate: ");
+    }
+
+    @Override
+    protected void onResume() {
+        populateUserListFromDb();
+        super.onResume();
     }
 
     private void populateUserListFromDb(){
@@ -299,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             @Override
             public void onGetPlant(List<UtilisateurAllPlant> utilisateurAllPlants) {
                 Log.d("test", "onGetPlant: " + utilisateurAllPlants.get(0));
+                plantUserList.clear();
+                plantList.clear();
                 for(int i=0;i<utilisateurAllPlants.size();i++){
                     Plant newPlant = new Plant(utilisateurAllPlants.get(i).getIdPlante(), utilisateurAllPlants.get(i).getImage().getUrl(), utilisateurAllPlants.get(i).getNomFr(),
                             utilisateurAllPlants.get(i).getNomLatin(), new FamillePlante(utilisateurAllPlants.get(i).getFamille().getNom(),utilisateurAllPlants.get(i).getNomLatin()),
@@ -334,6 +343,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                     plantUserList.add(newUserPlant);
                 }
+
 
             }
 
@@ -442,16 +452,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             replaceFragment(allPlantsFragment);
         } else if (currentFragment instanceof AjoutPlanteFragment) {
             replaceFragment(generalDetailPlantsFragment);
+        } else if (currentFragment instanceof SelectActionPlantsFragment) {
+            Bundle args = new Bundle();
+            args.putInt("selectedTab", 1);
+            homeFragment = new HomeFragment();
+            homeFragment.setArguments(args);
+            replaceFragment(homeFragment);
         } else if (!(currentFragment instanceof HomeFragment)) {
             replaceFragment(homeFragment);
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         } else {
-            currentFragment = ((HomeFragment) homeFragment).getVisibleFragment();
-            if (currentFragment instanceof SelectActionPlantsFragment) {
-                ((HomeFragment) homeFragment).replaceFragment(((HomeFragment) homeFragment).getHomeMonthFragment());
-            } else {
-                super.onSupportNavigateUp();
-            }
+            super.onSupportNavigateUp();
+
         }
         return super.onSupportNavigateUp();
     }
@@ -470,86 +482,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
-    public void initializeDatas() {
 
-        //List des familles
-        FamillePlante orchys = new FamillePlante("Orchydee", "orchys");
-        FamillePlante bonsaiolo = new FamillePlante("", "bonsaiolo");
-        FamillePlante arbre = new FamillePlante("Arbre", "");
-
-        //Liste des plantes
-        plantList = new ArrayList<>();
-        plantList = new ArrayList<>();
-        Plant orchidee = new Plant("orchidee", "orchideum", orchys, "Orchidee Blah", "rose", "fleur", "exposition", "sol", "intérieur");
-        Plant bonsai = new Plant("bonsai", "bonsaium", bonsaiolo, "Bonsai Blah", "blanche", "arbuste", "exposition", "sol", "intérieur");
-        Plant abricotier = new Plant("abricotier", "abricotierum", arbre, "Abricotier Blah", "jaune", "arbre", "exposition", "sol", "verger");
-        Plant cerisier = new Plant("cerisier", "cerisierum", arbre, "Cerisier Blah", "rose", "arbre", "exposition", "sol", "verger");
-
-        plantList.add(orchidee);
-        plantList.add(bonsai);
-        plantList.add(abricotier);
-        plantList.add(cerisier);
-
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 3, "Mars"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 4, "Avril"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 5, "Mai"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Floraison", 6, "Juin"));
-
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Taille", 9, "Septembre"));
-
-
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 6, "Juin"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 7, "Juillet"));
-        orchidee.addActionCalendrier(new ActionCalendrier(1, "Fructification", 8, "Aout"));
-
-        //Les couples UserPlant, UserAction, Date
-        ArrayList<CoupleActionDate> listCoupleActionDateBichon = new ArrayList<>();
-        ArrayList<CoupleActionDate> listCoupleActionDateBonbon = new ArrayList<>();
-
-        //Les UserPlants
-        UserPlant monBichon = new UserPlant(orchidee, "Mon Bichon", listCoupleActionDateBichon);
-        UserPlant bonbon = new UserPlant(bonsai, "Bonbon", listCoupleActionDateBonbon);
-
-        //Liste des plantes utilisateurs
-        plantUserList = new ArrayList<>();
-        plantUserList.add(monBichon);
-        plantUserList.add(bonbon);
-
-
-        //Les UserActions
-        UserAction arroser = new UserAction("Arroser");
-        UserAction tailler = new UserAction("Tailler");
-        UserAction planter = new UserAction("Planter");
-        UserAction fertiliser = new UserAction("Fertiliser");
-        UserAction rempoter = new UserAction("Rempoter");
-
-        listUserActions = new ArrayList<>();
-        listUserActions.add(arroser);
-        listUserActions.add(tailler);
-        listUserActions.add(planter);
-        listUserActions.add(fertiliser);
-        listUserActions.add(rempoter);
-
-
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 16).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 17).getTime(), "Semaines", 3));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), planter, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
-        listCoupleActionDateBichon.add(new CoupleActionDate(monBichon, monBichon.getPlantName(), fertiliser, new GregorianCalendar(2019, Calendar.JANUARY, 19).getTime()));
-
-        CoupleActionDate coupleActionDateTest = new CoupleActionDate(monBichon, monBichon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime(), "Jours", 10);
-        coupleActionDateTest.setDateInitiale(new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime());
-        listCoupleActionDateBichon.add(coupleActionDateTest);
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 18).getTime()));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), planter, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime(), "Mois", 1));
-        listCoupleActionDateBonbon.add(new CoupleActionDate(bonbon, bonbon.getPlantName(), tailler, new GregorianCalendar(2019, Calendar.JANUARY, 20).getTime()));
-
-        listCoupleActionDate = new ArrayList<>();
-        for (UserPlant userPlant : plantUserList) {
-            listCoupleActionDate.addAll(userPlant.getListCoupleActionDate());
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -570,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public List<UserAction> getListUserAction() {
-        return listUserActions;
+        return listUserAction;
     }
 
     @Override
@@ -590,9 +523,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.dispatchTouchEvent(event);
     }
 
-    public List<UserAction> getListUserActions() {
-        return listUserActions;
-    }
 
     public Fragment getHomeFragment() {
         return homeFragment;

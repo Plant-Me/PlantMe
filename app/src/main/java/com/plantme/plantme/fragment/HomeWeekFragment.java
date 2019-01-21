@@ -94,7 +94,7 @@ public class HomeWeekFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ActionBar ab = ((MainActivity) getContext()).getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
-
+        setUpRecyclerView(view);
         super.onViewCreated(view, savedInstanceState);
 
 

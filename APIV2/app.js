@@ -329,9 +329,18 @@ app.post("/plantesUtilisateur",(req,res) => {
 
             }
         })
-           for(let j=0;j<plantesUtilisateur[i].actionUtilisateur.length;j++) {
-            connectionAsync.query(queryStringActions, [idPlanteUtilisateur,plantesUtilisateur[i].actionUtilisateur[j].idActionUtilisateur, plantesUtilisateur[i].actionUtilisateur[j].date,plantesUtilisateur[i].actionUtilisateur[j].dateInitiale,plantesUtilisateur[i].actionUtilisateur[j].typeRepetition,plantesUtilisateur[i].actionUtilisateur[j].valeurRepetition ], (err, rows, fields)=>{
-  
+           for(let j=0;j<plantesUtilisateur[i].actionUtilisateurs.length;j++) {
+            
+            //console.log("error " + dateInitialeFormat)
+            //console.log("error " + dateInitialeFormatISO)
+
+
+            connectionAsync.query(queryStringActions, [idPlanteUtilisateur,plantesUtilisateur[i].actionUtilisateurs[j].idActionUtilisateur, convert(plantesUtilisateur[i].actionUtilisateurs[j].date),convert(plantesUtilisateur[i].actionUtilisateurs[j].dateInitiale),plantesUtilisateur[i].actionUtilisateurs[j].typeRepetition,plantesUtilisateur[i].actionUtilisateurs[j].valeurRepetition ], (err, rows, fields)=>{
+              if (err){
+                console.log("error " + err)
+                res.sendStatus(204)
+                return
+              }
             })
            }
         }
@@ -339,6 +348,12 @@ app.post("/plantesUtilisateur",(req,res) => {
    // let resultquery2 = connectionSync.query(queryString2,[plantesUtilisateur[i].id_utilisateur,plantesUtilisateur[i].id_plante,plantesUtilisateur[i].nom_personnel])
        // if (!resultquery2.length > 0){è         
 })
+function convert(str) {
+  var date = new Date(str),
+      mnth = ("0" + (date.getMonth()+1)).slice(-2),
+      day  = ("0" + date.getDate()).slice(-2);
+  return [ date.getFullYear(), mnth, day ].join("-");
+}
 
 /*app.get("/plantesUtilisateur",(req,res) => {
 

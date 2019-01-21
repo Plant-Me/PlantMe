@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/ivPlant"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
@@ -33,10 +33,11 @@
 
     <TextView
         android:id="@+id/tvPlantUsage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
+        android:inputType="textMultiLine"
         android:text="Plant Usage"
         app:layout_constraintBottom_toBottomOf="@+id/ivPlant"
         app:layout_constraintStart_toEndOf="@+id/ivPlant"
