@@ -1,12 +1,4 @@
-build/
-*.iml
-.idea/
-local.properties
-.gradle/
-.DS_Store
-node_modules
-build
+/node_modules
 npm-debug.log
-.env
-
-desktop.ini
+.DS_Store
+/.env
