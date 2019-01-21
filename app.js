@@ -9,16 +9,16 @@ const bodyParser= require('body-parser')
 
  //connection mysql
  const connectionAsync = mysqlAsync.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password:"",
-  database: 'planteme'
+  host: 'db4free.net',
+  user: 'roussel',
+  password:"azeqsdwxc",
+  database: 'plantemes'
 })
 const connectionSync = new mysqlSync({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'planteme'
+  host: 'db4free.net',
+  user: 'roussel',
+  password:"azeqsdwxc",
+  database: 'plantemes'
 });
 
 
@@ -406,8 +406,8 @@ app.delete("/plantesUtilisateur",(req,res) => {
 
 
 
-//localhost:3000
-app.listen(3000, () => {
-  console.log("Server is up and listening on 3000 ...")
-})
+//localhost:4000
+app.listen(process.env.PORT || 4000, function(){
+  console.log('Your node js server is running');
+});
 
