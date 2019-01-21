@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/rvUserActionType"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Action :"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/rvSpinnerRepetition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rvUserActionType"
+        app:layout_constraintEnd_toStartOf="@+id/rvActionDialogMinus"
+        app:layout_constraintStart_toEndOf="@+id/rvUserActionType"
+        app:layout_constraintTop_toTopOf="@+id/rvUserActionType" />
+
+    <Button
+        android:id="@+id/rvActionDialogMinus"
+        style="@android:style/Widget.Material.Light.Button.Small"
+        android:layout_width="20dp"
+        android:layout_height="15dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/button_small"
+        android:padding="0dp"
+        android:text="-"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/rvSpinnerRepetition"
+        app:layout_constraintEnd_toStartOf="@+id/rvActionDialogPlus"
+        app:layout_constraintTop_toTopOf="@+id/rvSpinnerRepetition" />
+
+    <Button
+        android:id="@+id/rvActionDialogPlus"
+        style="@android:style/Widget.Material.Light.Button.Small"
+        android:layout_width="20dp"
+        android:layout_height="15dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button_small"
+        android:padding="0dp"
+        android:text="+"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/rvActionDialogMinus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rvActionDialogMinus" />
+</android.support.constraint.ConstraintLayout>
