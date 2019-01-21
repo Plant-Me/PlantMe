@@ -21,7 +21,7 @@ import retrofit2.http.Query;
 
 public interface PlantMeService {
 
-    public static final String ENDPOINT = "http://10.0.2.2:3000";
+    public static final String ENDPOINT = "https://planteme.herokuapp.com";
 
     @GET("/plante")
     Call<List<ResultAllPlant>> listPlant();
