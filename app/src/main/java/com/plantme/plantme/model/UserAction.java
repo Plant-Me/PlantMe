@@ -2,6 +2,7 @@ package com.plantme.plantme.model;
 
 public class UserAction {
     private int idAction;
+    private int imageRId;
     private String actionName;
 
     public UserAction(String actionName) {
@@ -10,6 +11,12 @@ public class UserAction {
 
     public UserAction(int idAction, String actionName) {
         this.idAction = idAction;
+        this.actionName = actionName;
+    }
+
+    public UserAction(int idAction, int imageRId, String actionName) {
+        this.idAction = idAction;
+        this.imageRId = imageRId;
         this.actionName = actionName;
     }
 
@@ -28,5 +35,9 @@ public class UserAction {
     @Override
     public boolean equals(Object obj) {
         return idAction == ((UserAction)obj).getIdAction();
+    }
+
+    public int getImageRId() {
+        return imageRId;
     }
 }

@@ -265,16 +265,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         listUserAction = new ArrayList<>();
         //Les UserActions
-        UserAction arroser = new UserAction(1,"Arroser");
-        UserAction fertiliser = new UserAction(5,"Fertiliser");
-        UserAction rempoter = new UserAction(2,"Rempoter");
-        UserAction tailler = new UserAction(4,"Tailler");
-        UserAction recolter = new UserAction(3,"Recolter");
+        UserAction arroser = new UserAction(1, R.drawable.ic_arroser,"Arroser");
+        UserAction fertiliser = new UserAction(5, R.drawable.ic_fertiliser, "Fertiliser");
+        UserAction rempoter = new UserAction(2, R.drawable.ic_rempoter,"Rempoter");
+        UserAction tailler = new UserAction(4, R.drawable.ic_tailler, "Tailler");
+        UserAction recolter = new UserAction(3, R.drawable.ic_recolter, "Recolter");
+        UserAction planter = new UserAction(6, R.drawable.ic_planter, "Planter");
         listUserAction.add(arroser);
         listUserAction.add(fertiliser);
         listUserAction.add(rempoter);
         listUserAction.add(tailler);
         listUserAction.add(recolter);
+        listUserAction.add(planter);
 
        /* listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));
         listCoupleActionDateBichon.add(new CoupleActionDate(monBichon.getPlantName(), arroser, new GregorianCalendar(2019, Calendar.JANUARY, 14 ).getTime()));

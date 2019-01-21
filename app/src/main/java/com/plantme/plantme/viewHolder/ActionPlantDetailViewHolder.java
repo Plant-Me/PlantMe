@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.plantme.plantme.R;
 import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.GlideApp;
 
 import java.text.SimpleDateFormat;
 
@@ -15,12 +16,14 @@ public class ActionPlantDetailViewHolder extends RecyclerView.ViewHolder{
     private ImageView ivActionImage;
     private TextView typeAction;
     private TextView dateAction;
+    private View view;
 
     public ActionPlantDetailViewHolder(View viewItem) {
         super(viewItem);
         ivActionImage = viewItem.findViewById(R.id.rowActionImageView);
         typeAction = viewItem.findViewById(R.id.rowActionTypeAction);
         dateAction = viewItem.findViewById(R.id.rowActionDate);
+        this.view = viewItem;
 
     }
 
@@ -30,6 +33,8 @@ public class ActionPlantDetailViewHolder extends RecyclerView.ViewHolder{
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
 
         dateAction.setText(formatter.format(coupleActionDate.getDateActuelle()));
+        GlideApp.with(view).load(coupleActionDate.getUserAction().getImageRId()).into(ivActionImage);
+
     }
 
 }

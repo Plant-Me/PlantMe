@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.plantme.plantme.R;
 import com.plantme.plantme.model.CoupleActionDate;
+import com.plantme.plantme.model.GlideApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,6 +21,7 @@ public class ActionWeekViewHolder extends RecyclerView.ViewHolder {
     private TextView tvMyPlantName;
     private TextView tvActionName;
     private TextView tvActionDate;
+    private View view;
 
     public ActionWeekViewHolder(View viewItem) {
         super(viewItem);
@@ -28,6 +30,7 @@ public class ActionWeekViewHolder extends RecyclerView.ViewHolder {
         tvMyPlantName = viewItem.findViewById(R.id.tvMyPlantName);
         tvActionName = viewItem.findViewById(R.id.tvActionName);
         tvActionDate = viewItem.findViewById(R.id.tvActionDate);
+        this.view = viewItem;
     }
 
     public void bind(CoupleActionDate coupleActionDate) {
@@ -52,6 +55,8 @@ public class ActionWeekViewHolder extends RecyclerView.ViewHolder {
             tvActionDate.setText("");
 
         }
+
+        GlideApp.with(view).load(coupleActionDate.getUserAction().getImageRId()).into(ivActionImage);
 
     }
 
