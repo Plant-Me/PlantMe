@@ -12,14 +12,14 @@ const bodyParser= require('body-parser')
   host: 'db4free.net',
   user: 'roussel',
   password:"azeqsdwxc",
-  port:'3306',
+  port:'3307',
   database: 'plantemes'
 })
 const connectionSync = new mysqlSync({
   host: 'db4free.net',
   user: 'roussel',
   password:"azeqsdwxc",
-  port:'3306',
+  port:'3307',
   database: 'plantemes'
 });
 
